@@ -1,0 +1,11 @@
+{
+  "name": "mjl-design-agency",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "MJL Design Agency — design systems, reference studies and skills. UX first.",
+  "scripts": {
+    "capture": "bash -c 'source ./tools/browser-env.sh && node tools/capture.mjs \"$@\"' --",
+    "setup:browser": "bash tools/setup-browser.sh"
+  }
+}

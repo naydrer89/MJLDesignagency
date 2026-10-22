@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cupertino Clarity — Aera</title>
+<script>document.documentElement.className = 'js';</script>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  @font-face {
+    font-family: 'Manrope';
+    src: url('assets/fonts/manrope.woff2') format('woff2');
+    font-weight: 400 800;
+    font-display: swap;
+  }
+
+  :root {
+    --black: #000;
+    --ink: #f5f5f7;
+    --ink-2: #a1a1a6;
+    --ink-3: #86868b;
+    --paper: #f5f5f7;
+    --paper-ink: #1d1d1f;
+    --blue: #0071e3;
+    --blue-bright: #2997ff;
+    --tint: #7c5cff;
+    --hair: rgba(255, 255, 255, 0.14);
+    --hair-dark: rgba(0, 0, 0, 0.1);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --focus: #2997ff;
+    --selection: #0071e3;
+    --skip-bg: #0071e3;
+    --skip-on: #fff;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--ink);
+    font-family: 'Manrope', system-ui, sans-serif;
+    letter-spacing: -0.011em;
+    overflow-x: hidden;
+  }
+
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    height: 2px;
+    z-index: 60;
+    background: linear-gradient(90deg, var(--blue-bright), var(--tint));
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .wrap {
+    width: min(1180px, 100% - 3rem);
+    margin-inline: auto;
+  }
+
+  /* ---------- Navigation als schwebende Kapsel ---------- */
+  .nav {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 0.45rem 0.5rem 0.45rem 1.1rem;
+    border-radius: 980px;
+    background: rgba(22, 22, 24, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.9);
+    width: min(920px, calc(100% - 1.5rem));
+  }
+
+  .nav__brand {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    margin-right: auto;
+  }
+
+  .nav__links {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+
+  .nav__links a { transition: color 0.25s ease; }
+  .nav__links a:hover { color: var(--ink); }
+
+  .pill {
+    height: 32px;
+    padding-inline: 0.95rem;
+    border-radius: 980px;
+    background: var(--ink);
+    color: #000;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.3s var(--ease), background 0.3s ease;
+  }
+
+  .pill:hover { background: #fff; transform: translateY(-1px); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-top: clamp(6.5rem, 10.5vw, 8.5rem);
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tint);
+    transition: color 0.6s var(--ease);
+  }
+
+  h1 {
+    margin: 1.2rem auto 0;
+    max-width: 17ch;
+    font-size: clamp(2.8rem, 6.6vw, 5.2rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    /* Bewusst Vollton statt Verlauf: die Headline wird in Wortmasken zerlegt,
+       ein per background-clip gefärbter Verlauf läge sonst hinter den Spans. */
+    color: #f5f5f7;
+  }
+
+  .hero__sub {
+    margin: 1.6rem auto 0;
+    max-width: 42ch;
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .hero__cta {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1.6rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 15px;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--blue-bright);
+    transition: gap 0.3s var(--ease);
+  }
+
+  .link:hover { gap: 0.6rem; }
+
+  .btn-solid {
+    display: inline-flex;
+    align-items: center;
+    height: 46px;
+    padding-inline: 1.6rem;
+    border-radius: 980px;
+    background: var(--blue);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.3s ease, transform 0.3s var(--ease);
+  }
+
+  .btn-solid:hover { background: #1a80e8; transform: translateY(-1px); }
+
+  /* ---------- Gerät: Skalierung und Rotation folgen dem Scroll ---------- */
+  .stage {
+    position: relative;
+    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+    display: grid;
+    place-items: center;
+    min-height: min(44vh, 400px);
+    isolation: isolate;
+  }
+
+  .stage__halo {
+    position: absolute;
+    width: min(76vw, 720px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in oklab, var(--tint) 55%, transparent), transparent 62%);
+    filter: blur(60px);
+    opacity: 0.75;
+    transition: background 0.8s var(--ease);
+  }
+
+  .device {
+    position: relative;
+    width: min(46vw, 330px);
+    aspect-ratio: 1;
+    transform:
+      scale(calc(0.78 + var(--scrub, 0.35) * 0.42))
+      rotate(calc(var(--scrub, 0.35) * 16deg));
+    transition: transform 0.18s linear;
+    will-change: transform;
+  }
+
+  .device__disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.85), transparent 30%),
+      linear-gradient(148deg, #f6f4ff 0%, color-mix(in oklab, var(--tint) 82%, #fff) 22%, var(--tint) 42%, #241a48 74%, #08080a 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+      inset 0 -30px 70px rgba(0, 0, 0, 0.6),
+      0 70px 140px -50px color-mix(in oklab, var(--tint) 70%, transparent);
+    transition: background 0.8s var(--ease), box-shadow 0.8s var(--ease);
+  }
+
+  .device__ring {
+    position: absolute;
+    inset: 9%;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: radial-gradient(circle at 50% 120%, rgba(255, 255, 255, 0.22), transparent 60%);
+    animation: turn 26s linear infinite;
+  }
+
+  .device__ring::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 14px 3px rgba(255, 255, 255, 0.7);
+  }
+
+  .device__core {
+    position: absolute;
+    inset: 30%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 30%, #fff, #d9d4ff 40%, var(--tint) 100%);
+    box-shadow: 0 0 60px 10px color-mix(in oklab, var(--tint) 70%, transparent);
+    transition: background 0.8s var(--ease), box-shadow 0.8s var(--ease);
+  }
+
+  @keyframes turn {
+    to { transform: rotate(360deg); }
+  }
+
+  .stage__label {
+    position: absolute;
+    bottom: 5%;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--ink-3);
+    display: flex;
+    gap: 1.4rem;
+  }
+
+  /* ---------- Farben ---------- */
+  .colors {
+    margin-block: clamp(3rem, 7vw, 6rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  .swatches {
+    display: flex;
+    gap: 0.9rem;
+  }
+
+  .swatch {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+    position: relative;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .swatch[aria-pressed='true']::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+  }
+
+  .swatch:hover { transform: scale(1.08); }
+
+  .colors__name {
+    font-size: 15px;
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Material: klebender Text, laufendes Licht ---------- */
+  .material {
+    padding-block: clamp(5rem, 11vw, 9rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  .material__sticky {
+    position: sticky;
+    top: 120px;
+    aspect-ratio: 4 / 5;
+    border-radius: 32px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 100% at 20% 0%, color-mix(in oklab, var(--tint) 45%, transparent), transparent 55%),
+      linear-gradient(160deg, #17171a, #08080a 70%);
+    border: 1px solid var(--hair);
+    display: grid;
+    place-items: center;
+  }
+
+  .material__sticky::before {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    background: conic-gradient(from 180deg, transparent, rgba(255, 255, 255, 0.14), transparent 40%);
+    animation: turn 18s linear infinite;
+  }
+
+  .material__chip {
+    position: relative;
+    width: 58%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 34% 28%, #fff, color-mix(in oklab, var(--tint) 75%, #111) 55%, #0b0b0d);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 40px 100px -30px #000;
+  }
+
+  .material__text h2 {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+    max-width: 16ch;
+  }
+
+  .material__text p {
+    margin-top: 1.4rem;
+    color: var(--ink-2);
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 46ch;
+  }
+
+  .facts {
+    margin-top: 2.4rem;
+    border-top: 1px solid var(--hair);
+  }
+
+  .fact {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--hair);
+    font-size: 14px;
+  }
+
+  .fact span:last-child { color: var(--ink-2); text-align: right; }
+
+  /* ---------- Bahn: horizontale Bewegung, gesteuert vom Scroll ---------- */
+  .rail {
+    position: relative;
+    padding-block: clamp(4rem, 9vw, 8rem);
+    overflow: hidden;
+  }
+
+  .rail__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .rail__head h2 {
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+    max-width: 18ch;
+  }
+
+  .rail__head p { max-width: 30ch; color: var(--ink-3); font-size: 14px; }
+
+  .rail__track {
+    display: flex;
+    gap: 1.25rem;
+    width: max-content;
+    transform: translate3d(calc(var(--scrub, 0) * -46%), 0, 0);
+    transition: transform 0.15s linear;
+    padding-right: 20vw;
+  }
+
+  .tile {
+    width: clamp(240px, 26vw, 360px);
+    padding: 1.6rem;
+    border-radius: 26px;
+    border: 1px solid var(--hair);
+    background: linear-gradient(170deg, #17171b, #0b0b0d);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.4s ease, transform 0.5s var(--ease);
+  }
+
+  .tile:hover { border-color: rgba(255, 255, 255, 0.28); transform: translateY(-4px); }
+
+  .tile__glyph {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    display: grid;
+    place-items: center;
+    color: var(--tint);
+    transition: color 0.4s ease;
+  }
+
+  .tile h3 {
+    margin-top: 2rem;
+    font-size: 21px;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  .tile p { margin-top: 0.6rem; font-size: 14px; line-height: 1.55; color: var(--ink-3); }
+
+  /* ---------- Spezifikationen ---------- */
+  .specs {
+    padding-block: clamp(4rem, 9vw, 8rem);
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    border-top: 1px solid var(--hair);
+  }
+
+  .specs h2 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+
+  .specs dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .specs dt,
+  .specs dd {
+    padding-block: 1.05rem;
+    border-bottom: 1px solid var(--hair);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .specs dt { color: var(--ink-3); }
+  .specs dd { color: var(--ink); justify-content: flex-end; text-align: right; }
+
+  /* ---------- Kaufleiste, erscheint nach dem ersten Screen ---------- */
+  .buybar {
+    position: fixed;
+    left: 50%;
+    bottom: 1.2rem;
+    transform: translate(-50%, 140%);
+    z-index: 55;
+    width: min(680px, calc(100% - 1.5rem));
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 0.7rem 0.7rem 1.2rem;
+    border-radius: 980px;
+    background: rgba(28, 28, 30, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 30px 60px -30px #000;
+    transition: transform 0.55s var(--ease);
+  }
+
+  .buybar.is-in { transform: translate(-50%, 0); }
+
+  .buybar__info { margin-right: auto; font-size: 13px; color: var(--ink-2); }
+  .buybar__info strong { color: var(--ink); font-weight: 600; }
+
+  footer {
+    padding-block: 3rem 6rem;
+    border-top: 1px solid var(--hair);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 900px) {
+    .material,
+    .specs { grid-template-columns: 1fr; }
+    .material__sticky { position: relative; top: 0; max-height: 420px; }
+    .specs dl { grid-template-columns: 1fr; }
+    .specs dd { justify-content: flex-start; border-bottom: 1px solid var(--hair); padding-top: 0; }
+    .nav__links { display: none; }
+    .nav { justify-content: space-between; }
+    .nav__brand { margin-right: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .wrap { width: min(1180px, 100% - 2rem); }
+    .stage { min-height: 54vh; }
+    .device { width: min(72vw, 320px); }
+    .rail__head { flex-direction: column; align-items: flex-start; }
+    .rail__track { transform: none; overflow-x: auto; padding-right: 1rem; }
+    .buybar__info span { display: none; }
+    footer { padding-bottom: 7rem; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<div class="progress" data-progress aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="nav__brand" href="#main">Aera</a>
+  <nav class="nav__links" aria-label="Hauptnavigation">
+    <a href="#material">Material</a>
+    <a href="#bahn">Funktionen</a>
+    <a href="#spezifikationen">Technik</a>
+  </nav>
+  <a class="pill" href="#kaufen" data-magnetic="4">Kaufen</a>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <section class="hero">
+      <p class="eyebrow">Aera</p>
+      <h1 data-words>Licht. In seiner<br>ruhigsten Form.</h1>
+      <p class="hero__sub">
+        Ein Raumlicht, das den Tag kennt. Es wird wärmer, wenn es Abend wird, und dunkler,
+        wenn Sie es brauchen — ohne dass Sie es ihm sagen.
+      </p>
+      <div class="hero__cta">
+        <a class="btn-solid" href="#kaufen" data-magnetic="6">Ab 349 €</a>
+        <a class="link" href="#material">Mehr erfahren <span aria-hidden="true">›</span></a>
+      </div>
+    </section>
+
+    <section class="stage" aria-label="Aera, Vorderansicht">
+      <div class="stage__halo" aria-hidden="true"></div>
+      <div class="device" data-scrub>
+        <div class="device__disc"></div>
+        <div class="device__ring" aria-hidden="true"></div>
+        <div class="device__core"></div>
+      </div>
+      <p class="stage__label"><span>Ø 180 mm</span><span>1,1 kg</span><span>Aluminium, eloxiert</span></p>
+    </section>
+
+    <section class="colors" aria-label="Farbe wählen">
+      <div class="swatches" role="group" aria-label="Gehäusefarbe">
+        <button class="swatch" style="--c:#7c5cff" data-tint="#7c5cff" data-name="Violett" aria-pressed="true" aria-label="Violett"></button>
+        <button class="swatch" style="--c:#f26d5b" data-tint="#f26d5b" data-name="Koralle" aria-pressed="false" aria-label="Koralle"></button>
+        <button class="swatch" style="--c:#3ad0a4" data-tint="#3ad0a4" data-name="Jade" aria-pressed="false" aria-label="Jade"></button>
+        <button class="swatch" style="--c:#d9d9de" data-tint="#d9d9de" data-name="Silber" aria-pressed="false" aria-label="Silber"></button>
+      </div>
+      <p class="colors__name" aria-live="polite">Violett</p>
+    </section>
+
+    <section class="material" id="material">
+      <div class="material__sticky" aria-hidden="true" data-reveal="mask">
+        <div class="material__chip"></div>
+      </div>
+      <div class="material__text">
+        <h2 data-words>Ein Körper, der nur Licht zeigt.</h2>
+        <p>
+          Kein Display, keine Taste, keine Beschriftung. Die Oberfläche ist aus einem Stück
+          eloxiertem Aluminium gefräst, die Kante ist so dünn, dass sie im Gegenlicht verschwindet.
+        </p>
+        <p>
+          Alles, was Sie brauchen, liegt in einer Geste: drehen für Helligkeit, tippen für Stimmung.
+        </p>
+        <div class="facts">
+          <div class="fact"><span>Gehäuse</span><span>Aluminium 6061, eloxiert</span></div>
+          <div class="fact"><span>Streuung</span><span>Optisches PMMA, 2 mm</span></div>
+          <div class="fact"><span>Leistung</span><span>4 W im Mittelbetrieb</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="rail" id="bahn">
+    <div class="wrap">
+      <div class="rail__head">
+        <h2 data-words>Es passt sich an, ohne zu fragen.</h2>
+        <p>Vier Dinge, die den Unterschied zwischen einem Licht und einem Raumgefühl machen.</p>
+      </div>
+    </div>
+    <div class="rail__track" data-scrub>
+      <article class="tile">
+        <div class="tile__glyph" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4"/><path d="M10 1v2M10 17v2M1 10h2M17 10h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h3>Tageslicht, gemessen statt geschätzt</h3>
+          <p>Ein Sensor liest die Farbtemperatur im Raum und verschiebt das Licht um 200 K in Richtung Abend.</p>
+        </div>
+      </article>
+      <article class="tile">
+        <div class="tile__glyph" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 13c2-6 12-6 14 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M3 13h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h3>Dämmerung in 40 Minuten</h3>
+          <p>Statt hart auszugehen, dimmt Aera über den Abend. Die Kurve ist ruhig, nicht linear.</p>
+        </div>
+      </article>
+      <article class="tile">
+        <div class="tile__glyph" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <h3>Lokal. Ohne Konto.</h3>
+          <p>Zeitpläne liegen auf dem Gerät. Kein Konto, kein Cloud-Zwang, kein Update, das Sie aussperrt.</p>
+        </div>
+      </article>
+      <article class="tile">
+        <div class="tile__glyph" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="12" rx="6" stroke="currentColor" stroke-width="1.4"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h3>Zehn Jahre, ein Kabel</h3>
+          <p>USB-C, austauschbarer Akku, Ersatzteile über den Support. Kein Kleber im Gehäuse.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="specs" id="spezifikationen">
+      <h2 data-words>Die Zahlen, die zählen.</h2>
+      <dl>
+        <dt>Lichtstrom</dt><dd>780 lm</dd>
+        <dt>Farbtemperatur</dt><dd>1 800 – 6 500 K</dd>
+        <dt>Farbwiedergabe</dt><dd>CRI 96</dd>
+        <dt>Abmessung</dt><dd>180 × 62 mm</dd>
+        <dt>Gewicht</dt><dd>1,1 kg</dd>
+        <dt>Anschluss</dt><dd>USB-C, 15 W</dd>
+        <dt>Material</dt><dd>Aluminium, eloxiert</dd>
+        <dt>Garantie</dt><dd>5 Jahre</dd>
+      </dl>
+    </section>
+
+    <footer id="kaufen">
+      <span>Aera — Konzeptseite im Design-System cupertino-clarity.</span>
+      <span>Testseite 02</span>
+    </footer>
+  </div>
+</main>
+
+<div class="buybar" id="buybar">
+  <p class="buybar__info"><strong>Aera</strong> <span>· Violett · ab 349 €</span></p>
+  <a class="btn-solid" href="#kaufen">In den Beutel</a>
+</div>
+
+<script src="assets/motion.js" defer></script>
+<script>
+  (function () {
+    var root = document.documentElement;
+    var name = document.querySelector('.colors__name');
+    document.querySelectorAll('.swatch').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.swatch').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        btn.setAttribute('aria-pressed', 'true');
+        root.style.setProperty('--tint', btn.dataset.tint);
+        name.textContent = btn.dataset.name;
+        var info = document.querySelector('.buybar__info span');
+        if (info) info.textContent = '· ' + btn.dataset.name + ' · ab 349 €';
+      });
+    });
+
+    var bar = document.getElementById('buybar');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        bar.classList.toggle('is-in', !e.isIntersecting);
+      });
+    }, { threshold: 0 });
+    io.observe(document.querySelector('.hero'));
+  })();
+</script>
+</body>
+</html>

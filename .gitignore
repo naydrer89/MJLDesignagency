@@ -1,0 +1,5 @@
+node_modules/
+package-lock.json.bak
+
+# Prüf-Artefakte (Screenshots, Debug-Skripte) — nicht Teil der Bibliothek
+artifacts/

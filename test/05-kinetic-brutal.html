@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetic Brutal — Vela 04</title>
+<script>document.documentElement.className = 'js';</script>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  @font-face {
+    font-family: 'Jost';
+    src: url('assets/fonts/jost.woff2') format('woff2');
+    font-weight: 400 700;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Archivo';
+    src: url('assets/fonts/archivo.woff2') format('woff2');
+    font-weight: 400 700;
+    font-display: swap;
+  }
+
+  :root {
+    --ink: #111;
+    --paper: #fff;
+    --smoke: #f5f5f5;
+    --volt: #d4fb00;
+    --orange: #ff5a00;
+    --grey: #707072;
+    --line: rgba(0, 0, 0, 0.1);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --focus: #111;
+    --selection: #d4fb00;
+    --skip-bg: #111;
+    --skip-on: #fff;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Archivo', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  .display {
+    font-family: 'Jost', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.86;
+    text-transform: uppercase;
+  }
+
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    height: 3px;
+    z-index: 60;
+    background: var(--volt);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 0.9rem clamp(1rem, 4vw, 3rem);
+    color: var(--paper);
+    background: rgba(10, 10, 10, 0.94);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    transition: transform 0.4s var(--ease);
+  }
+
+  .nav a { color: inherit; }
+
+  .brand {
+    font-family: 'Jost', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+
+  .nav__links {
+    margin-left: auto;
+    display: flex;
+    gap: 1.8rem;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .nav__cta {
+    padding: 0.5rem 1rem;
+    background: var(--volt);
+    color: var(--ink) !important;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .nav__cta:hover { transform: scale(1.04); }
+
+  /* ---------- Hero: Typo bis an die Kante ---------- */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(5rem, 9vw, 8rem) clamp(1rem, 4vw, 3rem) 0;
+    background:
+      radial-gradient(80% 60% at 70% 10%, rgba(212, 251, 0, 0.18), transparent 60%),
+      radial-gradient(60% 50% at 10% 90%, rgba(255, 90, 0, 0.16), transparent 60%),
+      #0c0c0c;
+    color: var(--paper);
+    overflow: hidden;
+  }
+
+  .hero__art {
+    position: absolute;
+    right: -6%;
+    top: 12%;
+    width: min(46vw, 620px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: conic-gradient(from 210deg, var(--volt), #6b7f00 25%, #0c0c0c 55%, var(--orange) 85%, var(--volt));
+    filter: blur(2px);
+    opacity: 0.9;
+    transform: rotate(calc(var(--scrub, 0.3) * 40deg)) scale(calc(0.9 + var(--scrub, 0.3) * 0.2));
+    transition: transform 0.15s linear;
+  }
+
+  .hero__art::after {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    background: #0c0c0c;
+    filter: blur(0.5px);
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding-block: 2rem;
+  }
+
+  .hero__meta {
+    display: flex;
+    gap: 1.6rem;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: clamp(1rem, 3vw, 2rem);
+  }
+
+  h1 {
+    font-size: clamp(3.1rem, 8.6vw, 7.6rem);
+    margin-left: -0.04em;
+  }
+
+  h1 .line { display: block; }
+  h1 .outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.75);
+  }
+
+  .hero__foot {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+    width: 100%;
+  }
+
+  .hero__lead {
+    max-width: 34ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .hero__buy {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .price {
+    font-family: 'Jost', sans-serif;
+    font-size: 28px;
+    letter-spacing: -0.03em;
+  }
+
+  .btn-volt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 52px;
+    padding-inline: 1.8rem;
+    border-radius: 999px;
+    background: var(--volt);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 0.35s var(--ease), background 0.3s ease;
+  }
+
+  .btn-volt:hover { transform: scale(1.04); background: #e4ff3d; }
+
+  /* ---------- Ticker ---------- */
+  .ticker {
+    background: var(--volt);
+    color: var(--ink);
+    overflow: hidden;
+    border-block: 2px solid var(--ink);
+  }
+
+  .ticker__track {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    width: max-content;
+    padding-block: 0.7rem;
+    animation: ticker 26s linear infinite;
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .ticker__track span::after {
+    content: '✳';
+    margin-left: 2rem;
+    font-size: 0.8em;
+    vertical-align: 0.15em;
+  }
+
+  @keyframes ticker { to { transform: translate3d(-50%, 0, 0); } }
+
+  /* ---------- Kollektion: horizontale Bahn ---------- */
+  .rail {
+    padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(3rem, 6vw, 5rem);
+    overflow: hidden;
+  }
+
+  .rail__head {
+    padding-inline: clamp(1rem, 4vw, 3rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .rail__head h2 {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    max-width: 16ch;
+  }
+
+  .rail__head p { max-width: 28ch; color: var(--grey); font-size: 13.5px; }
+
+  .rail__track {
+    display: flex;
+    gap: clamp(0.75rem, 1.6vw, 1.4rem);
+    width: max-content;
+    padding-inline: clamp(1rem, 4vw, 3rem);
+    transform: translate3d(calc(var(--scrub, 0) * -52%), 0, 0);
+    transition: transform 0.12s linear;
+  }
+
+  .product {
+    width: clamp(260px, 30vw, 420px);
+    aspect-ratio: 4 / 5;
+    position: relative;
+    overflow: hidden;
+    background: var(--smoke);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.4rem;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .product:hover { transform: translateY(-6px); }
+
+  .product__art {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transition: transform 0.8s var(--ease);
+  }
+
+  .product:hover .product__art { transform: scale(1.06); }
+
+  .product--a .product__art {
+    background:
+      radial-gradient(60% 50% at 50% 40%, #fff, transparent 70%),
+      conic-gradient(from 140deg at 50% 55%, var(--volt), #7e9400 40%, #111 70%, var(--volt));
+  }
+
+  .product--b .product__art {
+    background:
+      radial-gradient(55% 45% at 45% 35%, #fff, transparent 65%),
+      conic-gradient(from 20deg at 55% 50%, var(--orange), #8f2f00 45%, #111 75%, var(--orange));
+  }
+
+  .product--c .product__art {
+    background:
+      radial-gradient(55% 45% at 50% 35%, #fff, transparent 65%),
+      conic-gradient(from 250deg at 50% 50%, #f2f2f2, #b9b9b9 40%, #111 72%, #d8d8d8);
+  }
+
+  .product__num {
+    position: relative;
+    z-index: 1;
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(2.6rem, 4vw, 3.4rem);
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+  }
+
+  .product__num span {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: var(--grey);
+    font-family: 'Archivo', sans-serif;
+  }
+
+  .product__foot {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .product__foot h3 {
+    font-family: 'Jost', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+
+  .product__foot p { font-size: 12.5px; color: #4b4b4b; }
+
+  .product__tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* ---------- Der Schuh: klebende Typo, laufende Liste ---------- */
+  .detail {
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: clamp(4rem, 9vw, 7rem);
+    margin-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .detail__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    padding-inline: clamp(1rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .detail__sticky {
+    position: sticky;
+    top: 8vh;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .detail h2 {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+
+  .detail__quote {
+    max-width: 32ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .specs { border-top: 1px solid rgba(255, 255, 255, 0.16); }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1rem;
+    padding-block: clamp(1.2rem, 2.6vw, 2rem);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    align-items: baseline;
+  }
+
+  .spec dt {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+
+  .spec dd { color: rgba(255, 255, 255, 0.62); font-size: 14px; }
+
+  .spec dd b { color: var(--volt); font-weight: 600; }
+
+  /* ---------- Zitat ---------- */
+  .quote {
+    padding-block: clamp(4rem, 10vw, 8rem);
+    padding-inline: clamp(1rem, 4vw, 3rem);
+  }
+
+  .quote blockquote {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(2rem, 5.2vw, 4.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    max-width: 22ch;
+  }
+
+  .quote blockquote span { color: var(--orange); }
+
+  .quote figcaption {
+    margin-top: 1.6rem;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  /* ---------- Abschluss ---------- */
+  .end {
+    background: var(--volt);
+    color: var(--ink);
+    padding: clamp(3rem, 7vw, 5rem) clamp(1rem, 4vw, 3rem);
+    border-top: 2px solid var(--ink);
+  }
+
+  .end h2 {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    line-height: 0.84;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    max-width: 14ch;
+  }
+
+  .end__row {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-ink {
+    display: inline-flex;
+    align-items: center;
+    height: 52px;
+    padding-inline: 1.8rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 0.35s var(--ease);
+  }
+
+  .btn-ink:hover { transform: scale(1.04); }
+
+  footer {
+    background: var(--ink);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 1.4rem clamp(1rem, 4vw, 3rem) 2rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 900px) {
+    .nav__links { display: none; }
+    .nav__cta { margin-left: auto; }
+    .detail__grid { grid-template-columns: 1fr; }
+    .detail__sticky { position: static; }
+    .hero__art { opacity: 0.5; }
+  }
+
+  @media (max-width: 620px) {
+    .rail__track { transform: none; overflow-x: auto; scroll-snap-type: x mandatory; }
+    .product { scroll-snap-align: start; }
+    .hero__foot { flex-direction: column; align-items: flex-start; }
+    .spec { grid-template-columns: 1fr; gap: 0.3rem; }
+    .nav { padding: 0.75rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<div class="progress" data-progress aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="#main">Veloz</a>
+  <nav class="nav__links" aria-label="Hauptnavigation">
+    <a href="#kollektion">Kollektion</a>
+    <a href="#schuh">Vela 04</a>
+    <a href="#crew">Crew</a>
+  </nav>
+  <a class="nav__cta" href="#kaufen">Kaufen</a>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="hero__art" aria-hidden="true" data-scrub></div>
+    <div class="hero__inner">
+      <div class="hero__meta">
+        <span>Vela 04</span>
+        <span>220 g</span>
+        <span>Carbon-Platte</span>
+      </div>
+      <h1 class="display" data-words>
+        <span class="line">Kein Tempo.</span>
+        <span class="line outline">Kein Limit.</span>
+      </h1>
+    </div>
+    <div class="hero__foot">
+      <p class="hero__lead">
+        Gebaut für die letzten zwölf Kilometer, wenn der Kopf aufhört zu rechnen.
+        Eine Sohle, die zurückgibt, was Sie hineinlegen.
+      </p>
+      <div class="hero__buy">
+        <span class="price">260 €</span>
+        <a class="btn-volt" href="#kaufen" data-magnetic="6">Jetzt sichern</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track">
+      <span>Vela 04</span><span>Nur 4 000 Paar</span><span>Straße &amp; Bahn</span><span>220 Gramm</span><span>Kein Tempo, kein Limit</span><span>Vela 04</span><span>Nur 4 000 Paar</span><span>Straße &amp; Bahn</span><span>220 Gramm</span><span>Kein Tempo, kein Limit</span>
+    </div>
+  </div>
+
+  <section class="rail" id="kollektion">
+    <div class="rail__head">
+      <h2 data-words>Drei Farben. Ein Tag.</h2>
+      <p>Jede Farbstellung ist auf 4 000 Paar limitiert — danach wird sie nicht wiederholt.</p>
+    </div>
+    <div class="rail__track" data-scrub>
+      <article class="product product--a">
+        <div class="product__art" aria-hidden="true"></div>
+        <div class="product__num"><span>Vela 04</span>01</div>
+        <div class="product__foot">
+          <div><h3>Volt</h3><p>Tagesseite · 220 g</p></div>
+          <span class="product__tag">Neu</span>
+        </div>
+      </article>
+      <article class="product product--b">
+        <div class="product__art" aria-hidden="true"></div>
+        <div class="product__num"><span>Vela 04</span>02</div>
+        <div class="product__foot">
+          <div><h3>Ember</h3><p>Abendrunde · 220 g</p></div>
+          <span class="product__tag">Neu</span>
+        </div>
+      </article>
+      <article class="product product--c">
+        <div class="product__art" aria-hidden="true"></div>
+        <div class="product__num"><span>Vela 04</span>03</div>
+        <div class="product__foot">
+          <div><h3>Beton</h3><p>Alltag · 220 g</p></div>
+          <span class="product__tag">Neu</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="detail" id="schuh">
+    <div class="detail__grid">
+      <div class="detail__sticky">
+        <h2 data-words>Was zurückkommt, ist Energie.</h2>
+        <p class="detail__quote">
+          Die Platte ist steifer als beim Vorgänger, die Sohle weicher. Der Unterschied merkt man
+          erst bei Kilometer dreißig — dann aber deutlich.
+        </p>
+      </div>
+      <dl class="specs">
+        <div class="spec"><dt>Gewicht</dt><dd><b>220 g</b> in Größe 42</dd></div>
+        <div class="spec"><dt>Sprengung</dt><dd>8 mm, gemessen</dd></div>
+        <div class="spec"><dt>Platte</dt><dd>Carbon, dreifach gefaltet</dd></div>
+        <div class="spec"><dt>Sohle</dt><dd>Schaum mit 82 % Rückgabe</dd></div>
+        <div class="spec"><dt>Obermaterial</dt><dd>Gestrickt, ein Stück</dd></div>
+        <div class="spec"><dt>Passform</dt><dd>Schmal, eine halbe Nummer größer</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <figure class="quote" id="crew">
+    <blockquote data-words>„Ich laufe nicht gegen dich. Ich laufe gegen <span>gestern</span>."</blockquote>
+    <figcaption>Mira K. — 2:28:14 über 42,195 km</figcaption>
+  </figure>
+
+  <section class="end" id="kaufen">
+    <h2 data-words>Morgen um sechs.</h2>
+    <div class="end__row">
+      <p style="max-width:34ch">Der nächste Lauf wartet nicht auf die richtige Stimmung. Nur auf den richtigen Schuh.</p>
+      <a class="btn-ink" href="#main" data-magnetic="7">Paar sichern</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Kinetic Brutal — Konzeptseite im Design-System kinetic-brutal.</span>
+    <span>Testseite 05</span>
+  </footer>
+</main>
+
+<script src="assets/motion.js" defer></script>
+</body>
+</html>

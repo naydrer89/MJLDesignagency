@@ -1,0 +1,269 @@
+[
+  {
+    "slug": "apple",
+    "name": "Apple",
+    "url": "https://www.apple.com/",
+    "group": "tech",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.657Z"
+  },
+  {
+    "slug": "stripe",
+    "name": "Stripe",
+    "url": "https://stripe.com/",
+    "group": "tech",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "linear",
+    "name": "Linear",
+    "url": "https://linear.app/",
+    "group": "tech",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "vercel",
+    "name": "Vercel",
+    "url": "https://vercel.com/",
+    "group": "tech",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "airbnb",
+    "name": "Airbnb",
+    "url": "https://www.airbnb.com/",
+    "group": "consumer",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "nike",
+    "name": "Nike",
+    "url": "https://www.nike.com/",
+    "group": "consumer",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "spotify",
+    "name": "Spotify",
+    "url": "https://www.spotify.com/",
+    "group": "consumer",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "notion",
+    "name": "Notion",
+    "url": "https://www.notion.com/",
+    "group": "tech",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "figma",
+    "name": "Figma",
+    "url": "https://www.figma.com/",
+    "group": "tech",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "openai",
+    "name": "OpenAI",
+    "url": "https://openai.com/",
+    "group": "tech",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": null,
+    "statusNote": "reconciled: hero.jpg + tokens.json exist (earlier error was reported after files were written)",
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "rolex",
+    "name": "Rolex",
+    "url": "https://www.rolex.com/",
+    "group": "luxury",
+    "status": "http-error",
+    "httpStatus": 403,
+    "error": null,
+    "title": "Access Denied",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "chanel",
+    "name": "Chanel",
+    "url": "https://www.chanel.com/",
+    "group": "luxury",
+    "status": "http-error",
+    "httpStatus": 403,
+    "error": null,
+    "title": "Access Denied",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "hermes",
+    "name": "Hermès",
+    "url": "https://www.hermes.com/",
+    "group": "luxury",
+    "status": "http-error",
+    "httpStatus": 403,
+    "error": null,
+    "title": "hermes.com",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "louis-vuitton",
+    "name": "Louis Vuitton",
+    "url": "https://www.louisvuitton.com/",
+    "group": "luxury",
+    "status": "http-error",
+    "httpStatus": 403,
+    "error": null,
+    "title": "LOUIS VUITTON",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "cartier",
+    "name": "Cartier",
+    "url": "https://www.cartier.com/",
+    "group": "luxury",
+    "status": "http-error",
+    "httpStatus": 403,
+    "error": null,
+    "title": "Access Denied",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "dior",
+    "name": "Dior",
+    "url": "https://www.dior.com/",
+    "group": "luxury",
+    "status": "http-error",
+    "httpStatus": 403,
+    "error": null,
+    "title": "Page unavailable",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "gucci",
+    "name": "Gucci",
+    "url": "https://www.gucci.com/",
+    "group": "luxury",
+    "status": "error",
+    "httpStatus": null,
+    "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.gucci.com/",
+    "title": null,
+    "files": [],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "ferrari",
+    "name": "Ferrari",
+    "url": "https://www.ferrari.com/",
+    "group": "luxury",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": "Official Ferrari website",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "porsche",
+    "name": "Porsche",
+    "url": "https://www.porsche.com/",
+    "group": "luxury",
+    "status": "ok",
+    "httpStatus": 200,
+    "error": null,
+    "title": "Porsche United States | Official Website",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  },
+  {
+    "slug": "tiffany",
+    "name": "Tiffany & Co.",
+    "url": "https://www.tiffany.com/",
+    "group": "luxury",
+    "status": "http-error",
+    "httpStatus": 403,
+    "error": null,
+    "title": "Access Denied",
+    "files": [
+      "tokens.json",
+      "hero.jpg"
+    ],
+    "capturedAt": "2026-10-22T15:34:30.658Z"
+  }
+]

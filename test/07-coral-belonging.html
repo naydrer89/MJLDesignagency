@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coral Belonging — Wo willst du hin?</title>
+<script>document.documentElement.className = 'js';</script>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  @font-face {
+    font-family: 'Figtree';
+    src: url('assets/fonts/figtree.woff2') format('woff2');
+    font-weight: 400 800;
+    font-display: swap;
+  }
+
+  :root {
+    --paper: #fff;
+    --paper-2: #f7f7f7;
+    --paper-3: #f2f2f2;
+    --ink: #222;
+    --ink-2: #6c6c6c;
+    --line: rgba(0, 0, 0, 0.08);
+    --coral: #ff385c;
+    --coral-deep: #e00b41;
+    --green: #008a05;
+    --sand: #f3e7d3;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --focus: #ff385c;
+    --selection: #ffd7de;
+    --skip-bg: #222;
+    --skip-on: #fff;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Figtree', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    height: 2px;
+    z-index: 60;
+    background: var(--coral);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .wrap {
+    width: min(1200px, 100% - 3rem);
+    margin-inline: auto;
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav__row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 76px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--coral);
+  }
+
+  .brand svg { width: 22px; height: 22px; }
+
+  .nav__mini {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    padding: 0.4rem 0.4rem 0.4rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .nav__mini b {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--coral);
+    color: #fff;
+  }
+
+  .nav__links {
+    margin-left: auto;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .nav__links a:hover { color: var(--ink); }
+
+  .nav__host {
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+  }
+
+  .nav__host:hover { background: var(--paper-3); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+
+  h1 {
+    max-width: 18ch;
+    font-size: clamp(2.6rem, 5.6vw, 4.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+  }
+
+  h1 .accent { color: var(--coral); }
+
+  .hero__sub {
+    margin-top: 1.1rem;
+    max-width: 46ch;
+    color: var(--ink-2);
+    font-size: 17px;
+  }
+
+  /* Suche: das eigentliche Produkt, deshalb groß und ruhig. */
+  .search {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr auto;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: 0 8px 28px -12px rgba(0, 0, 0, 0.18);
+    padding: 0.45rem;
+    background: #fff;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .search:hover { box-shadow: 0 12px 34px -12px rgba(0, 0, 0, 0.24); }
+
+  .field {
+    padding: 0.55rem 1.2rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.25s ease;
+    min-width: 0;
+  }
+
+  .field:hover { background: var(--paper-2); }
+
+  .field + .field { border-left: 1px solid var(--line); }
+
+  .field:focus-within { background: var(--paper-2); }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: 0.1rem 0 0;
+    font-size: 14px;
+    color: var(--ink-2);
+    outline: none;
+    appearance: none;
+  }
+
+  .field input::placeholder { color: var(--ink-2); opacity: 1; }
+
+  .search__go {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--coral);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    transition: background 0.25s ease, transform 0.3s var(--ease);
+  }
+
+  .search__go:hover { background: var(--coral-deep); transform: scale(1.05); }
+
+  .quick {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: -0.5rem;
+  }
+
+  .quick button {
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink-2);
+    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+  }
+
+  .quick button:hover,
+  .quick button[aria-pressed='true'] {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: var(--paper-2);
+  }
+
+  /* ---------- Aufenthalte ---------- */
+  .stays { padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(3rem, 6vw, 5rem); }
+
+  .stays__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .stays__head h2 {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .stays__head a { font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2.4vw, 1.8rem);
+  }
+
+  .stay {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    border-radius: 14px;
+    transition: transform 0.45s var(--ease);
+  }
+
+  .stay:hover { transform: translateY(-3px); }
+
+  .scene {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--sand);
+    transition: box-shadow 0.4s ease;
+  }
+
+  .stay:hover .scene { box-shadow: 0 18px 34px -24px rgba(0, 0, 0, 0.5); }
+
+  .scene svg { width: 100%; height: 100%; display: block; transition: transform 0.7s var(--ease); }
+  .stay:hover .scene svg { transform: scale(1.04); }
+
+  .scene__tag {
+    position: absolute;
+    top: 0.7rem;
+    left: 0.7rem;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .scene__fav {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    display: grid;
+    place-items: center;
+    color: var(--coral);
+    transition: transform 0.3s var(--ease), background 0.25s ease;
+  }
+
+  .scene__fav:hover { transform: scale(1.1); background: #fff; }
+
+  .stay__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+
+  .stay h3 { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .stay__meta { font-size: 13.5px; color: var(--ink-2); }
+  .stay__price { font-size: 14px; margin-top: 0.1rem; }
+  .stay__price b { font-weight: 700; }
+
+  .rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .rating svg { color: var(--ink); }
+
+  /* ---------- Zugehörigkeit ---------- */
+  .belong {
+    background: var(--paper-2);
+    border-radius: 20px;
+    padding: clamp(2rem, 5vw, 4.5rem);
+    margin-block: clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .belong h2 {
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    max-width: 16ch;
+  }
+
+  .belong p { margin-top: 1.1rem; max-width: 40ch; color: var(--ink-2); font-size: 16px; }
+
+  .belong__list { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+
+  .belong__item { background: #fff; padding: 1.1rem 1.2rem; }
+  .belong__item b { display: block; font-size: 15px; }
+  .belong__item span { font-size: 13.5px; color: var(--ink-2); }
+
+  /* ---------- Gastgeber ---------- */
+  .host {
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(4rem, 8vw, 6rem);
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .host__art {
+    aspect-ratio: 5 / 4;
+    border-radius: 18px;
+    background:
+      radial-gradient(60% 60% at 30% 20%, #ffe1e6, transparent 70%),
+      radial-gradient(70% 70% at 80% 80%, #ffd0c4, transparent 70%),
+      var(--sand);
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .host__house {
+    width: 55%;
+    aspect-ratio: 1 / 1;
+    background: #fff;
+    border-radius: 50% 50% 12px 12px;
+    position: relative;
+    box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.35);
+  }
+
+  .host__house::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 40%;
+    height: 3px;
+    background: var(--coral);
+    opacity: 0.5;
+  }
+
+  .host__house::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    width: 26%;
+    height: 52%;
+    transform: translateX(-50%);
+    border-radius: 999px 999px 0 0;
+    background: var(--coral);
+    opacity: 0.18;
+  }
+
+  .host h2 {
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    max-width: 17ch;
+  }
+
+  .host p { margin-top: 1rem; max-width: 42ch; color: var(--ink-2); }
+
+  .host__row { margin-top: 1.8rem; display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding-inline: 1.2rem;
+    border-radius: 999px;
+    background: var(--coral);
+    color: #fff;
+    font-size: 14.5px;
+    font-weight: 600;
+    transition: background 0.25s ease, transform 0.3s var(--ease);
+  }
+
+  .btn:hover { background: var(--coral-deep); transform: translateY(-1px); }
+
+  .btn--outline { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  .btn--outline:hover { background: var(--paper-3); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 1.4rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 980px) {
+    .hero { padding-top: 2.5rem; }
+    .nav__links { display: none; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .belong { grid-template-columns: 1fr; }
+    .host { grid-template-columns: 1fr; }
+    .search { grid-template-columns: 1fr 1fr; border-radius: 20px; }
+    .search .field:nth-child(3) { display: none; }
+    .search__go { grid-column: 2; justify-self: end; }
+    .nav__mini { display: inline-flex; }
+  }
+
+  @media (max-width: 620px) {
+    .wrap { width: calc(100% - 2rem); }
+    .nav__host { display: none; }
+    .nav__mini { margin-left: auto; }
+    .grid { grid-template-columns: 1fr; }
+    .stay:nth-child(n + 4) { display: none; }
+    .search { grid-template-columns: 1fr; }
+    .search .field:nth-child(3) { display: block; }
+    .search__go { display: none; }
+    .field + .field { border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<div class="progress" data-progress aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap nav__row">
+    <a class="brand" href="#main">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5c1.3 0 2.4.8 3 2.1.9 1.9 2.6 5.4 3.7 8 .9 2.2 1.6 4.1 1.6 5.2 0 2.3-1.8 3.7-4 3.7-1.7 0-3-.9-4.3-2.1-1.3 1.2-2.6 2.1-4.3 2.1-2.2 0-4-1.4-4-3.7 0-1.1.7-3 1.6-5.2 1.1-2.6 2.8-6.1 3.7-8 .6-1.3 1.7-2.1 3-2.1Zm0 2c-.4 0-.7.2-.9.6-.9 1.9-2.6 5.5-3.7 8-.8 2-1.4 3.6-1.4 4.4 0 1.2.9 1.9 2.2 1.9 1.2 0 2.3-.8 3.4-1.9l.4-.4.4.4c1.1 1.1 2.2 1.9 3.4 1.9 1.3 0 2.2-.7 2.2-1.9 0-.8-.6-2.4-1.4-4.4-1.1-2.5-2.8-6.1-3.7-8-.2-.4-.5-.6-.9-.6Z"/></svg>
+      Nieder
+    </a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <a href="#aufenthalte">Aufenthalte</a>
+      <a href="#zugehoerigkeit">Erlebnisse</a>
+      <a href="#gastgeber">Gastgeben</a>
+    </nav>
+    <a class="nav__host" href="#gastgeber">Unterkunft anbieten</a>
+    <a class="nav__mini" href="#aufenthalte" aria-label="Zu den Unterkünften">
+      Suchen
+      <b aria-hidden="true">
+        <svg width="13" height="13" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="2"/><path d="m12 12 3.6 3.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </b>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <section class="hero">
+      <h1 data-words>Wo willst du <span class="accent">ankommen</span>?</h1>
+      <p class="hero__sub">
+        Räume, die jemand mit Absicht eingerichtet hat. Keine Ketten, keine Schlüsselbox —
+        dafür ein Mensch, der weiß, wo man morgens Kaffee bekommt.
+      </p>
+
+      <form class="search" role="search" onsubmit="return false">
+        <div class="field">
+          <label for="ort">Ort</label>
+          <input id="ort" type="text" placeholder="Wohin?" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="zeit">Zeitraum</label>
+          <input id="zeit" type="text" placeholder="Beliebig" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="gast">Gäste</label>
+          <select id="gast">
+            <option>2 Gäste</option>
+            <option>1 Gast</option>
+            <option>3 Gäste</option>
+            <option>4 Gäste</option>
+          </select>
+        </div>
+        <button class="search__go" type="submit" aria-label="Unterkünfte suchen" data-magnetic="4">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.8"/><path d="m12 12 3.6 3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </form>
+
+      <div class="quick" role="group" aria-label="Beliebte Ziele">
+        <button type="button" aria-pressed="true">Am Wasser</button>
+        <button type="button" aria-pressed="false">In den Bergen</button>
+        <button type="button" aria-pressed="false">In der Stadt</button>
+        <button type="button" aria-pressed="false">Mit Garten</button>
+        <button type="button" aria-pressed="false">Für zwei</button>
+      </div>
+    </section>
+
+    <section class="stays" id="aufenthalte">
+      <div class="stays__head">
+        <h2>Diese Woche verfügbar</h2>
+        <a href="#aufenthalte">Alle ansehen</a>
+      </div>
+
+      <div class="grid">
+        <a class="stay" href="#aufenthalte" data-reveal>
+          <div class="scene">
+            <svg viewBox="0 0 400 300" role="img" aria-label="Illustration: Haus am Meer bei Sonnenuntergang">
+              <rect width="400" height="300" fill="#fbe3d0"/>
+              <circle cx="310" cy="86" r="38" fill="#ff9f7a"/>
+              <path d="M0 190h400v110H0z" fill="#7fb4b8"/>
+              <path d="M0 210h400v90H0z" fill="#5f9ba1"/>
+              <path d="M60 190v-58l46-30 46 30v58z" fill="#fff8f0"/>
+              <path d="M106 102 60 132h92z" fill="#e0705a"/>
+              <rect x="92" y="150" width="28" height="40" fill="#7b9aa0"/>
+              <path d="M0 254c40-10 80 10 120 0s80-12 120 0 80-8 120 0" stroke="#3f7f87" stroke-width="3" fill="none"/>
+            </svg>
+            <span class="scene__tag">Ganze Unterkunft</span>
+            <span class="scene__fav" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 13.5S2.5 10.2 2.5 6.4A3.1 3.1 0 0 1 8 4.4a3.1 3.1 0 0 1 5.5 2c0 3.8-5.5 7.1-5.5 7.1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+          <div class="stay__row">
+            <h3>Haus Amrum</h3>
+            <span class="rating"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="m6 .8 1.6 3.4 3.7.5-2.7 2.6.7 3.7L6 9.3l-3.3 1.7.7-3.7L.7 4.7l3.7-.5Z"/></svg>4,94</span>
+          </div>
+          <p class="stay__meta">Nordsee · 2 Gäste · 1 Schlafzimmer</p>
+          <p class="stay__price"><b>148 €</b> / Nacht</p>
+        </a>
+
+        <a class="stay" href="#aufenthalte" data-reveal data-delay="80ms">
+          <div class="scene">
+            <svg viewBox="0 0 400 300" role="img" aria-label="Illustration: Hütte in den Bergen">
+              <rect width="400" height="300" fill="#e7edf2"/>
+              <path d="M0 300V170l80-60 60 44 72-76 78 82 44-32 66 60v112z" fill="#a9bccb"/>
+              <path d="M0 300V214l96-58 62 40 60-56 84 66 44-24 54 46v72z" fill="#7a93a6"/>
+              <path d="M148 300v-66l52-34 52 34v66z" fill="#f7f4ee"/>
+              <path d="M200 200l-64 42h128z" fill="#a4543f"/>
+              <rect x="190" y="252" width="24" height="48" fill="#a4543f"/>
+              <circle cx="330" cy="60" r="20" fill="#fff" opacity=".7"/>
+            </svg>
+            <span class="scene__tag">Berghütte</span>
+            <span class="scene__fav" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 13.5S2.5 10.2 2.5 6.4A3.1 3.1 0 0 1 8 4.4a3.1 3.1 0 0 1 5.5 2c0 3.8-5.5 7.1-5.5 7.1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+          <div class="stay__row">
+            <h3>Hütte Falkensteig</h3>
+            <span class="rating"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="m6 .8 1.6 3.4 3.7.5-2.7 2.6.7 3.7L6 9.3l-3.3 1.7.7-3.7L.7 4.7l3.7-.5Z"/></svg>4,87</span>
+          </div>
+          <p class="stay__meta">Allgäu · 4 Gäste · 2 Schlafzimmer</p>
+          <p class="stay__price"><b>176 €</b> / Nacht</p>
+        </a>
+
+        <a class="stay" href="#aufenthalte" data-reveal data-delay="160ms">
+          <div class="scene">
+            <svg viewBox="0 0 400 300" role="img" aria-label="Illustration: Loft in der Stadt">
+              <rect width="400" height="300" fill="#efe9e1"/>
+              <rect x="40" y="60" width="100" height="180" fill="#d9cdbf"/>
+              <rect x="160" y="30" width="90" height="210" fill="#c9b8a6"/>
+              <rect x="270" y="80" width="90" height="160" fill="#d9cdbf"/>
+              <g fill="#f7f4ee">
+                <rect x="56" y="80" width="26" height="22"/><rect x="98" y="80" width="26" height="22"/>
+                <rect x="56" y="118" width="26" height="22"/><rect x="98" y="118" width="26" height="22"/>
+                <rect x="176" y="52" width="26" height="24"/><rect x="216" y="52" width="18" height="24"/>
+                <rect x="176" y="96" width="26" height="24"/><rect x="216" y="96" width="18" height="24"/>
+                <rect x="286" y="100" width="24" height="20"/><rect x="322" y="100" width="24" height="20"/>
+                <rect x="286" y="136" width="24" height="20"/><rect x="322" y="136" width="24" height="20"/>
+              </g>
+              <rect y="240" width="400" height="60" fill="#c7b9a9"/>
+            </svg>
+            <span class="scene__tag">Loft</span>
+            <span class="scene__fav" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 13.5S2.5 10.2 2.5 6.4A3.1 3.1 0 0 1 8 4.4a3.1 3.1 0 0 1 5.5 2c0 3.8-5.5 7.1-5.5 7.1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+          <div class="stay__row">
+            <h3>Loft Okerstraße</h3>
+            <span class="rating"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="m6 .8 1.6 3.4 3.7.5-2.7 2.6.7 3.7L6 9.3l-3.3 1.7.7-3.7L.7 4.7l3.7-.5Z"/></svg>4,91</span>
+          </div>
+          <p class="stay__meta">Leipzig · 2 Gäste · 1 Schlafzimmer</p>
+          <p class="stay__price"><b>112 €</b> / Nacht</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="belong" id="zugehoerigkeit">
+      <div>
+        <h2 data-words>Zugehören heißt: jemand hat mitgedacht.</h2>
+        <p>
+          Deshalb prüfen wir jede Unterkunft persönlich. Nicht auf Sterne, sondern darauf,
+          ob man dort gerne aufwacht.
+        </p>
+      </div>
+      <div class="belong__list">
+        <div class="belong__item"><b>Besucht, nicht bewertet</b><span>Jede Unterkunft wird einmal vor Ort gesehen.</span></div>
+        <div class="belong__item"><b>Kein Schlüsselautomat</b><span>Sie werden empfangen — oder es gibt einen klaren Grund, warum nicht.</span></div>
+        <div class="belong__item"><b>Preis inklusive</b><span>Endreinigung und Gebühren stehen im ersten Preis, nicht im letzten Schritt.</span></div>
+      </div>
+    </section>
+
+    <section class="host" id="gastgeber">
+      <div class="host__art" aria-hidden="true"><div class="host__house"></div></div>
+      <div>
+        <h2 data-words>Ein Zimmer, das jemanden erwartet.</h2>
+        <p>
+          Wenn Sie einen Raum haben, der zu schade für Gästezimmer-Standard ist, zeigen Sie ihn hier.
+          Wir kümmern uns um Kalender, Steuern und die unangenehmen Nachrichten.
+        </p>
+        <div class="host__row">
+          <a class="btn" href="#gastgeber" data-magnetic="6">Unterkunft anbieten</a>
+          <a class="btn btn--outline" href="#aufenthalte">Erst reisen</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Coral Belonging — Konzeptseite im Design-System coral-belonging.</span>
+      <span>Testseite 07</span>
+    </footer>
+  </div>
+</main>
+
+<script src="assets/motion.js" defer></script>
+<script>
+  document.querySelectorAll('.quick button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.quick button').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+      btn.setAttribute('aria-pressed', 'true');
+    });
+  });
+</script>
+</body>
+</html>

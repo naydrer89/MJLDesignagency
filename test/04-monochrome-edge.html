@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monochrome Edge — Vom Commit zur URL</title>
+<script>document.documentElement.className = 'js';</script>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  @font-face {
+    font-family: 'Geist';
+    src: url('assets/fonts/geist.woff2') format('woff2');
+    font-weight: 300 700;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Geist Mono';
+    src: url('assets/fonts/geist-mono.woff2') format('woff2');
+    font-weight: 400 600;
+    font-display: swap;
+  }
+
+  :root {
+    --bg: #000;
+    --surface: #0a0a0a;
+    --surface-2: #111;
+    --line: #1f1f1f;
+    --line-soft: rgba(255, 255, 255, 0.09);
+    --ink: #ededed;
+    --ink-2: #a1a1a1;
+    --ink-3: #7a7a7a;
+    --blue: #0072f5;
+    --cyan: #52a8ff;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --focus: #52a8ff;
+    --selection: #0072f5;
+    --skip-bg: #ededed;
+    --skip-on: #000;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.011em;
+    overflow-x: hidden;
+  }
+
+  /* Rasterlinien: ein Hauch von Konstruktion, kein Hintergrundbild. */
+  .gridlines {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--line-soft) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line-soft) 1px, transparent 1px);
+    background-size: 96px 96px;
+    mask-image: radial-gradient(120% 80% at 50% 0%, #000 10%, transparent 75%);
+    opacity: 0.55;
+  }
+
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    height: 1px;
+    z-index: 60;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .wrap {
+    width: min(1180px, 100% - 3rem);
+    margin-inline: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mono {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav__row {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 60px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+  }
+
+  .brand__mark {
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 15px solid var(--ink);
+  }
+
+  .nav__links {
+    display: flex;
+    gap: 1.6rem;
+    margin-left: auto;
+    font-size: 13.5px;
+    color: var(--ink-2);
+  }
+
+  .nav__links a:hover { color: var(--ink); }
+
+  .nav__cta {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding-inline: 0.85rem;
+    border-radius: 6px;
+    background: var(--ink);
+    color: #000;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.25s ease;
+  }
+
+  .nav__cta:hover { background: #fff; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(2.5rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: 1.08fr 1fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.35rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+
+  .kicker i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+  }
+
+  h1 {
+    margin-top: 1.4rem;
+    max-width: 16ch;
+    font-size: clamp(2.75rem, 5.4vw, 4.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+    font-weight: 500;
+  }
+
+  h1 .accent { color: var(--ink-2); }
+
+  .hero__sub {
+    margin-top: 1.5rem;
+    max-width: 44ch;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  .hero__actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 44px;
+    padding-inline: 1.1rem;
+    border-radius: 6px;
+    background: var(--ink);
+    color: #000;
+    font-size: 14.5px;
+    font-weight: 500;
+    transition: background 0.25s ease, transform 0.3s var(--ease);
+  }
+
+  .btn:hover { background: #fff; transform: translateY(-1px); }
+
+  .btn--outline {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    box-shadow: none;
+  }
+
+  .btn--outline:hover { background: var(--surface-2); border-color: #333; }
+
+  /* ---------- Terminal ---------- */
+  .term {
+    align-self: center;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: linear-gradient(180deg, #0d0d0d, #060606);
+    overflow: hidden;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: var(--ink-2);
+    box-shadow: 0 30px 60px -40px #000;
+  }
+
+  .term__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    background: #0a0a0a;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+
+  .term__bar span:last-child { margin-left: auto; }
+
+  .term__body { padding: 0.9rem 1rem 1.2rem; }
+
+  .term__line {
+    display: block;
+    white-space: pre-wrap;
+    opacity: 0;
+    animation: type 0.01s linear forwards;
+    animation-delay: calc(var(--i) * 130ms + 120ms);
+  }
+
+  @keyframes type { to { opacity: 1; } }
+
+  .term__line .dim { color: var(--ink-3); }
+  .term__line .ok { color: #22c55e; }
+  .term__line .warn { color: #f5a623; }
+  .term__line .link { color: var(--cyan); text-decoration: underline; text-underline-offset: 2px; }
+
+  .term__cursor {
+    display: inline-block;
+    width: 7px;
+    height: 14px;
+    background: var(--ink);
+    vertical-align: -2px;
+    animation: blink 1.1s steps(1) infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .term__foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 0.9rem;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--ink-3);
+    background: #070707;
+  }
+
+  /* ---------- Kennzahlenleiste ---------- */
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-block: 1px solid var(--line);
+    margin-block: clamp(2.5rem, 5vw, 4rem) clamp(3.5rem, 7vw, 6rem);
+  }
+
+  .strip > div {
+    padding: 1.5rem 1.4rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .strip > div:first-child { border-left: 0; padding-left: 0; }
+
+  .strip b {
+    display: block;
+    font-size: 26px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .strip p { margin-top: 0.5rem; font-size: 13px; color: var(--ink-3); }
+
+  /* ---------- Ablauf mit klebender Bühne ---------- */
+  .flow {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+    align-items: start;
+  }
+
+  .flow__intro { position: sticky; top: 96px; }
+
+  h2 {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    font-weight: 500;
+    max-width: 16ch;
+  }
+
+  .flow__intro p { margin-top: 1.1rem; max-width: 36ch; font-size: 15.5px; color: var(--ink-2); }
+
+  .flow__switch {
+    margin-top: 1.8rem;
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    gap: 2px;
+  }
+
+  .flow__switch button {
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+
+  .flow__switch button[aria-pressed='true'] { background: var(--surface-2); color: var(--ink); }
+
+  .build {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .build__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-3);
+  }
+
+  .build__row {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr 0.7fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+    transition: background 0.3s ease;
+  }
+
+  .build__row:last-child { border-bottom: 0; }
+  .build__row:hover { background: #0f0f0f; }
+
+  .build__row b { font-weight: 500; font-family: 'Geist Mono', monospace; font-size: 12px; }
+  .build__row span { color: var(--ink-3); font-family: 'Geist Mono', monospace; font-size: 11.5px; }
+  .build__row span:last-child { text-align: right; }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: #22c55e;
+  }
+
+  .status::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .status--run { color: #f5a623; }
+  .status--run::before { animation: blink 1s steps(1) infinite; }
+
+  /* ---------- Bento: eine Fläche, harte Kanten ---------- */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-block-end: clamp(4rem, 8vw, 7rem);
+  }
+
+  .bento > article {
+    background: var(--bg);
+    padding: 1.8rem;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background 0.35s ease;
+  }
+
+  .bento > article:hover { background: var(--surface); }
+  .bento .span-2 { grid-column: span 2; }
+  .bento .row-2 { grid-row: span 2; }
+
+  .bento h3 { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; }
+  .bento p { margin-top: 0.5rem; font-size: 13.5px; line-height: 1.6; color: var(--ink-3); max-width: 34ch; }
+
+  .glyph {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    color: var(--ink-2);
+    margin-bottom: 1.5rem;
+  }
+
+  .bento .metric {
+    font-family: 'Geist Mono', monospace;
+    font-size: 40px;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .bento .metric small { font-size: 14px; color: var(--ink-3); }
+
+  /* ---------- Abschluss ---------- */
+  .end {
+    border-top: 1px solid var(--line);
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .end h2 { max-width: 18ch; }
+  .end__actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 1.4rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 940px) {
+    .hero, .flow { grid-template-columns: 1fr; }
+    .flow__intro { position: static; }
+    .nav__links { display: none; }
+    .nav__cta { margin-left: auto; }
+    .strip { grid-template-columns: repeat(2, 1fr); }
+    .strip > div:nth-child(3) { border-left: 0; padding-left: 0; }
+    .strip > div:nth-child(n + 3) { border-top: 1px solid var(--line); }
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .bento .span-2 { grid-column: span 2; }
+  }
+
+  @media (max-width: 600px) {
+    .wrap { width: calc(100% - 2rem); }
+    .bento { grid-template-columns: 1fr; }
+    .bento .span-2 { grid-column: 1; }
+    .bento .row-2 { grid-row: 1; }
+    .build__row { grid-template-columns: 1fr 0.8fr; }
+    .build__row b + span { display: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<div class="gridlines" aria-hidden="true"></div>
+<div class="progress" data-progress aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap nav__row">
+    <a class="brand" href="#main"><span class="brand__mark" aria-hidden="true"></span>Monolith</a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <a href="#ablauf">Ablauf</a>
+      <a href="#plattform">Plattform</a>
+      <a href="#preis">Preis</a>
+    </nav>
+    <a class="nav__cta" href="#preis" data-magnetic="4">Deploy starten</a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <span class="kicker"><i aria-hidden="true"></i>Produktion · 42 ms</span>
+        <h1 data-words>Vom Commit zur URL in <span class="accent">34 Sekunden</span>.</h1>
+        <p class="hero__sub">
+          Ein Build, ein Preview, ein Rollback. Alles protokolliert, alles reproduzierbar —
+          ohne YAML-Datei, die niemand liest.
+        </p>
+        <div class="hero__actions">
+          <a class="btn" href="#preis" data-magnetic="6">Kostenlos starten</a>
+          <a class="btn btn--outline" href="#ablauf">Build ansehen</a>
+        </div>
+      </div>
+
+      <div class="term" aria-label="Beispiel eines Deploy-Protokolls">
+        <div class="term__bar"><span>deploy — main</span><span>zsh</span></div>
+        <div class="term__body">
+          <span class="term__line" style="--i:0"><span class="dim">$</span> monolith deploy</span>
+          <span class="term__line" style="--i:1"><span class="dim">→</span> erkenne Framework … next</span>
+          <span class="term__line" style="--i:2"><span class="dim">→</span> installiere Abhängigkeiten  <span class="dim">2,1 s</span></span>
+          <span class="term__line" style="--i:3"><span class="dim">→</span> baue 42 Seiten  <span class="dim">26,4 s</span></span>
+          <span class="term__line" style="--i:4"><span class="ok">✓</span> Build erfolgreich</span>
+          <span class="term__line" style="--i:5"><span class="dim">→</span> lade 128 Objekte  <span class="dim">3,2 s</span></span>
+          <span class="term__line" style="--i:6"><span class="ok">✓</span> <span class="link">aera-shop.monolith.app</span></span>
+          <span class="term__line" style="--i:7"><span class="warn">!</span> 3 Bilder über 400 kB <span class="dim">— Hinweis</span></span>
+          <span class="term__line" style="--i:8"><span class="dim">$</span> <span class="term__cursor" aria-hidden="true"></span></span>
+        </div>
+        <div class="term__foot"><span>34,1 s gesamt</span><span>Region: fra1</span></div>
+      </div>
+    </section>
+
+    <div class="strip" data-reveal>
+      <div><b><span data-count="34">0</span> s</b><p>mittlere Build-Zeit</p></div>
+      <div><b><span data-count="99.9" data-decimals="1">0</span> %</b><p>Edge-Verfügbarkeit</p></div>
+      <div><b><span data-count="0" data-decimals="0">0</span></b><p>serverseitige Konfiguration nötig</p></div>
+      <div><b><span data-count="18">0</span></b><p>Regionen, ein Befehl</p></div>
+    </div>
+
+    <section class="flow" id="ablauf">
+      <div class="flow__intro">
+        <h2 data-words>Jeder Schritt ist sichtbar.</h2>
+        <p>
+          Statt „irgendwo ist etwas passiert" bekommen Sie einen Verlauf, den Sie einem Kollegen
+          zeigen können. Umschalten zwischen Zweigen, ohne die Seite zu verlassen.
+        </p>
+        <div class="flow__switch" role="group" aria-label="Zweig wählen">
+          <button type="button" aria-pressed="true" data-branch="main">main</button>
+          <button type="button" aria-pressed="false" data-branch="preview">preview</button>
+        </div>
+      </div>
+
+      <div class="build" aria-live="polite">
+        <div class="build__head"><span id="buildBranch">main</span><span>a1f92c4</span></div>
+        <div class="build__row"><b>Installation</b><span>dependencies</span><span>2,1 s</span></div>
+        <div class="build__row"><b>Kompilierung</b><span>42 Seiten</span><span>26,4 s</span></div>
+        <div class="build__row"><b>Optimierung</b><span>Bilder, Fonts</span><span>3,2 s</span></div>
+        <div class="build__row"><b>Auslieferung</b><span>128 Objekte</span><span>2,4 s</span></div>
+        <div class="build__row"><b>Prüfung</b><span class="status">bestanden</span><span>34,1 s</span></div>
+      </div>
+    </section>
+
+    <section class="bento" id="plattform" aria-label="Plattform">
+      <article class="span-2">
+        <div>
+          <div class="glyph" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 11 6 5l3 4 2-2 3 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Previews, die man teilen kann</h3>
+          <p>Jeder Zweig bekommt eine eigene URL mit Passwortschutz. Feedback landet am Commit, nicht im Chat.</p>
+        </div>
+        <div class="metric">128 <small>Objekte pro Deploy</small></div>
+      </article>
+      <article class="row-2">
+        <div>
+          <div class="glyph" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Rollback in einem Klick</h3>
+          <p>Jede Version bleibt adressierbar. Ein Rücksprung ist ein Deploy, kein Notfall.</p>
+        </div>
+        <div class="metric">0 s <small>Ausfall beim Zurückrollen</small></div>
+      </article>
+      <article>
+        <div class="glyph" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h3>Protokoll statt Vermutung</h3>
+          <p>Jeder Request mit Dauer und Region — filterbar bis zur einzelnen Funktion.</p>
+        </div>
+      </article>
+      <article>
+        <div class="glyph" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 6.5h11" stroke="currentColor" stroke-width="1.4"/></svg>
+        </div>
+        <div>
+          <h3>Kein YAML</h3>
+          <p>Die Plattform liest Ihr Projekt und schlägt die Konfiguration vor. Sie bestätigen.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="end" id="preis">
+      <h2 data-words>Der erste Deploy ist kostenlos. Der zweite auch.</h2>
+      <div class="end__actions">
+        <a class="btn" href="#main" data-magnetic="7">Projekt verbinden</a>
+        <a class="btn btn--outline" href="#ablauf">Preise lesen</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>Monochrome Edge — Konzeptseite im Design-System monochrome-edge.</span>
+      <span>Testseite 04</span>
+    </footer>
+  </div>
+</main>
+
+<script src="assets/motion.js" defer></script>
+<script>
+  (function () {
+    var head = document.getElementById('buildBranch');
+    document.querySelectorAll('.flow__switch button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.flow__switch button').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        btn.setAttribute('aria-pressed', 'true');
+        head.textContent = btn.dataset.branch;
+      });
+    });
+  })();
+</script>
+</body>
+</html>

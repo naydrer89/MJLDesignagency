@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oyster Authority — Zeit, die bleibt</title>
+<script>document.documentElement.className = 'js';</script>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  @font-face {
+    font-family: 'Instrument Sans';
+    src: url('assets/fonts/instrument-sans.woff2') format('woff2');
+    font-weight: 400 700;
+    font-display: swap;
+  }
+
+  :root {
+    --green: #0b1f18;
+    --green-deep: #071511;
+    --green-soft: #123528;
+    --gold: #c8a45c;
+    --gold-dim: #a17f3c;
+    --ivory: #f4f1e8;
+    --ivory-dim: #b9c3ba;
+    --hair: rgba(200, 164, 92, 0.28);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --focus: #c8a45c;
+    --selection: #c8a45c;
+    --skip-bg: #c8a45c;
+    --skip-on: #0b1f18;
+  }
+
+  body {
+    background: var(--green);
+    color: var(--ivory);
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    letter-spacing: 0.005em;
+    overflow-x: hidden;
+  }
+
+  .label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    height: 1px;
+    z-index: 60;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .wrap {
+    width: min(1240px, 100% - 8rem);
+    margin-inline: auto;
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid rgba(200, 164, 92, 0.16);
+    background: rgba(11, 31, 24, 0.9);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav__row {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    height: 78px;
+  }
+
+  .brand {
+    font-size: 17px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .brand span { color: var(--gold); }
+
+  .nav__links {
+    margin-left: auto;
+    display: flex;
+    gap: 2rem;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ivory-dim);
+  }
+
+  .nav__links a {
+    position: relative;
+    padding-block: 0.4rem;
+    transition: color 0.3s ease;
+  }
+
+  .nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .nav__links a:hover { color: var(--ivory); }
+  .nav__links a:hover::after { transform: scaleX(1); }
+
+  .nav__cta {
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--hair);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ivory);
+    transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+  }
+
+  .nav__cta:hover { background: var(--gold); color: var(--green); border-color: var(--gold); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 0.85fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: center;
+    padding-block: clamp(4rem, 10vw, 8.5rem);
+  }
+
+  h1 {
+    margin-top: 1.8rem;
+    font-size: clamp(2.6rem, 4.6vw, 4rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    font-weight: 300;
+    max-width: 15ch;
+  }
+
+  .hero__sub {
+    margin-top: 1.8rem;
+    max-width: 40ch;
+    color: var(--ivory-dim);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .hero__row {
+    margin-top: 2.6rem;
+    display: flex;
+    gap: 1.6rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    height: 46px;
+    padding-inline: 1.5rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  .btn:hover { background: var(--gold); color: var(--green); }
+
+  .btn--plain { border-color: transparent; color: var(--ivory-dim); padding-inline: 0; }
+  .btn--plain:hover { background: transparent; color: var(--ivory); }
+
+  /* ---------- Uhr ---------- */
+  .watch {
+    position: relative;
+    justify-self: center;
+    width: min(34vw, 380px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    transform: rotate(calc((var(--scrub, 0.4) - 0.4) * 6deg));
+    transition: transform 0.2s linear;
+  }
+
+  .watch::before {
+    content: '';
+    position: absolute;
+    inset: -14%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200, 164, 92, 0.18), transparent 65%);
+    filter: blur(20px);
+  }
+
+  .watch__case {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background:
+      conic-gradient(from 0deg, #d8bb7d, #8c6d2f 12%, #e6cf9b 24%, #8c6d2f 38%, #d8bb7d 52%, #7d5f24 66%, #e6cf9b 80%, #8c6d2f 92%, #d8bb7d);
+    padding: 9px;
+    box-shadow: 0 40px 80px -40px #000, inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  }
+
+  .watch__dial {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.12), transparent 42%),
+      radial-gradient(circle at 50% 60%, #123528, #0a1c16 70%);
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  /* Minutenstriche als konisches Raster */
+  .watch__ticks {
+    position: absolute;
+    inset: 7%;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from -0.4deg, rgba(244, 241, 232, 0.55) 0 0.8deg, transparent 0.8deg 6deg);
+    mask-image: radial-gradient(circle, transparent 78%, #000 79%);
+  }
+
+  .watch__ticks--gold {
+    position: absolute;
+    inset: 7%;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from -1.2deg, var(--gold) 0 2.4deg, transparent 2.4deg 30deg);
+    mask-image: radial-gradient(circle, transparent 68%, #000 69%);
+    opacity: 0.8;
+  }
+
+  .watch__text {
+    position: absolute;
+    top: 26%;
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.9;
+  }
+
+  .watch__text b {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    color: var(--ivory);
+    margin-bottom: 0.2rem;
+  }
+
+  .hand {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform-origin: 50% 100%;
+    border-radius: 999px;
+    will-change: transform;
+  }
+
+  .hand--hour {
+    width: 5px;
+    height: 24%;
+    margin-left: -2.5px;
+    background: var(--ivory);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .hand--minute {
+    width: 3px;
+    height: 34%;
+    margin-left: -1.5px;
+    background: var(--ivory);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .hand--second {
+    width: 1.5px;
+    height: 38%;
+    margin-left: -0.75px;
+    background: var(--gold);
+  }
+
+  .hand--second::after {
+    content: '';
+    position: absolute;
+    left: -1.2px;
+    bottom: -8px;
+    width: 4px;
+    height: 14%;
+    background: var(--gold);
+    border-radius: 999px;
+  }
+
+  .watch__cap {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 2px var(--green);
+  }
+
+  .hero__caption {
+    margin-top: 1.6rem;
+    text-align: center;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: var(--ivory-dim);
+  }
+
+  /* ---------- Manifest ---------- */
+  .manifest {
+    border-top: 1px solid rgba(200, 164, 92, 0.2);
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    display: grid;
+    grid-template-columns: 0.35fr 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .manifest__col p { font-size: 15.5px; line-height: 1.85; color: var(--ivory-dim); }
+  .manifest__col p + p { margin-top: 1.2rem; }
+
+  .manifest__col p:first-of-type::first-letter {
+    float: left;
+    font-size: 3.4rem;
+    line-height: 0.85;
+    padding: 0.1em 0.12em 0 0;
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  .rule {
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--hair), transparent);
+    justify-self: end;
+  }
+
+  h2 {
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+    line-height: 1.14;
+    letter-spacing: -0.01em;
+    font-weight: 300;
+    max-width: 18ch;
+  }
+
+  /* ---------- Kollektion ---------- */
+  .collection {
+    padding-block: clamp(2rem, 5vw, 3.5rem) clamp(4rem, 9vw, 7rem);
+    overflow: hidden;
+    border-top: 1px solid rgba(200, 164, 92, 0.2);
+  }
+
+  .collection__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .collection__head p { max-width: 32ch; color: var(--ivory-dim); font-size: 14px; }
+
+  .pan {
+    display: flex;
+    gap: clamp(1rem, 2vw, 2rem);
+    width: max-content;
+    transform: translate3d(calc(var(--scrub, 0) * -44%), 0, 0);
+    transition: transform 0.14s linear;
+  }
+
+  .piece {
+    width: clamp(240px, 26vw, 330px);
+    border: 1px solid rgba(200, 164, 92, 0.2);
+    padding: 1.6rem;
+    background: linear-gradient(180deg, rgba(18, 53, 40, 0.5), transparent);
+    transition: border-color 0.5s ease, transform 0.6s var(--ease);
+  }
+
+  .piece:hover { border-color: var(--gold); transform: translateY(-4px); }
+
+  .piece__dial {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    margin-bottom: 1.4rem;
+    background:
+      radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.16), transparent 45%),
+      radial-gradient(circle, var(--dial, #123528), #071511 72%);
+    border: 1px solid rgba(200, 164, 92, 0.5);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+    position: relative;
+  }
+
+  /* Minutenstriche nur am Rand: als Ring maskiert, nicht als Strahlen über das Blatt. */
+  .piece__dial::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(244, 241, 232, 0.45) 0 0.7deg, transparent 0.7deg 15deg);
+    mask-image: radial-gradient(circle, transparent 77%, #000 78%);
+  }
+
+  .piece__dial::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1px;
+    height: 34%;
+    background: var(--ivory);
+    transform-origin: 50% 100%;
+    transform: translate(-50%, -100%) rotate(42deg);
+    opacity: 0.85;
+  }
+
+  .piece h3 { font-size: 19px; font-weight: 400; letter-spacing: 0.02em; }
+  .piece__ref {
+    margin-top: 0.3rem;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .piece p { margin-top: 0.9rem; font-size: 13.5px; line-height: 1.7; color: var(--ivory-dim); }
+
+  /* ---------- Handwerk ---------- */
+  .craft {
+    border-top: 1px solid rgba(200, 164, 92, 0.2);
+    padding-block: clamp(4rem, 9vw, 7rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  .craft__sticky { position: sticky; top: 110px; }
+
+  .craft__frame {
+    aspect-ratio: 4 / 5;
+    border: 1px solid rgba(200, 164, 92, 0.24);
+    padding: 1.4rem;
+    position: relative;
+    background: radial-gradient(80% 60% at 50% 20%, rgba(200, 164, 92, 0.1), transparent 65%);
+  }
+
+  .craft__frame::before,
+  .craft__frame::after {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--gold);
+    opacity: 0.7;
+  }
+
+  .craft__frame::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+  .craft__frame::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+  .craft__inner {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(60% 40% at 50% 45%, rgba(200, 164, 92, 0.5), transparent 62%),
+      repeating-linear-gradient(115deg, rgba(244, 241, 232, 0.05) 0 1px, transparent 1px 9px),
+      var(--green-deep);
+    display: grid;
+    place-items: center;
+  }
+
+  .craft__gear {
+    width: 42%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px dotted var(--gold);
+    position: relative;
+    animation: turn 40s linear infinite;
+  }
+
+  .craft__gear::before {
+    content: '';
+    position: absolute;
+    inset: 22%;
+    border-radius: 50%;
+    border: 1px solid rgba(200, 164, 92, 0.6);
+  }
+
+  .craft__gear::after {
+    content: '';
+    position: absolute;
+    inset: 42%;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.8;
+  }
+
+  @keyframes turn { to { transform: rotate(360deg); } }
+
+  .craft__list { border-top: 1px solid rgba(200, 164, 92, 0.2); }
+
+  .craft__item {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.2rem;
+    padding-block: 2rem;
+    border-bottom: 1px solid rgba(200, 164, 92, 0.2);
+  }
+
+  .craft__item span {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    padding-top: 0.35rem;
+  }
+
+  .craft__item h3 { font-size: 20px; font-weight: 400; letter-spacing: 0.01em; }
+  .craft__item p { margin-top: 0.5rem; font-size: 14.5px; line-height: 1.75; color: var(--ivory-dim); max-width: 44ch; }
+
+  /* ---------- Abschluss ---------- */
+  .end {
+    border-top: 1px solid rgba(200, 164, 92, 0.2);
+    padding-block: clamp(4rem, 9vw, 7rem);
+    text-align: center;
+  }
+
+  .end h2 {
+    margin-inline: auto;
+    max-width: 22ch;
+    font-size: clamp(2rem, 3.8vw, 3.1rem);
+    font-weight: 300;
+  }
+
+  .end p { margin: 1.2rem auto 0; max-width: 44ch; color: var(--ivory-dim); font-size: 15px; }
+  .end__row { margin-top: 2.2rem; display: flex; justify-content: center; gap: 1.4rem; flex-wrap: wrap; }
+
+  footer {
+    border-top: 1px solid rgba(200, 164, 92, 0.2);
+    padding-block: 1.6rem 2.6rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ivory-dim);
+  }
+
+  @media (max-width: 1000px) {
+    .wrap { width: min(1240px, 100% - 3rem); }
+    .hero { grid-template-columns: 1fr; }
+    .watch { width: min(62vw, 340px); margin-top: 2rem; }
+    .manifest { grid-template-columns: 1fr; }
+    .rule { display: none; }
+    .craft { grid-template-columns: 1fr; }
+    .craft__sticky { position: static; }
+    .nav__links { display: none; }
+  }
+
+  @media (max-width: 620px) {
+    .wrap { width: calc(100% - 2rem); }
+    .collection__head { align-items: flex-start; }
+    .pan { transform: none; overflow-x: auto; padding-right: 1rem; }
+    .craft__item { grid-template-columns: 2rem 1fr; gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<div class="progress" data-progress aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap nav__row">
+    <a class="brand" href="#main">Maison <span>Oyster</span></a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <a href="#kollektion">Kollektion</a>
+      <a href="#handwerk">Handwerk</a>
+      <a href="#haendler">Händler</a>
+    </nav>
+    <a class="nav__cta" href="#haendler" data-magnetic="3">Termin</a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <span class="label">Seit 1926 · Genf</span>
+        <h1 data-words>Zeit ist das einzige Luxusgut, das man nicht nachkaufen kann.</h1>
+        <p class="hero__sub">
+          Eine Uhr, die man vererbt, ohne sie erklären zu müssen. Von Hand zusammengesetzt,
+          in einer Stückzahl, die niemanden beeilt.
+        </p>
+        <div class="hero__row">
+          <a class="btn" href="#kollektion" data-magnetic="4">Kollektion ansehen</a>
+          <a class="btn btn--plain" href="#handwerk">Das Werk verstehen</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="watch" data-scrub>
+          <div class="watch__case">
+            <div class="watch__dial">
+              <div class="watch__ticks" aria-hidden="true"></div>
+              <div class="watch__ticks--gold" aria-hidden="true"></div>
+              <div class="watch__text"><b>Oyster</b>Automatik</div>
+              <div class="hand hand--hour" id="hHour"></div>
+              <div class="hand hand--minute" id="hMinute"></div>
+              <div class="hand hand--second" id="hSecond"></div>
+              <div class="watch__cap" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+        <p class="hero__caption">Ref. 36.004 · 36 mm · Grün, Gold</p>
+      </div>
+    </section>
+
+    <section class="manifest">
+      <div class="manifest__col"><span class="label">Haltung</span></div>
+      <div class="manifest__col" data-reveal>
+        <p>
+          Eine Uhr misst nicht die Zeit. Sie erinnert daran, dass sie läuft. Deshalb ist an diesem
+          Gehäuse nichts, was schneller aussehen soll, als es ist.
+        </p>
+        <p>
+          Das Zifferblatt trägt keine Jahreszahl, keine Sonderserie, keinen Anlass. Nur die Stunde,
+          die Minute und den Sekundenzeiger, der in fünf Schritten je Sekunde weitergeht.
+        </p>
+      </div>
+      <div class="manifest__col" data-reveal>
+        <p>
+          Das Gehäuse wird aus einem Block geschliffen, nicht gepresst. Deshalb sitzt die Kante
+          dort, wo sie sitzt — und bleibt dort nach zwanzig Jahren.
+        </p>
+        <p>
+          Wer eine Uhr kauft, kauft auch den Service in dreißig Jahren. Beides gehört zum Preis,
+          beides steht auf der Karte.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <section class="collection" id="kollektion">
+    <div class="wrap">
+      <div class="collection__head">
+        <h2 data-words>Drei Größen, ein Charakter.</h2>
+        <p>Alle Modelle teilen das Werk. Unterschiedlich ist nur, wie viel Platz der Tag auf dem Handgelenk bekommt.</p>
+      </div>
+    </div>
+    <div class="pan" data-scrub>
+      <article class="piece">
+        <div class="piece__dial" style="--dial:#123528" aria-hidden="true"></div>
+        <h3>Oyster 36</h3>
+        <p class="piece__ref">Ref. 36.004</p>
+        <p>Für Handgelenke, die keine Erklärung brauchen. Das Blatt ist tiefgrün, die Lünette schmal.</p>
+      </article>
+      <article class="piece">
+        <div class="piece__dial" style="--dial:#1b2b3a" aria-hidden="true"></div>
+        <h3>Oyster 39</h3>
+        <p class="piece__ref">Ref. 39.011</p>
+        <p>Die ruhige Mitte. Mehr Fläche für das Blatt, gleiche Höhe am Arm.</p>
+      </article>
+      <article class="piece">
+        <div class="piece__dial" style="--dial:#2a2118" aria-hidden="true"></div>
+        <h3>Oyster 41</h3>
+        <p class="piece__ref">Ref. 41.020</p>
+        <p>Für den Arm, der den Tag trägt. Das Werk bleibt dasselbe, der Blick wird größer.</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="craft" id="handwerk">
+      <div class="craft__sticky">
+        <div class="craft__frame" data-reveal="mask">
+          <div class="craft__inner"><div class="craft__gear" aria-hidden="true"></div></div>
+        </div>
+      </div>
+      <div>
+        <h2 data-words>Was man nicht sieht, ist der Aufwand.</h2>
+        <div class="craft__list" style="margin-top:2.5rem">
+          <div class="craft__item"><span>I</span><div><h3>Das Werk</h3><p>287 Teile, 3 Hz, 70 Stunden Gangreserve. Jedes Werk wird fünf Wochen lang in sechs Lagen geprüft.</p></div></div>
+          <div class="craft__item"><span>II</span><div><h3>Das Gehäuse</h3><p>Ein Block Edelstahl, 94 Arbeitsgänge, zwei Schliffe. Die Flanke bleibt poliert, die Auflage gebürstet.</p></div></div>
+          <div class="craft__item"><span>III</span><div><h3>Das Blatt</h3><p>Neun Schichten Lack, jede einzeln getrocknet. Deshalb ändert sich die Tiefe mit dem Licht.</p></div></div>
+          <div class="craft__item"><span>IV</span><div><h3>Die Übergabe</h3><p>Jede Uhr wird vom Uhrmacher eingestellt, der sie zusammengesetzt hat. Der Name steht im Zertifikat.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="end" id="haendler">
+      <h2 data-words>Man kauft keine Uhr im Vorbeigehen.</h2>
+      <p>Vereinbaren Sie einen Termin in einer der vier Boutiquen — oder lassen Sie sich die Kollektion zeigen.</p>
+      <div class="end__row">
+        <a class="btn" href="#main" data-magnetic="5">Termin anfragen</a>
+        <a class="btn btn--plain" href="#kollektion">Boutiquen finden</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>Oyster Authority — Konzeptseite im Design-System oyster-authority.</span>
+      <span>Testseite 08</span>
+    </footer>
+  </div>
+</main>
+
+<script src="assets/motion.js" defer></script>
+<script>
+  (function () {
+    var h = document.getElementById('hHour');
+    var m = document.getElementById('hMinute');
+    var s = document.getElementById('hSecond');
+
+    function tick() {
+      var now = new Date();
+      var sec = now.getSeconds() + now.getMilliseconds() / 1000;
+      var min = now.getMinutes() + sec / 60;
+      var hour = (now.getHours() % 12) + min / 60;
+      s.style.transform = 'rotate(' + (sec * 6) + 'deg)';
+      m.style.transform = 'rotate(' + (min * 6) + 'deg)';
+      h.style.transform = 'rotate(' + (hour * 30) + 'deg)';
+      requestAnimationFrame(tick);
+    }
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      requestAnimationFrame(tick);
+    } else {
+      var now = new Date();
+      s.style.transform = 'rotate(' + (now.getSeconds() * 6) + 'deg)';
+      m.style.transform = 'rotate(' + (now.getMinutes() * 6) + 'deg)';
+      h.style.transform = 'rotate(' + ((now.getHours() % 12) * 30) + 'deg)';
+    }
+  })();
+</script>
+</body>
+</html>

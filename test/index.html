@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testseiten — neun Designsprachen</title>
+<script>document.documentElement.className = 'js';</script>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  @font-face {
+    font-family: 'Geist';
+    src: url('assets/fonts/geist.woff2') format('woff2');
+    font-weight: 300 700;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Geist Mono';
+    src: url('assets/fonts/geist-mono.woff2') format('woff2');
+    font-weight: 400 600;
+    font-display: swap;
+  }
+
+  :root {
+    --bg: #0e0e13;
+    --surface: #16161d;
+    --line: rgba(255, 255, 255, 0.1);
+    --ink: #f2f0f5;
+    --ink-2: #a9aebc;
+    --ink-3: #6f7583;
+    --accent: #abc7ff;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --focus: #abc7ff;
+    --selection: #0071e3;
+    --skip-bg: #abc7ff;
+    --skip-on: #0e0e13;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .wrap {
+    width: min(1180px, 100% - 3rem);
+    margin-inline: auto;
+  }
+
+  header.top {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .top__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 72px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .top__row a { color: var(--ink); }
+  .top__row a:hover { color: var(--accent); }
+
+  .main {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    padding-block: clamp(3rem, 7vw, 6rem);
+    align-items: start;
+  }
+
+  .intro { position: sticky; top: 3rem; }
+
+  .intro h1 {
+    font-size: clamp(2.1rem, 3.6vw, 3.1rem);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    font-weight: 500;
+    max-width: 14ch;
+  }
+
+  .intro p {
+    margin-top: 1.3rem;
+    max-width: 40ch;
+    color: var(--ink-2);
+    font-size: 14.5px;
+  }
+
+  .intro p + p { margin-top: 0.9rem; }
+
+  .intro__meta {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0.5rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+
+  .intro__meta b { color: var(--ink); font-weight: 500; }
+
+  .list { border-top: 1px solid var(--line); }
+
+  .item {
+    display: grid;
+    grid-template-columns: 2.6rem 1fr auto 1.4rem;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 1.15rem;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    transition: padding-inline 0.4s var(--ease), background 0.4s ease;
+  }
+
+  .item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--c1) 12%, transparent), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .item:hover::before,
+  .item:focus-visible::before { opacity: 1; }
+
+  .item:hover { padding-inline: 0.75rem 0.25rem; }
+
+  .item__num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    position: relative;
+  }
+
+  .item__name {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .item__name b {
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .item__name span { font-size: 12px; color: var(--ink-3); }
+
+  .swatches {
+    position: relative;
+    display: flex;
+    gap: 3px;
+  }
+
+  .swatches i {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  }
+
+  .item__arrow {
+    position: relative;
+    color: var(--ink-3);
+    transition: transform 0.4s var(--ease), color 0.3s ease;
+  }
+
+  .item:hover .item__arrow { transform: translateX(4px); color: var(--ink); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 1.6rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .intro { position: static; }
+    .intro h1 { max-width: 18ch; }
+  }
+
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 2rem); }
+    .item { grid-template-columns: 2rem 1fr 1.2rem; }
+    .swatches { display: none; }
+    .top__row span:last-child { display: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<header class="top">
+  <div class="wrap top__row">
+    <a href="../AGENTS.md">MJL Design Agency</a>
+    <span>Testseiten · neun Sprachen</span>
+  </div>
+</header>
+
+<main class="wrap main" id="main">
+  <section class="intro">
+    <h1 data-words>Neun Sprachen. Ein Handwerk.</h1>
+    <p>
+      Jede Seite ist aus den Tokens ihres Design-Systems gebaut — Farben, Typo-Grade, Radien
+      und Abstände aus dem Frontmatter, nicht aus dem Bauch.
+    </p>
+    <p>
+      Die Aufgabe ist auf jeder Seite dieselbe: ein Ziel pro Screen, alle Zustände, Tastatur,
+      Kontrast und Bewegung, die etwas erklärt.
+    </p>
+    <div class="intro__meta">
+      <span>Seiten <b>9</b></span>
+      <span>Systeme <b>21</b></span>
+      <span>Schriften <b>lokal, 8 Dateien</b></span>
+      <span>Build <b>keiner</b></span>
+    </div>
+  </section>
+
+  <nav class="list" aria-label="Testseiten">
+    <a class="item" href="01-obsidian-precision.html" style="--c1:#abc7ff" data-reveal>
+      <span class="item__num">01</span>
+      <span class="item__name"><b>Obsidian Precision</b><span>Rechercheraum · Antwort mit Quelle</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#131318"></i><i style="--c:#0071e3"></i><i style="--c:#61dbb4"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="02-cupertino-clarity.html" style="--c1:#2997ff" data-reveal>
+      <span class="item__num">02</span>
+      <span class="item__name"><b>Cupertino Clarity</b><span>Produktseite · Aera</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#000"></i><i style="--c:#f5f5f7"></i><i style="--c:#0071e3"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="03-ledger-gradient.html" style="--c1:#635bff" data-reveal>
+      <span class="item__num">03</span>
+      <span class="item__name"><b>Ledger Gradient</b><span>Zahlungsplattform · Ablauf und Buchung</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#0a2540"></i><i style="--c:#635bff"></i><i style="--c:#00d4ff"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="04-monochrome-edge.html" style="--c1:#ededed" data-reveal>
+      <span class="item__num">04</span>
+      <span class="item__name"><b>Monochrome Edge</b><span>Deploy-Plattform · Protokoll statt YAML</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#000"></i><i style="--c:#1f1f1f"></i><i style="--c:#0072f5"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="05-kinetic-brutal.html" style="--c1:#d4fb00" data-reveal>
+      <span class="item__num">05</span>
+      <span class="item__name"><b>Kinetic Brutal</b><span>Kampagne · Vela 04</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#111"></i><i style="--c:#d4fb00"></i><i style="--c:#ff5a00"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="06-paper-workshop.html" style="--c1:#2383e2" data-reveal>
+      <span class="item__num">06</span>
+      <span class="item__name"><b>Paper Workshop</b><span>Arbeitsbereich · Dokument und Checkliste</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#fff"></i><i style="--c:#f1f1ef"></i><i style="--c:#2383e2"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="07-coral-belonging.html" style="--c1:#ff385c" data-reveal>
+      <span class="item__num">07</span>
+      <span class="item__name"><b>Coral Belonging</b><span>Marktplatz · Suche und Aufenthalte</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#fff"></i><i style="--c:#ff385c"></i><i style="--c:#f3e7d3"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="08-oyster-authority.html" style="--c1:#c8a45c" data-reveal>
+      <span class="item__num">08</span>
+      <span class="item__name"><b>Oyster Authority</b><span>Luxus · Uhr und Handwerk</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#0b1f18"></i><i style="--c:#c8a45c"></i><i style="--c:#f4f1e8"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="item" href="09-rosso-corsa.html" style="--c1:#ff2800" data-reveal>
+      <span class="item__num">09</span>
+      <span class="item__name"><b>Rosso Corsa</b><span>Motorsport · Rennwochenende</span></span>
+      <span class="swatches" aria-hidden="true"><i style="--c:#121212"></i><i style="--c:#ff2800"></i><i style="--c:#fff200"></i></span>
+      <span class="item__arrow" aria-hidden="true">→</span>
+    </a>
+  </nav>
+</main>
+
+<footer class="wrap">
+  <span>Alle Seiten sind statisches HTML, ohne Build und ohne Framework.</span>
+  <span><a href="README.md">README</a> · <a href="../philosophy.md">Philosophie</a></span>
+</footer>
+
+<script src="assets/motion.js" defer></script>
+</body>
+</html>
