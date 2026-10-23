@@ -3,307 +3,912 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Testseiten — neun Designsprachen</title>
-<script>document.documentElement.className = 'js';</script>
+<title>Testseiten — neun Designsprachen, ein Maßstab</title>
+<meta name="description" content="Neun Beispielseiten in neun Designsprachen, gebaut aus den Tokens der Design-Bibliothek. Haus-System: Meridian Studio.">
 <link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/meridian.css">
 <style>
   @font-face {
-    font-family: 'Geist';
-    src: url('assets/fonts/geist.woff2') format('woff2');
+    font-family: 'Jost';
+    src: url('assets/fonts/jost.woff2') format('woff2');
     font-weight: 300 700;
     font-display: swap;
   }
-
   @font-face {
-    font-family: 'Geist Mono';
-    src: url('assets/fonts/geist-mono.woff2') format('woff2');
-    font-weight: 400 600;
+    font-family: 'Figtree';
+    src: url('assets/fonts/figtree.woff2') format('woff2');
+    font-weight: 300 800;
     font-display: swap;
   }
 
-  :root {
-    --bg: #0e0e13;
-    --surface: #16161d;
-    --line: rgba(255, 255, 255, 0.1);
-    --ink: #f2f0f5;
-    --ink-2: #a9aebc;
-    --ink-3: #6f7583;
-    --accent: #abc7ff;
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    --focus: #abc7ff;
-    --selection: #0071e3;
-    --skip-bg: #abc7ff;
-    --skip-on: #0e0e13;
+  .lede {
+    padding-block: clamp(56px, 7vw, 96px) clamp(40px, 5vw, 64px);
   }
 
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Geist', system-ui, sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  .wrap {
-    width: min(1180px, 100% - 3rem);
-    margin-inline: auto;
-  }
-
-  header.top {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .top__row {
+  .lede__label {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    height: 72px;
-    font-size: 11px;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+
+  .lede__label::before {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .lede h1 {
+    max-width: 20ch;
+    margin-bottom: 24px;
+  }
+
+  .lede h1 .serif {
+    color: var(--accent);
+    font-size: 1.04em;
+    padding-right: 0.05em;
+  }
+
+  .lede__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 48px;
+    align-items: end;
+  }
+
+  .lede__meta {
+    display: flex;
+    gap: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-3);
   }
 
-  .top__row a { color: var(--ink); }
-  .top__row a:hover { color: var(--accent); }
-
-  .main {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: clamp(2rem, 6vw, 6rem);
-    padding-block: clamp(3rem, 7vw, 6rem);
-    align-items: start;
-  }
-
-  .intro { position: sticky; top: 3rem; }
-
-  .intro h1 {
-    font-size: clamp(2.1rem, 3.6vw, 3.1rem);
-    line-height: 1.04;
-    letter-spacing: -0.04em;
+  .lede__meta b {
+    display: block;
+    font-family: 'Archivo', sans-serif;
+    font-size: 1.5rem;
     font-weight: 500;
-    max-width: 14ch;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 4px;
+    text-transform: none;
   }
 
-  .intro p {
-    margin-top: 1.3rem;
-    max-width: 40ch;
-    color: var(--ink-2);
-    font-size: 14.5px;
-  }
+  /* ---------- Feature ---------- */
 
-  .intro p + p { margin-top: 0.9rem; }
-
-  .intro__meta {
-    margin-top: 2rem;
+  .feature {
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    background: var(--surface);
+    box-shadow: var(--e2);
     display: grid;
-    gap: 0.5rem;
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    color: var(--ink-3);
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    overflow: hidden;
+    transition: box-shadow 0.4s var(--ease), border-color 0.3s var(--ease);
   }
 
-  .intro__meta b { color: var(--ink); font-weight: 500; }
-
-  .list { border-top: 1px solid var(--line); }
-
-  .item {
-    display: grid;
-    grid-template-columns: 2.6rem 1fr auto 1.4rem;
-    align-items: center;
-    gap: 1rem;
-    padding-block: 1.15rem;
-    border-bottom: 1px solid var(--line);
-    position: relative;
-    transition: padding-inline 0.4s var(--ease), background 0.4s ease;
+  .feature:hover {
+    box-shadow: var(--e3);
+    border-color: var(--hairline-strong);
   }
 
-  .item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, color-mix(in oklab, var(--c1) 12%, transparent), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .item:hover::before,
-  .item:focus-visible::before { opacity: 1; }
-
-  .item:hover { padding-inline: 0.75rem 0.25rem; }
-
-  .item__num {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    color: var(--ink-3);
-    position: relative;
-  }
-
-  .item__name {
-    position: relative;
+  .feature__copy {
+    padding: clamp(24px, 3.2vw, 44px);
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    align-items: flex-start;
+    border-right: 1px solid var(--hairline);
   }
 
-  .item__name b {
-    font-size: 17px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
+  .feature__copy h2 {
+    margin: 14px 0 14px;
+    max-width: 16ch;
   }
 
-  .item__name span { font-size: 12px; color: var(--ink-3); }
+  .feature__copy p {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    max-width: 38ch;
+    margin-bottom: 26px;
+  }
 
-  .swatches {
-    position: relative;
+  .feature__copy .arrow-link {
+    margin-top: auto;
+  }
+
+  .feature__tags {
     display: flex;
-    gap: 3px;
-  }
-
-  .swatches i {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--c);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-  }
-
-  .item__arrow {
-    position: relative;
-    color: var(--ink-3);
-    transition: transform 0.4s var(--ease), color 0.3s ease;
-  }
-
-  .item:hover .item__arrow { transform: translateX(4px); color: var(--ink); }
-
-  footer {
-    border-top: 1px solid var(--line);
-    padding-block: 1.6rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
     flex-wrap: wrap;
-    font-size: 11.5px;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .scale {
+    position: relative;
+    padding: 28px;
+    background:
+      radial-gradient(560px 320px at 62% 28%, rgba(36, 71, 232, 0.08), transparent 70%),
+      var(--surface-subtle);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    min-height: 380px;
+  }
+
+  .mini {
+    width: min(460px, 100%);
+    background: #fff;
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    box-shadow: 0 24px 50px -30px rgba(18, 19, 22, 0.5);
+    overflow: hidden;
+    transform: rotate(-1.4deg) translateY(6px);
+    transition: transform 0.6s var(--ease-premium);
+  }
+
+  .feature:hover .mini {
+    transform: rotate(0deg) translateY(0);
+  }
+
+  .mini__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--canvas-raised);
+  }
+
+  .mini__bar i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--surface-sunken);
+  }
+
+  .mini__bar span {
+    margin-left: 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 8px;
     color: var(--ink-3);
   }
 
-  @media (max-width: 900px) {
-    .main { grid-template-columns: 1fr; }
-    .intro { position: static; }
-    .intro h1 { max-width: 18ch; }
+  .mini__body {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    min-height: 230px;
+  }
+
+  .mini__side {
+    border-right: 1px solid var(--hairline);
+    padding: 10px 8px;
+    background: color-mix(in srgb, var(--canvas) 55%, #fff);
+  }
+
+  .mini__side b {
+    display: block;
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .mini__side i {
+    display: block;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--surface-subtle);
+    margin-bottom: 6px;
+  }
+
+  .mini__side i:first-of-type {
+    background: var(--accent);
+    width: 76%;
+  }
+
+  .mini__side i:nth-of-type(2) { width: 64%; }
+  .mini__side i:nth-of-type(3) { width: 70%; }
+  .mini__side i:nth-of-type(4) { width: 52%; }
+
+  .mini__main {
+    padding: 14px;
+  }
+
+  .mini__main h3 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 3px;
+  }
+
+  .mini__main .mono {
+    font-size: 8px;
+    color: var(--ink-3);
+  }
+
+  .mini__rule {
+    height: 1px;
+    background: var(--hairline);
+    margin: 10px 0;
+  }
+
+  .mini__line {
+    height: 6px;
+    border-radius: 2px;
+    background: var(--surface-subtle);
+    margin-bottom: 6px;
+  }
+
+  .mini__line:nth-child(2) { width: 92%; }
+  .mini__line:nth-child(3) { width: 78%; }
+
+  .mini__box {
+    border-left: 2px solid var(--accent);
+    padding-left: 8px;
+    margin: 10px 0;
+    font-size: 9.5px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .mini__pill {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 8px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  /* ---------- Karten ---------- */
+
+  .gallery {
+    padding-block: clamp(56px, 7vw, 96px);
+  }
+
+  .gallery__head {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .gallery__head h2 {
+    font-size: clamp(1.75rem, 3.4vw, 2.375rem);
+  }
+
+  .gallery__head span {
+    margin-left: auto;
+    padding-bottom: 6px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .card {
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-xl);
+    background: var(--surface);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease-premium);
+  }
+
+  .card:hover {
+    border-color: var(--hairline-strong);
+    box-shadow: var(--e2);
+    transform: translateY(-3px);
+  }
+
+  .card__preview {
+    height: 176px;
+    background: var(--pv-bg);
+    color: var(--pv-fg);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card__preview::after {
+    content: '';
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--pv-accent);
+    opacity: 0.16;
+    transition: transform 0.6s var(--ease-premium);
+  }
+
+  .card:hover .card__preview::after {
+    transform: scale(1.25);
+  }
+
+  .card__preview .card__sample {
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    font-weight: var(--pv-weight, 600);
+    max-width: 16ch;
+    font-family: var(--pv-font, 'Archivo'), sans-serif;
+    text-transform: var(--pv-case, none);
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .card__sample em {
+    font-style: normal;
+    color: var(--pv-accent);
+  }
+
+  .card__chips {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card__chips i {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--pv-accent);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .card__chips i:nth-child(2) {
+    background: var(--pv-fg);
+    opacity: 0.5;
+  }
+
+  .card__chips i:nth-child(3) {
+    background: transparent;
+    border-color: var(--pv-fg);
+    opacity: 0.35;
+  }
+
+  .card__chips em {
+    margin-left: auto;
+    font-style: normal;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .card__body {
+    padding: 18px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card__kicker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+
+  .card__kicker b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .card h3 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+
+  .card p {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin-bottom: 16px;
+    max-width: 44ch;
+  }
+
+  .card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .card__link svg {
+    transition: transform 0.24s var(--ease-premium);
+  }
+
+  .card:hover .card__link svg {
+    transform: translateX(3px);
+  }
+
+  /* ---------- Maßstab ---------- */
+
+  .standard {
+    border-top: 1px solid var(--hairline);
+    padding-block: clamp(56px, 7vw, 96px);
+    background: var(--canvas-raised);
+  }
+
+  .standard__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .standard__item {
+    padding: 24px 28px 8px 0;
+    border-right: 1px solid var(--hairline);
+  }
+
+  .standard__item:last-child {
+    border-right: 0;
+  }
+
+  .standard__item + .standard__item {
+    padding-left: 28px;
+  }
+
+  .standard__item h3 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 10px 0 6px;
+  }
+
+  .standard__item p {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: 30ch;
+  }
+
+  .standard__item span {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+  }
+
+  @media (max-width: 980px) {
+    .feature {
+      grid-template-columns: 1fr;
+    }
+
+    .feature__copy {
+      border-right: 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .scale {
+      min-height: 320px;
+    }
+
+    .standard__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .standard__item:nth-child(2) {
+      border-right: 0;
+    }
+
+    .standard__item:nth-child(1),
+    .standard__item:nth-child(2) {
+      border-bottom: 1px solid var(--hairline);
+    }
+  }
+
+  @media (max-width: 820px) {
+    .lede__row {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .lede__meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .lede__meta div {
+      font-size: 9px;
+    }
+
+    .cards {
+      grid-template-columns: 1fr;
+    }
+
+    .lede__meta {
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .nav__actions {
+      display: none;
+    }
   }
 
   @media (max-width: 560px) {
-    .wrap { width: calc(100% - 2rem); }
-    .item { grid-template-columns: 2rem 1fr 1.2rem; }
-    .swatches { display: none; }
-    .top__row span:last-child { display: none; }
+    .mini {
+      transform: none;
+    }
+
+    .gallery__head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .gallery__head span {
+      margin-left: 0;
+    }
+
+    .standard__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .standard__item,
+    .standard__item + .standard__item {
+      padding: 20px 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .standard__item:last-child {
+      border-bottom: 0;
+    }
+
+    .card__preview {
+      height: 150px;
+    }
   }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Zum Inhalt springen</a>
 
-<header class="top">
-  <div class="wrap top__row">
-    <a href="../AGENTS.md">MJL Design Agency</a>
-    <span>Testseiten · neun Sprachen</span>
+<header class="nav">
+  <div class="frame nav__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M2 10h16" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="10" cy="10" r="2.4" fill="currentColor"/>
+      </svg>
+      MJL Design Library
+    </a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <a class="nav__link" href="#seiten">Seiten</a>
+      <a class="nav__link" href="#massstab">Maßstab</a>
+      <a class="nav__link" href="../designguidelines/README.md">Systeme</a>
+      <a class="nav__link" href="../philosophy.md">Philosophie</a>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--secondary" href="01-meridian-studio.html">Haus-System ansehen</a>
+    </div>
   </div>
+  <div class="progress" data-progress aria-hidden="true"></div>
 </header>
 
-<main class="wrap main" id="main">
-  <section class="intro">
-    <h1 data-words>Neun Sprachen. Ein Handwerk.</h1>
-    <p>
-      Jede Seite ist aus den Tokens ihres Design-Systems gebaut — Farben, Typo-Grade, Radien
-      und Abstände aus dem Frontmatter, nicht aus dem Bauch.
-    </p>
-    <p>
-      Die Aufgabe ist auf jeder Seite dieselbe: ein Ziel pro Screen, alle Zustände, Tastatur,
-      Kontrast und Bewegung, die etwas erklärt.
-    </p>
-    <div class="intro__meta">
-      <span>Seiten <b>9</b></span>
-      <span>Systeme <b>21</b></span>
-      <span>Schriften <b>lokal, 8 Dateien</b></span>
-      <span>Build <b>keiner</b></span>
+<main id="main">
+  <section class="lede">
+    <div class="frame">
+      <p class="label lede__label" data-reveal="side">Testseiten der Bibliothek</p>
+      <div class="lede__row">
+        <div>
+          <h1 class="display" data-words="45">Neun Seiten. Neun Sprachen. Ein <span class="serif">Maßstab</span>.</h1>
+          <p class="lead" data-reveal data-delay="0.18s">
+            Jede Seite ist aus den Tokens ihres Design-Systems gebaut — nicht aus einem Template.
+            Was sich unterscheidet, ist die Sprache. Was bleibt, ist das Handwerk.
+          </p>
+        </div>
+        <div class="lede__meta" data-stagger>
+          <div><b>22</b>Systeme im Index</div>
+          <div><b>09</b>Seiten gebaut</div>
+          <div><b>12</b>Referenzen gemessen</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <nav class="list" aria-label="Testseiten">
-    <a class="item" href="01-obsidian-precision.html" style="--c1:#abc7ff" data-reveal>
-      <span class="item__num">01</span>
-      <span class="item__name"><b>Obsidian Precision</b><span>Rechercheraum · Antwort mit Quelle</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#131318"></i><i style="--c:#0071e3"></i><i style="--c:#61dbb4"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
+  <div class="frame" data-reveal>
+    <a class="feature" href="01-meridian-studio.html">
+      <div class="feature__copy">
+        <span class="label">Haus-System · Meridian Studio</span>
+        <h2 class="h2">Entscheidungen, die man später noch versteht.</h2>
+        <p>
+          Die Synthese aus vier Haltungen: Apples Ruhe, Linears Disziplin, Stripes Erklärfreude,
+          Notions Klarheit. Warmes Papier, Haarlinien, ein Kobalt.
+        </p>
+        <div class="feature__tags">
+          <span class="badge badge--accent">Archivo</span>
+          <span class="badge">Instrument Sans</span>
+          <span class="badge">Geist Mono</span>
+        </div>
+        <span class="arrow-link">Seite öffnen
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
 
-    <a class="item" href="02-cupertino-clarity.html" style="--c1:#2997ff" data-reveal>
-      <span class="item__num">02</span>
-      <span class="item__name"><b>Cupertino Clarity</b><span>Produktseite · Aera</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#000"></i><i style="--c:#f5f5f7"></i><i style="--c:#0071e3"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
+      <div class="scale" aria-hidden="true">
+        <div class="mini">
+          <div class="mini__bar"><i></i><i></i><i></i><span>meridian / entscheidung</span></div>
+          <div class="mini__body">
+            <div class="mini__side">
+              <b>MJL Produkt</b>
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <div class="mini__main">
+              <h3>Checkout: Retry-Logik</h3>
+              <p class="mono">14. Okt · 4 Belege · v3</p>
+              <div class="mini__rule"></div>
+              <div class="mini__line"></div>
+              <div class="mini__line"></div>
+              <div class="mini__box">Wiederholung nur nach Backoff, höchstens drei Versuche.</div>
+              <div class="mini__rule"></div>
+              <div class="mini__line" style="width:64%"></div>
+              <span class="mini__pill">Entschieden</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </a>
+  </div>
 
-    <a class="item" href="03-ledger-gradient.html" style="--c1:#635bff" data-reveal>
-      <span class="item__num">03</span>
-      <span class="item__name"><b>Ledger Gradient</b><span>Zahlungsplattform · Ablauf und Buchung</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#0a2540"></i><i style="--c:#635bff"></i><i style="--c:#00d4ff"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
+  <section class="gallery" id="seiten">
+    <div class="frame">
+      <div class="gallery__head">
+        <h2 class="h2">Acht weitere Sprachen</h2>
+        <span class="label">02 — 09</span>
+      </div>
 
-    <a class="item" href="04-monochrome-edge.html" style="--c1:#ededed" data-reveal>
-      <span class="item__num">04</span>
-      <span class="item__name"><b>Monochrome Edge</b><span>Deploy-Plattform · Protokoll statt YAML</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#000"></i><i style="--c:#1f1f1f"></i><i style="--c:#0072f5"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
+      <div class="cards" data-stagger>
+        <a class="card" href="02-cupertino-clarity.html" style="--pv-bg:#000;--pv-fg:#f5f5f7;--pv-accent:#2997ff;--pv-font:'Archivo';--pv-weight:700">
+          <div class="card__preview">
+            <p class="card__sample">Licht. In seiner ruhigsten Form.</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Cupertino Clarity</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>02</b> Apple · Produktseite</div>
+            <h3>Aera — ein Raumlicht</h3>
+            <p>Ein Produkt pro Viewport, 980px-Pills, Schwarz als Bühne. Die Seite erklärt ein Ding, nicht eine Plattform.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
 
-    <a class="item" href="05-kinetic-brutal.html" style="--c1:#d4fb00" data-reveal>
-      <span class="item__num">05</span>
-      <span class="item__name"><b>Kinetic Brutal</b><span>Kampagne · Vela 04</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#111"></i><i style="--c:#d4fb00"></i><i style="--c:#ff5a00"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
+        <a class="card" href="03-ledger-gradient.html" style="--pv-bg:#f6f9fc;--pv-fg:#0a2540;--pv-accent:#635bff;--pv-font:'Figtree';--pv-weight:500">
+          <div class="card__preview">
+            <p class="card__sample">Jede Zahlung hat einen Grund. Und einen Beleg.</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Ledger Gradient</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>03</b> Stripe · Zahlungsplattform</div>
+            <h3>Ledger — der Beleg</h3>
+            <p>Ein Zahlungsfenster, das man lesen kann: Ereignisse, Signatur, Rohdaten. Ein Gradient, sonst Navy auf Weiß.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
 
-    <a class="item" href="06-paper-workshop.html" style="--c1:#2383e2" data-reveal>
-      <span class="item__num">06</span>
-      <span class="item__name"><b>Paper Workshop</b><span>Arbeitsbereich · Dokument und Checkliste</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#fff"></i><i style="--c:#f1f1ef"></i><i style="--c:#2383e2"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
+        <a class="card" href="04-monochrome-edge.html" style="--pv-bg:#0a0a0a;--pv-fg:#fff;--pv-accent:#fff;--pv-font:'Geist Mono';--pv-weight:400">
+          <div class="card__preview">
+            <p class="card__sample">Vom Commit zur URL in 34 Sekunden.</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Monochrome Edge</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>04</b> Vercel · Entwicklerplattform</div>
+            <h3>Monolith — Deploy</h3>
+            <p>Schwarz, Weiß, eine Zahl. Terminal, Build-Verlauf, Latenzkurve — alles sichtbar, nichts erklärt sich selbst.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
 
-    <a class="item" href="07-coral-belonging.html" style="--c1:#ff385c" data-reveal>
-      <span class="item__num">07</span>
-      <span class="item__name"><b>Coral Belonging</b><span>Marktplatz · Suche und Aufenthalte</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#fff"></i><i style="--c:#ff385c"></i><i style="--c:#f3e7d3"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
+        <a class="card" href="05-kinetic-brutal.html" style="--pv-bg:#d4fb00;--pv-fg:#111;--pv-accent:#111;--pv-font:'Archivo';--pv-weight:700;--pv-case:uppercase">
+          <div class="card__preview">
+            <p class="card__sample">Morgen um sechs.</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Kinetic Brutal</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>05</b> Nike · Kampagne</div>
+            <h3>Volt — ein Lauf</h3>
+            <p>Riesige Typo, harte Kanten, ein Ticker. Die Seite ist laut, weil das Produkt laut ist — nicht aus Zufall.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
 
-    <a class="item" href="08-oyster-authority.html" style="--c1:#c8a45c" data-reveal>
-      <span class="item__num">08</span>
-      <span class="item__name"><b>Oyster Authority</b><span>Luxus · Uhr und Handwerk</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#0b1f18"></i><i style="--c:#c8a45c"></i><i style="--c:#f4f1e8"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
+        <a class="card" href="06-paper-workshop.html" style="--pv-bg:#f9f9f8;--pv-fg:#191918;--pv-accent:#2383e2;--pv-font:'Archivo';--pv-weight:600">
+          <div class="card__preview">
+            <p class="card__sample">Der Schreibtisch, der mitdenkt.</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Paper Workshop</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>06</b> Notion · Arbeitsbereich</div>
+            <h3>Werkstatt — ein Dokument</h3>
+            <p>Warmes Papier, 4px-Radien, Suche mit ⌘K. Die Seite zeigt Arbeit statt Behauptungen.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
 
-    <a class="item" href="09-rosso-corsa.html" style="--c1:#ff2800" data-reveal>
-      <span class="item__num">09</span>
-      <span class="item__name"><b>Rosso Corsa</b><span>Motorsport · Rennwochenende</span></span>
-      <span class="swatches" aria-hidden="true"><i style="--c:#121212"></i><i style="--c:#ff2800"></i><i style="--c:#fff200"></i></span>
-      <span class="item__arrow" aria-hidden="true">→</span>
-    </a>
-  </nav>
+        <a class="card" href="07-coral-belonging.html" style="--pv-bg:#fff;--pv-fg:#222;--pv-accent:#ff385c;--pv-font:'Archivo';--pv-weight:600">
+          <div class="card__preview">
+            <p class="card__sample">Wo willst du ankommen?</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Coral Belonging</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>07</b> Airbnb · Marktplatz</div>
+            <h3>Bleibe — eine Unterkunft</h3>
+            <p>Suche, Filter, Karte, Null-Treffer. Der Zustand „nichts gefunden“ ist hier genauso gestaltet wie der Treffer.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="card" href="08-oyster-authority.html" style="--pv-bg:#0b1f18;--pv-fg:#f4f1e8;--pv-accent:#c8a45c;--pv-font:'Jost';--pv-weight:300">
+          <div class="card__preview">
+            <p class="card__sample">Was bleibt, misst man nicht in Stunden.</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Oyster Authority</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>08</b> Rolex · Manufaktur</div>
+            <h3>Maison Oyster — die Uhr</h3>
+            <p>Eine Uhr aus CSS-Schichten: geriffelte Lünette, Guilloché, Indizes, Band. Vier Ausführungen, ein Termin.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="card" href="09-rosso-corsa.html" style="--pv-bg:#121212;--pv-fg:#fff;--pv-accent:#ff2800;--pv-font:'Archivo';--pv-weight:700;--pv-case:uppercase">
+          <div class="card__preview">
+            <p class="card__sample">48 Stunden. Ein Ziel.</p>
+            <div class="card__chips"><i></i><i></i><i></i><em>Rosso Corsa</em></div>
+          </div>
+          <div class="card__body">
+            <div class="card__kicker"><b>09</b> Ferrari · Rennwochenende</div>
+            <h3>Scuderia — Monza</h3>
+            <p>Zeiten, Telemetrie, Countdown. Zahlen in Mono, Rot nur dort, wo es weh tut.</p>
+            <span class="card__link">Seite öffnen
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="standard" id="massstab">
+    <div class="frame">
+      <div class="section-head">
+        <div>
+          <span class="label" data-reveal="side">Der Maßstab</span>
+          <h2 class="h2" data-words="45">Was alle neun teilen.</h2>
+        </div>
+        <p class="body" data-reveal data-delay="0.12s">
+          Die Sprachen sind verschieden. Die Prüfung ist dieselbe — sonst wäre es Dekoration.
+        </p>
+      </div>
+
+      <div class="standard__grid" data-stagger>
+        <article class="standard__item">
+          <span>01</span>
+          <h3>Tastatur zuerst</h3>
+          <p>Skip-Link, sichtbarer Fokus, erreichbare Tabs und Dialoge. Jede Seite ist ohne Maus bedienbar.</p>
+        </article>
+        <article class="standard__item">
+          <span>02</span>
+          <h3>Zustände statt Glück</h3>
+          <p>Leer, lädt, Fehler, Erfolg, Extremwert. Mindestens ein Nicht-Standard-Zustand pro Seite.</p>
+        </article>
+        <article class="standard__item">
+          <span>03</span>
+          <h3>Bewegung mit Grund</h3>
+          <p>380–520 ms, kein Überschwingen, `prefers-reduced-motion` schaltet alles ab, ohne Inhalte zu verstecken.</p>
+        </article>
+        <article class="standard__item">
+          <span>04</span>
+          <h3>Keine fremden Assets</h3>
+          <p>Keine Logos, keine Stockfotos, keine CDN-Schriften. Alles im Repo, alles nachvollziehbar.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 </main>
 
-<footer class="wrap">
-  <span>Alle Seiten sind statisches HTML, ohne Build und ohne Framework.</span>
-  <span><a href="README.md">README</a> · <a href="../philosophy.md">Philosophie</a></span>
+<footer class="footer">
+  <div class="frame">
+    <div class="footer__grid">
+      <div>
+        <a class="brand" href="index.html">
+          <svg class="brand__mark" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M2 10h16" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="10" cy="10" r="2.4" fill="currentColor"/>
+          </svg>
+          MJL Design Library
+        </a>
+        <p class="small" style="margin-top:14px;max-width:32ch">
+          Design-Systeme, Referenzen und Testseiten. UX first — erst der Ablauf, dann die Oberfläche.
+        </p>
+      </div>
+      <div class="footer__col">
+        <h4 class="label">Seiten</h4>
+        <a href="01-meridian-studio.html">01 Meridian Studio</a>
+        <a href="02-cupertino-clarity.html">02 Cupertino Clarity</a>
+        <a href="03-ledger-gradient.html">03 Ledger Gradient</a>
+        <a href="04-monochrome-edge.html">04 Monochrome Edge</a>
+      </div>
+      <div class="footer__col">
+        <h4 class="label">Weiter</h4>
+        <a href="05-kinetic-brutal.html">05 Kinetic Brutal</a>
+        <a href="06-paper-workshop.html">06 Paper Workshop</a>
+        <a href="07-coral-belonging.html">07 Coral Belonging</a>
+        <a href="08-oyster-authority.html">08 Oyster Authority</a>
+        <a href="09-rosso-corsa.html">09 Rosso Corsa</a>
+      </div>
+      <div class="footer__col">
+        <h4 class="label">Bibliothek</h4>
+        <a href="../designguidelines/README.md">Design-Systeme</a>
+        <a href="../reference/README.md">Referenzen</a>
+        <a href="../skills">Skills</a>
+        <a href="../philosophy.md">Philosophie</a>
+        <a href="README.md">Regeln der Testseiten</a>
+      </div>
+    </div>
+    <div class="footer__base">
+      <span>© 2026 MJL Design Agency · Beispielprojekte, keine echten Marken</span>
+      <span>Meridian Studio · neun Sprachen, ein Maßstab</span>
+    </div>
+  </div>
 </footer>
 
-<script src="assets/motion.js" defer></script>
+<script src="assets/motion.js"></script>
 </body>
 </html>

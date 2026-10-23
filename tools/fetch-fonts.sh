@@ -24,6 +24,7 @@ FONTS=(
   "archivo|Archivo:wght@400..700|wght"
   "figtree|Figtree:wght@400..800|wght"
   "manrope|Manrope:wght@400..800|wght"
+  "instrument-serif-italic|Instrument+Serif:ital,wght@1,400|wght"
 )
 
 for entry in "${FONTS[@]}"; do

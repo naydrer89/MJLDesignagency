@@ -548,6 +548,243 @@
     .spec { grid-template-columns: 1fr; gap: 0.3rem; }
     .nav { padding: 0.75rem 1rem; }
   }
+  /* Passform: Größe wählen ist eine Entscheidung, kein Formular. */
+  .fit {
+    padding-block: clamp(4rem, 9vw, 7.5rem);
+    border-top: 1px solid var(--line);
+  }
+
+  .fit__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+    width: min(1280px, calc(100% - 3rem));
+    margin-inline: auto;
+  }
+
+  .fit h2 {
+    font-size: clamp(2.4rem, 5.6vw, 4.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0.8rem 0 1.2rem;
+  }
+
+  .fit__lead {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--grey);
+    max-width: 38ch;
+    margin-bottom: 2rem;
+  }
+
+  .sizes {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    max-width: 520px;
+  }
+
+  .size {
+    height: 58px;
+    border: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    position: relative;
+    transition: background-color 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease);
+  }
+
+  .size:hover {
+    border-color: var(--ink);
+  }
+
+  .size[aria-pressed='true'] {
+    background: var(--volt);
+    border-color: var(--volt);
+    color: var(--ink);
+  }
+
+  .size[disabled] {
+    color: #b9b9b9;
+    cursor: not-allowed;
+  }
+
+  .size[disabled]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 48.6%, var(--line) 48.6%, var(--line) 51.4%, transparent 51.4%);
+  }
+
+  .fit__hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--grey);
+  }
+
+  .fit__hint b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .fit__hint i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #16a34a;
+  }
+
+  .fit__hint i.is-sold {
+    background: var(--orange);
+  }
+
+  .fit__link {
+    display: inline-block;
+    margin-top: 1.4rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+  }
+
+  .fit__link:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .fit__specs {
+    border-top: 1px solid var(--line);
+  }
+
+  .fit__specs div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fit__specs span {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  .fit__specs b {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .fit__note {
+    margin-top: 1rem;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--grey);
+    max-width: 34ch;
+  }
+
+  /* Dialog */
+  .size-dialog {
+    width: min(560px, calc(100vw - 32px));
+    padding: 0;
+    border: 0;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.5);
+  }
+
+  .size-dialog::backdrop {
+    background: rgba(17, 17, 17, 0.55);
+    backdrop-filter: blur(3px);
+  }
+
+  .size-dialog[open] {
+    animation: dlg 0.32s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  @keyframes dlg {
+    from { opacity: 0; transform: translateY(12px) scale(0.985); }
+  }
+
+  .size-dialog__head {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .size-dialog__head h3 {
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .size-dialog__head button {
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--line);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .size-dialog table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  .size-dialog th,
+  .size-dialog td {
+    padding: 0.7rem 1.4rem;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .size-dialog th {
+    font-size: 0.5625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--grey);
+    font-weight: 500;
+  }
+
+  .size-dialog td:first-child {
+    font-weight: 500;
+  }
+
+  .size-dialog__foot {
+    padding: 1rem 1.4rem;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--grey);
+  }
+
+  @media (max-width: 860px) {
+    .fit__grid {
+      grid-template-columns: 1fr;
+      width: calc(100% - 2rem);
+    }
+
+    .sizes {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
 </style>
 </head>
 <body>
@@ -602,7 +839,7 @@
       <p>Jede Farbstellung ist auf 4 000 Paar limitiert — danach wird sie nicht wiederholt.</p>
     </div>
     <div class="rail__track" data-scrub>
-      <article class="product product--a">
+      <article class="product product--a" data-tilt="2.5">
         <div class="product__art" aria-hidden="true"></div>
         <div class="product__num"><span>Vela 04</span>01</div>
         <div class="product__foot">
@@ -610,7 +847,7 @@
           <span class="product__tag">Neu</span>
         </div>
       </article>
-      <article class="product product--b">
+      <article class="product product--b" data-tilt="2.5">
         <div class="product__art" aria-hidden="true"></div>
         <div class="product__num"><span>Vela 04</span>02</div>
         <div class="product__foot">
@@ -618,7 +855,7 @@
           <span class="product__tag">Neu</span>
         </div>
       </article>
-      <article class="product product--c">
+      <article class="product product--c" data-tilt="2.5">
         <div class="product__art" aria-hidden="true"></div>
         <div class="product__num"><span>Vela 04</span>03</div>
         <div class="product__foot">
@@ -654,6 +891,59 @@
     <figcaption>Mira K. — 2:28:14 über 42,195 km</figcaption>
   </figure>
 
+  <section class="fit" id="passform">
+    <div class="fit__grid">
+      <div>
+        <span class="eyebrow" data-reveal="side">Passform</span>
+        <h2 data-words="45">Die Größe, die bleibt.</h2>
+        <p class="fit__lead" data-reveal data-delay="0.12s">
+          Der Schuh sitzt vorn breit und hinten fest. Wer zwischen zwei Größen liegt,
+          nimmt die kleinere — das Obermaterial gibt nach zwei Läufen nach.
+        </p>
+
+        <div class="sizes" role="group" aria-label="Größe wählen">
+          <button class="size" type="button" aria-pressed="false" data-size="40">40</button>
+          <button class="size" type="button" aria-pressed="false" data-size="41">41</button>
+          <button class="size" type="button" aria-pressed="true" data-size="42">42</button>
+          <button class="size" type="button" aria-pressed="false" data-size="43">43</button>
+          <button class="size" type="button" aria-pressed="false" data-size="44">44</button>
+          <button class="size" type="button" aria-pressed="false" data-size="45" disabled>45</button>
+          <button class="size" type="button" aria-pressed="false" data-size="46">46</button>
+        </div>
+        <p class="fit__hint" aria-live="polite"><i id="fitDot"></i><b id="fitSize">EU 42</b> · vorrätig, Versand heute</p>
+        <button class="fit__link" type="button" data-dialog-open="sizeDialog">Größentabelle öffnen</button>
+      </div>
+
+      <div class="fit__specs" data-stagger>
+        <div><span>Gewicht</span><b>268 g (EU 42)</b></div>
+        <div><span>Sprengung</span><b>6 mm</b></div>
+        <div><span>Obermaterial</span><b>Flyknit, 71 % recycelt</b></div>
+        <div><span>Einsatz</span><b>Straße, 5 – 21 km</b></div>
+        <p class="fit__note">Gemessen am linken Schuh, EU 42, ohne Einlage. Beispielwerte dieses Entwurfs.</p>
+      </div>
+    </div>
+  </section>
+
+  <dialog class="size-dialog" id="sizeDialog" aria-labelledby="sizeTitle">
+    <div class="size-dialog__head">
+      <h3 id="sizeTitle">Größentabelle</h3>
+      <button type="button" data-dialog-close aria-label="Schließen">×</button>
+    </div>
+    <table>
+      <thead><tr><th>EU</th><th>UK</th><th>US</th><th>Fußlänge</th></tr></thead>
+      <tbody>
+        <tr><td>40</td><td>6</td><td>7</td><td>25,0 cm</td></tr>
+        <tr><td>41</td><td>7</td><td>8</td><td>25,8 cm</td></tr>
+        <tr><td>42</td><td>8</td><td>9</td><td>26,6 cm</td></tr>
+        <tr><td>43</td><td>9</td><td>10</td><td>27,4 cm</td></tr>
+        <tr><td>44</td><td>10</td><td>11</td><td>28,2 cm</td></tr>
+        <tr><td>45</td><td>11</td><td>12</td><td>29,0 cm</td></tr>
+        <tr><td>46</td><td>12</td><td>13</td><td>29,8 cm</td></tr>
+      </tbody>
+    </table>
+    <p class="size-dialog__foot">Zwischen zwei Größen? Die kleinere wählen. Bei breitem Fuß eine halbe Nummer größer.</p>
+  </dialog>
+
   <section class="end" id="kaufen">
     <h2 data-words>Morgen um sechs.</h2>
     <div class="end__row">
@@ -669,5 +959,20 @@
 </main>
 
 <script src="assets/motion.js" defer></script>
+<script>
+  (function () {
+    var sizeLabel = document.getElementById('fitSize');
+    var dot = document.getElementById('fitDot');
+    document.querySelectorAll('.size').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (btn.disabled) return;
+        document.querySelectorAll('.size').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        btn.setAttribute('aria-pressed', 'true');
+        sizeLabel.textContent = 'EU ' + btn.dataset.size;
+        dot.classList.remove('is-sold');
+      });
+    });
+  })();
+</script>
 </body>
 </html>

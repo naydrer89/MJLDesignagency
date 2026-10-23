@@ -141,6 +141,21 @@ button {
   clip-path: inset(0 0 0 0);
 }
 
+/* Kinder eines [data-stagger] folgen einander. Insgesamt nie über 420 ms:
+   sechs Schritte à 60 ms plus 380 ms Bewegung. */
+.js [data-stagger] > * {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) calc(min(var(--i, 0), 6) * 60ms),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) calc(min(var(--i, 0), 6) * 60ms);
+}
+
+.js [data-stagger].is-in > * {
+  opacity: 1;
+  transform: none;
+}
+
 /* Wörter eines Headlines-Reveals liegen in Masken. */
 [data-words] .word {
   display: inline-block;
@@ -179,9 +194,11 @@ button {
   }
 
   [data-reveal],
-  [data-words] .word > span {
+  [data-words] .word > span,
+  [data-stagger] > * {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
+    transition: none !important;
   }
 }

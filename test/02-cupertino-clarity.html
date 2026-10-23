@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cupertino Clarity — Aera</title>
 <script>document.documentElement.className = 'js';</script>
+<meta name="description" content="Aera: ein Raumlicht, das dem Tag folgt. Konzeptprojekt im Design-System Cupertino Clarity.">
 <link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/scene.css">
 <style>
   @font-face {
     font-family: 'Manrope';
@@ -16,700 +18,1348 @@
 
   :root {
     --black: #000;
+    --panel: #1d1d1f;
+    --panel-2: #2c2c2e;
     --ink: #f5f5f7;
     --ink-2: #a1a1a6;
     --ink-3: #86868b;
-    --paper: #f5f5f7;
-    --paper-ink: #1d1d1f;
     --blue: #0071e3;
     --blue-bright: #2997ff;
-    --tint: #7c5cff;
-    --hair: rgba(255, 255, 255, 0.14);
-    --hair-dark: rgba(0, 0, 0, 0.1);
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --green: #30d158;
+    --orange: #bf4800;
+    --hair: rgba(255, 255, 255, 0.16);
+    --hair-soft: rgba(255, 255, 255, 0.1);
+    --r-sm: 8px;
+    --r: 12px;
+    --r-md: 18px;
+    --r-lg: 28px;
+    --r-xl: 40px;
+    --pill: 980px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --focus: #2997ff;
     --selection: #0071e3;
     --skip-bg: #0071e3;
     --skip-on: #fff;
+    --tint: 262;
   }
 
   body {
     background: var(--black);
     color: var(--ink);
     font-family: 'Manrope', system-ui, sans-serif;
-    letter-spacing: -0.011em;
-    overflow-x: hidden;
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.022em;
   }
 
-  .progress {
-    position: fixed;
-    inset: 0 0 auto;
-    height: 2px;
-    z-index: 60;
-    background: linear-gradient(90deg, var(--blue-bright), var(--tint));
-    transform: scaleX(0);
-    transform-origin: 0 50%;
-  }
+  ::selection { background: var(--selection); color: #fff; }
 
   .wrap {
     width: min(1180px, 100% - 3rem);
     margin-inline: auto;
   }
 
-  /* ---------- Navigation als schwebende Kapsel ---------- */
-  .nav {
-    position: fixed;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    gap: 1.6rem;
-    padding: 0.45rem 0.5rem 0.45rem 1.1rem;
-    border-radius: 980px;
-    background: rgba(22, 22, 24, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(24px) saturate(180%);
-    box-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.9);
-    width: min(920px, calc(100% - 1.5rem));
+  .wrap--narrow { width: min(880px, 100% - 3rem); }
+
+  /* ---------- Typografie (Cupertino Clarity) ---------- */
+
+  .display {
+    font-size: clamp(3rem, 6.1vw, 5rem);
+    text-wrap: balance;
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.03em;
   }
 
-  .nav__brand {
-    font-weight: 700;
-    font-size: 15px;
+  .headline {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    text-wrap: balance;
+    line-height: 1.07;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  .headline-md {
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+    text-wrap: balance;
+    line-height: 1.1;
+    font-weight: 600;
     letter-spacing: -0.02em;
-    margin-right: auto;
   }
 
-  .nav__links {
-    display: flex;
-    gap: 1.5rem;
-    font-size: 13px;
+  .title {
+    font-size: 1.3125rem;
+    line-height: 1.19;
+    font-weight: 600;
+    letter-spacing: -0.011em;
+  }
+
+  .lead {
+    font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+    line-height: 1.42;
     color: var(--ink-2);
+    letter-spacing: -0.014em;
   }
 
-  .nav__links a { transition: color 0.25s ease; }
-  .nav__links a:hover { color: var(--ink); }
+  .body-sm {
+    font-size: 0.875rem;
+    line-height: 1.43;
+    color: var(--ink-2);
+    letter-spacing: -0.016em;
+  }
+
+  .label {
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 0.75rem;
+    line-height: 1.33;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .mono {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- Grundformen ---------- */
 
   .pill {
-    height: 32px;
-    padding-inline: 0.95rem;
-    border-radius: 980px;
-    background: var(--ink);
-    color: #000;
-    font-size: 12.5px;
-    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    transition: transform 0.3s var(--ease), background 0.3s ease;
-  }
-
-  .pill:hover { background: #fff; transform: translateY(-1px); }
-
-  /* ---------- Hero ---------- */
-  .hero {
-    padding-top: clamp(6.5rem, 10.5vw, 8.5rem);
-    text-align: center;
-  }
-
-  .eyebrow {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--tint);
-    transition: color 0.6s var(--ease);
-  }
-
-  h1 {
-    margin: 1.2rem auto 0;
-    max-width: 17ch;
-    font-size: clamp(2.8rem, 6.6vw, 5.2rem);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-    font-weight: 700;
-    /* Bewusst Vollton statt Verlauf: die Headline wird in Wortmasken zerlegt,
-       ein per background-clip gefärbter Verlauf läge sonst hinter den Spans. */
-    color: #f5f5f7;
-  }
-
-  .hero__sub {
-    margin: 1.6rem auto 0;
-    max-width: 42ch;
-    font-size: clamp(1rem, 1.5vw, 1.3rem);
-    line-height: 1.5;
-    color: var(--ink-2);
-  }
-
-  .hero__cta {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1.6rem;
     justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    font-size: 15px;
+    gap: 0.4rem;
+    height: 44px;
+    padding-inline: 1.5rem;
+    border-radius: var(--pill);
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border: 0;
+    cursor: pointer;
+    transition: background-color 0.24s var(--ease), transform 0.24s var(--ease);
   }
 
-  .link {
+  .pill:hover { background: #0077ed; }
+  .pill:active { transform: scale(0.985); }
+
+  .pill--ghost {
+    background: transparent;
+    color: var(--blue-bright);
+    border: 1px solid rgba(41, 151, 255, 0.5);
+    height: 40px;
+    padding-inline: 1.15rem;
+    font-size: 0.875rem;
+  }
+
+  .pill--ghost:hover { background: rgba(41, 151, 255, 0.1); }
+
+  .pill--light {
+    background: var(--ink);
+    color: #000;
+  }
+
+  .pill--light:hover { background: #fff; }
+
+  .textlink {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     color: var(--blue-bright);
-    transition: gap 0.3s var(--ease);
+    font-size: 1.0625rem;
+    letter-spacing: -0.014em;
+    padding-block: 0.5rem;
   }
 
-  .link:hover { gap: 0.6rem; }
+  .textlink svg { transition: transform 0.32s var(--ease); }
+  .textlink:hover svg { transform: translateX(3px); }
 
-  .btn-solid {
+  /* ---------- Navigation ---------- */
+
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.62);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+  }
+
+  .nav.is-stuck {
+    border-bottom-color: var(--hair-soft);
+    background: rgba(0, 0, 0, 0.82);
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 100%;
+  }
+
+  .nav__brand {
     display: inline-flex;
     align-items: center;
-    height: 46px;
-    padding-inline: 1.6rem;
-    border-radius: 980px;
-    background: var(--blue);
-    color: #fff;
-    font-weight: 600;
-    font-size: 15px;
-    transition: background 0.3s ease, transform 0.3s var(--ease);
+    gap: 0.45rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
-  .btn-solid:hover { background: #1a80e8; transform: translateY(-1px); }
+  .nav__brand svg { color: var(--ink); }
 
-  /* ---------- Gerät: Skalierung und Rotation folgen dem Scroll ---------- */
-  .stage {
+  .nav__links {
+    display: flex;
+    gap: 1.75rem;
+    margin-left: auto;
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+  }
+
+  .nav__links a { padding-block: 0.45rem; transition: color 0.24s var(--ease); }
+  .nav__links a:hover { color: var(--ink); }
+
+  .nav__cta {
+    margin-left: auto;
+    height: 30px;
+    padding-inline: 0.9rem;
+    font-size: 0.8125rem;
+  }
+
+  .nav__links + .nav__cta { margin-left: 0; }
+
+  /* ---------- Hero ---------- */
+
+  .hero {
+    padding-top: clamp(7.5rem, 12vw, 10rem);
+    text-align: center;
     position: relative;
-    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+    overflow: clip;
+  }
+
+  .hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 { margin-bottom: 1.25rem; }
+
+  .hero .lead {
+    max-width: 36ch;
+    margin-inline: auto;
+    text-wrap: balance;
+  }
+
+  .hero__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Das Licht ---------- */
+
+  .orb {
+    --tint: 262;
+    --light-h: 262;
+    --glow: 0.5;
+    --orb-size: clamp(240px, 30vw, 380px);
+    position: relative;
+    width: var(--orb-size);
+    aspect-ratio: 1;
+    border-radius: 50%;
     display: grid;
     place-items: center;
-    min-height: min(44vh, 400px);
     isolation: isolate;
   }
 
-  .stage__halo {
+  .orb__halo {
     position: absolute;
-    width: min(76vw, 720px);
-    aspect-ratio: 1;
+    inset: -72%;
     border-radius: 50%;
-    background: radial-gradient(circle, color-mix(in oklab, var(--tint) 55%, transparent), transparent 62%);
-    filter: blur(60px);
-    opacity: 0.75;
-    transition: background 0.8s var(--ease);
+    z-index: 0;
+    background: radial-gradient(
+      circle at 50% 50%,
+      hsl(var(--light-h) 94% 68% / calc(0.42 * var(--glow))) 0%,
+      hsl(var(--light-h) 90% 56% / calc(0.17 * var(--glow))) 38%,
+      transparent 70%
+    );
+    filter: blur(18px);
   }
 
-  .device {
-    position: relative;
-    width: min(46vw, 330px);
-    aspect-ratio: 1;
-    transform:
-      scale(calc(0.78 + var(--scrub, 0.35) * 0.42))
-      rotate(calc(var(--scrub, 0.35) * 16deg));
-    transition: transform 0.18s linear;
-    will-change: transform;
+  .orb__floor {
+    position: absolute;
+    left: 50%;
+    bottom: -14%;
+    width: 72%;
+    height: 16%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      hsl(var(--light-h) 90% 60% / calc(0.35 * var(--glow))),
+      transparent 70%
+    );
+    filter: blur(14px);
+    z-index: 0;
   }
 
-  .device__disc {
+  .orb__body {
     position: absolute;
     inset: 0;
     border-radius: 50%;
+    z-index: 1;
     background:
-      radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.85), transparent 30%),
-      linear-gradient(148deg, #f6f4ff 0%, color-mix(in oklab, var(--tint) 82%, #fff) 22%, var(--tint) 42%, #241a48 74%, #08080a 100%);
+      /* eine kleine, harte Spiegelung: Glas, kein Ballon */
+      radial-gradient(circle at 33% 23%, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0) 12%),
+      /* der Körper: innen hell, zur Kante hin tief */
+      radial-gradient(circle at 50% 52%, hsl(var(--tint) 58% 58%), hsl(var(--tint) 55% 40%) 52%, hsl(var(--tint) 44% 16%) 78%, #08080a 100%),
+      /* eine zweite, weiche Lichtkante unten */
+      radial-gradient(circle at 62% 82%, hsl(var(--light-h) 70% 40% / 0.22), transparent 42%);
     box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.22),
-      inset 0 -30px 70px rgba(0, 0, 0, 0.6),
-      0 70px 140px -50px color-mix(in oklab, var(--tint) 70%, transparent);
-    transition: background 0.8s var(--ease), box-shadow 0.8s var(--ease);
+      inset 0 -26px 48px rgba(0, 0, 0, 0.6),
+      inset 0 8px 22px rgba(255, 255, 255, 0.1),
+      0 34px 90px -34px hsl(var(--light-h) 90% 55% / 0.45);
   }
 
-  .device__ring {
+  .orb__core {
     position: absolute;
-    inset: 9%;
+    z-index: 2;
+    width: 54%;
+    aspect-ratio: 1;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    background: radial-gradient(circle at 50% 120%, rgba(255, 255, 255, 0.22), transparent 60%);
-    animation: turn 26s linear infinite;
+    background: radial-gradient(
+      circle at 50% 50%,
+      #fff 0%,
+      hsl(var(--light-h) 100% 95% / 0.92) 18%,
+      hsl(var(--light-h) 96% 80% / 0.5) 44%,
+      transparent 68%
+    );
+    filter: blur(20px);
+    opacity: calc(0.4 + var(--glow) * 0.7);
   }
 
-  .device__ring::after {
+  .orb__rim {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+      inset 0 12px 34px rgba(255, 255, 255, 0.08);
+  }
+
+  .hero__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding-block: clamp(3rem, 6vw, 5rem) 2rem;
+  }
+
+  .hero__stage::before {
     content: '';
     position: absolute;
-    top: -3px;
-    left: 50%;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 14px 3px rgba(255, 255, 255, 0.7);
+    inset: 12% 20% 0;
+    background: radial-gradient(ellipse at 50% 45%, hsl(var(--tint) 80% 40% / 0.22), transparent 68%);
+    filter: blur(20px);
+    pointer-events: none;
   }
 
-  .device__core {
-    position: absolute;
-    inset: 30%;
-    border-radius: 50%;
-    background: radial-gradient(circle at 40% 30%, #fff, #d9d4ff 40%, var(--tint) 100%);
-    box-shadow: 0 0 60px 10px color-mix(in oklab, var(--tint) 70%, transparent);
-    transition: background 0.8s var(--ease), box-shadow 0.8s var(--ease);
-  }
-
-  @keyframes turn {
-    to { transform: rotate(360deg); }
-  }
-
-  .stage__label {
-    position: absolute;
-    bottom: 5%;
-    font-size: 12px;
-    letter-spacing: 0.02em;
+  .hero__specs {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 1rem;
     color: var(--ink-3);
-    display: flex;
-    gap: 1.4rem;
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+    flex-wrap: wrap;
   }
 
-  /* ---------- Farben ---------- */
-  .colors {
-    margin-block: clamp(3rem, 7vw, 6rem);
+  .hero__specs li {
+    min-width: 5.5rem;
+  }
+
+  .hero__specs b {
+    display: block;
+    color: var(--ink-2);
+    font-weight: 600;
+    font-size: 0.8125rem;
+  }
+
+  /* Konfigurator: Farbe, Preis, Kauf */
+
+  .config {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1.4rem;
+    justify-content: center;
+    gap: 1.75rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+    border: 1px solid var(--hair-soft);
+    border-radius: var(--pill);
+    background: rgba(29, 29, 31, 0.7);
+    backdrop-filter: blur(16px);
+    width: fit-content;
+    margin-inline: auto;
   }
 
   .swatches {
     display: flex;
-    gap: 0.9rem;
+    align-items: center;
+    gap: 0.3rem;
   }
 
   .swatch {
+    position: relative;
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: var(--c);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
-    position: relative;
-    transition: transform 0.3s var(--ease);
-  }
-
-  .swatch[aria-pressed='true']::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 1px solid currentColor;
-  }
-
-  .swatch:hover { transform: scale(1.08); }
-
-  .colors__name {
-    font-size: 15px;
-    color: var(--ink-2);
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* ---------- Material: klebender Text, laufendes Licht ---------- */
-  .material {
-    padding-block: clamp(5rem, 11vw, 9rem);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 6vw, 6rem);
-    align-items: start;
-  }
-
-  .material__sticky {
-    position: sticky;
-    top: 120px;
-    aspect-ratio: 4 / 5;
-    border-radius: 32px;
-    overflow: hidden;
-    background:
-      radial-gradient(120% 100% at 20% 0%, color-mix(in oklab, var(--tint) 45%, transparent), transparent 55%),
-      linear-gradient(160deg, #17171a, #08080a 70%);
-    border: 1px solid var(--hair);
-    display: grid;
+    cursor: pointer;
+    display: inline-grid;
     place-items: center;
   }
 
-  .material__sticky::before {
-    content: '';
+  .swatch input {
     position: absolute;
-    inset: -40%;
-    background: conic-gradient(from 180deg, transparent, rgba(255, 255, 255, 0.14), transparent 40%);
-    animation: turn 18s linear infinite;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
   }
 
-  .material__chip {
-    position: relative;
-    width: 58%;
-    aspect-ratio: 1;
+  .swatch i {
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    background: radial-gradient(circle at 34% 28%, #fff, color-mix(in oklab, var(--tint) 75%, #111) 55%, #0b0b0d);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 40px 100px -30px #000;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: radial-gradient(circle at 36% 30%, hsl(var(--sw-h) 80% 76%), hsl(var(--sw-h) 60% 42%));
+    transition: box-shadow 0.24s var(--ease);
   }
 
-  .material__text h2 {
-    font-size: clamp(2rem, 4vw, 3.25rem);
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    font-weight: 700;
+  .swatch input:checked + i {
+    box-shadow: 0 0 0 2px #000, 0 0 0 3px rgba(255, 255, 255, 0.7);
+  }
+
+  .swatch input:focus-visible + i {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .config__name {
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+    min-width: 4.5rem;
+  }
+
+  .config__price {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .config__price span {
+    color: var(--ink-3);
+    font-weight: 400;
+    font-size: 0.8125rem;
+  }
+
+  /* ---------- Szene ---------- */
+
+  .scene {
+    --scene-span: 300svh;
+    /* Die Beats liegen übereinander: der alte muss ganz gehen, nicht blass stehen bleiben. */
+    --scene-dim: 0;
+    border-block: 1px solid var(--hair-soft);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(41, 151, 255, 0.05), transparent 70%),
+      #000;
+  }
+
+  .scene__inner {
+    min-height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+    padding-block: clamp(4rem, 9vh, 7rem);
+  }
+
+  .scene__copy {
+    order: 1;
+    min-height: 21rem;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-content: center;
+    row-gap: 2.25rem;
+  }
+
+  .scene__head {
+    grid-row: 1;
+    margin-bottom: 2rem;
+  }
+
+  .scene__head h2 {
+    margin-top: 0.85rem;
     max-width: 16ch;
   }
 
-  .material__text p {
-    margin-top: 1.4rem;
+  .beat {
+    max-width: 31rem;
+  }
+
+  .beat p {
+    max-width: 35ch;
+  }
+
+  .is-live .scene__copy .beat {
+    /* Alle Beats liegen in derselben Zelle: eine Kamera, kein Sprung. */
+    grid-row: 2;
+    grid-column: 1;
+    align-self: center;
+  }
+
+  .beat__index {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    color: var(--blue-bright);
+    margin-bottom: 0.75rem;
+  }
+
+  .beat h3 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.85rem;
+  }
+
+  .beat p {
     color: var(--ink-2);
-    font-size: 17px;
-    line-height: 1.6;
-    max-width: 46ch;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: -0.012em;
   }
 
-  .facts {
-    margin-top: 2.4rem;
-    border-top: 1px solid var(--hair);
-  }
-
-  .fact {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    padding-block: 1rem;
-    border-bottom: 1px solid var(--hair);
-    font-size: 14px;
-  }
-
-  .fact span:last-child { color: var(--ink-2); text-align: right; }
-
-  /* ---------- Bahn: horizontale Bewegung, gesteuert vom Scroll ---------- */
-  .rail {
-    position: relative;
-    padding-block: clamp(4rem, 9vw, 8rem);
-    overflow: hidden;
-  }
-
-  .rail__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .rail__head h2 {
-    font-size: clamp(1.9rem, 3.6vw, 3rem);
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    font-weight: 700;
-    max-width: 18ch;
-  }
-
-  .rail__head p { max-width: 30ch; color: var(--ink-3); font-size: 14px; }
-
-  .rail__track {
-    display: flex;
-    gap: 1.25rem;
-    width: max-content;
-    transform: translate3d(calc(var(--scrub, 0) * -46%), 0, 0);
-    transition: transform 0.15s linear;
-    padding-right: 20vw;
-  }
-
-  .tile {
-    width: clamp(240px, 26vw, 360px);
-    padding: 1.6rem;
-    border-radius: 26px;
-    border: 1px solid var(--hair);
-    background: linear-gradient(170deg, #17171b, #0b0b0d);
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: border-color 0.4s ease, transform 0.5s var(--ease);
-  }
-
-  .tile:hover { border-color: rgba(255, 255, 255, 0.28); transform: translateY(-4px); }
-
-  .tile__glyph {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.24);
+  .scene__object {
+    order: 2;
     display: grid;
     place-items: center;
-    color: var(--tint);
-    transition: color 0.4s ease;
+    padding-block: 1rem;
   }
 
-  .tile h3 {
+  .scene__rail {
+    order: 3;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
     margin-top: 2rem;
-    font-size: 21px;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-    font-weight: 700;
+    border-top: 1px solid var(--hair-soft);
+    padding-top: 1rem;
+    position: relative;
   }
 
-  .tile p { margin-top: 0.6rem; font-size: 14px; line-height: 1.55; color: var(--ink-3); }
-
-  /* ---------- Spezifikationen ---------- */
-  .specs {
-    padding-block: clamp(4rem, 9vw, 8rem);
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: clamp(2rem, 5vw, 5rem);
-    border-top: 1px solid var(--hair);
+  .scene__rail::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, var(--blue-bright), hsl(268 90% 68%));
+    transform: scaleX(var(--scene));
+    transform-origin: 0 50%;
   }
 
-  .specs h2 {
-    font-size: clamp(1.8rem, 3vw, 2.6rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    font-weight: 700;
-  }
-
-  .specs dl {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    border-top: 1px solid var(--hair);
-  }
-
-  .specs dt,
-  .specs dd {
-    padding-block: 1.05rem;
-    border-bottom: 1px solid var(--hair);
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-  }
-
-  .specs dt { color: var(--ink-3); }
-  .specs dd { color: var(--ink); justify-content: flex-end; text-align: right; }
-
-  /* ---------- Kaufleiste, erscheint nach dem ersten Screen ---------- */
-  .buybar {
-    position: fixed;
-    left: 50%;
-    bottom: 1.2rem;
-    transform: translate(-50%, 140%);
-    z-index: 55;
-    width: min(680px, calc(100% - 1.5rem));
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.7rem 0.7rem 0.7rem 1.2rem;
-    border-radius: 980px;
-    background: rgba(28, 28, 30, 0.86);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(24px);
-    box-shadow: 0 30px 60px -30px #000;
-    transition: transform 0.55s var(--ease);
-  }
-
-  .buybar.is-in { transform: translate(-50%, 0); }
-
-  .buybar__info { margin-right: auto; font-size: 13px; color: var(--ink-2); }
-  .buybar__info strong { color: var(--ink); font-weight: 600; }
-
-  footer {
-    padding-block: 3rem 6rem;
-    border-top: 1px solid var(--hair);
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    font-size: 12px;
+  .scene__rail li {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
     color: var(--ink-3);
   }
 
-  @media (max-width: 900px) {
-    .material,
-    .specs { grid-template-columns: 1fr; }
-    .material__sticky { position: relative; top: 0; max-height: 420px; }
-    .specs dl { grid-template-columns: 1fr; }
-    .specs dd { justify-content: flex-start; border-bottom: 1px solid var(--hair); padding-top: 0; }
-    .nav__links { display: none; }
-    .nav { justify-content: space-between; }
-    .nav__brand { margin-right: 0; }
+  .scene__rail li:last-child { text-align: right; }
+  .scene__rail li:nth-child(2) { text-align: center; }
+
+  /* ---------- Detail ---------- */
+
+  .section {
+    padding-block: clamp(4.5rem, 9vw, 8rem);
   }
 
-  @media (max-width: 640px) {
-    .wrap { width: min(1180px, 100% - 2rem); }
-    .stage { min-height: 54vh; }
-    .device { width: min(72vw, 320px); }
-    .rail__head { flex-direction: column; align-items: flex-start; }
-    .rail__track { transform: none; overflow-x: auto; padding-right: 1rem; }
-    .buybar__info span { display: none; }
-    footer { padding-bottom: 7rem; }
+  .section--hair { border-top: 1px solid var(--hair-soft); }
+
+  .section__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 3rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .section__head p {
+    max-width: 34ch;
+    color: var(--ink-2);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.35rem;
+  }
+
+  .detail {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+
+  .detail__media {
+    position: relative;
+    border-radius: var(--r-lg);
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 46%, hsl(268 60% 26% / 0.55), transparent 72%),
+      var(--panel);
+    aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: center;
+    overflow: clip;
+  }
+
+  .detail__media .orb {
+    --orb-size: min(62%, 320px);
+  }
+
+  .detail__media .macro-line {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.1rem 1.25rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.625rem;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.06em;
+  }
+
+  .detail__copy h2 { margin-bottom: 1.1rem; }
+  .detail__copy .lead { max-width: 38ch; }
+
+  .specs {
+    margin-top: 2rem;
+    border-top: 1px solid var(--hair-soft);
+  }
+
+  .specs div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--hair-soft);
+    font-size: 0.875rem;
+  }
+
+  .specs dt { color: var(--ink-3); }
+  .specs dd { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* ---------- Vier Eigenschaften ---------- */
+
+  .traits {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--hair-soft);
+    border: 1px solid var(--hair-soft);
+    border-radius: var(--r-md);
+    overflow: clip;
+  }
+
+  .trait {
+    background: #000;
+    padding: 1.6rem 1.5rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    min-height: 13rem;
+  }
+
+  .trait__icon {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    color: var(--blue-bright);
+    margin-bottom: auto;
+  }
+
+  .trait h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+  }
+
+  .trait p {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+
+  /* ---------- Modelle ---------- */
+
+  .models {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .model {
+    position: relative;
+    border: 1px solid var(--hair-soft);
+    border-radius: var(--r-md);
+    background: linear-gradient(180deg, rgba(29, 29, 31, 0.9), rgba(0, 0, 0, 0.9));
+    padding: 1.75rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s var(--ease), transform 0.4s var(--ease);
+  }
+
+  .model:hover { border-color: var(--hair); transform: translateY(-3px); }
+
+  .model__media {
+    display: grid;
+    place-items: center;
+    padding-block: 1.25rem 1.75rem;
+  }
+
+  .model__media .orb {
+    --orb-size: clamp(96px, 11vw, 132px);
+  }
+
+  .model__name {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+  }
+
+  .model__price {
+    margin-top: 0.2rem;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+
+  .model__specs {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--hair-soft);
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    margin-bottom: 1.25rem;
+  }
+
+  .model__specs span { display: flex; justify-content: space-between; gap: 1rem; }
+  .model__specs b { font-weight: 400; color: var(--ink-3); }
+
+  .model .pill { width: 100%; margin-top: auto; }
+
+  .model--hero {
+    border-color: rgba(41, 151, 255, 0.4);
+    box-shadow: 0 24px 60px -40px rgba(41, 151, 255, 0.6);
+  }
+
+  .model__tag {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-bright);
+  }
+
+  /* ---------- Zahlen ---------- */
+
+  .numbers__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .numbers__grid h2 { max-width: 12ch; }
+
+  .numbers {
+    border-top: 1px solid var(--hair-soft);
+  }
+
+  .numbers div {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--hair-soft);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .numbers dt { color: var(--ink-3); }
+  .numbers dd { text-align: right; }
+
+  /* ---------- Kaufen ---------- */
+
+  .buy {
+    text-align: center;
+    padding-block: clamp(4.5rem, 8vw, 7rem);
+    border-top: 1px solid var(--hair-soft);
+    background: radial-gradient(ellipse 60% 90% at 50% 0%, rgba(41, 151, 255, 0.08), transparent 70%);
+  }
+
+  .buy h2 { margin-bottom: 0.75rem; }
+
+  .buy p {
+    color: var(--ink-2);
+    max-width: 42ch;
+    margin-inline: auto;
+    font-size: 1rem;
+  }
+
+  .buy__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .buy__note {
+    margin-top: 1.25rem;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .buy__model {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ---------- Fuß ---------- */
+
+  .footer {
+    border-top: 1px solid var(--hair-soft);
+    padding-block: 2.5rem 2rem;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .footer__grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .footer__links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .footer__links a:hover { color: var(--ink-2); }
+
+  .footer__base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hair-soft);
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 1080px) {
+    .traits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .models { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .model:last-child { grid-column: span 2; }
+    .model:last-child .model__media .orb { --orb-size: 120px; }
+  }
+
+  @media (max-width: 900px) {
+    .scene__inner {
+      grid-template-columns: 1fr;
+      align-content: center;
+      gap: 2.5rem;
+      padding-block: 4rem 5rem;
+    }
+
+    .scene__copy {
+      order: 2;
+      min-height: 17rem;
+      text-align: center;
+      justify-items: center;
+    }
+
+    .scene__head { margin-bottom: 1.25rem; }
+    .scene__head h2 { margin-inline: auto; }
+    .scene__object { order: 1; }
+    .beat { max-width: 30ch; }
+    .scene__rail { margin-top: 1.5rem; }
+
+    .detail { grid-template-columns: 1fr; }
+    .detail__media { aspect-ratio: 5 / 4; }
+    .section__head { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+    .section__head p { margin-bottom: 0; }
+    .numbers__grid { grid-template-columns: 1fr; gap: 2rem; }
+    .numbers__grid h2 { max-width: 18ch; }
+  }
+
+  @media (max-width: 760px) {
+    .wrap, .wrap--narrow { width: calc(100% - 2rem); }
+    .nav__links { display: none; }
+    .nav__cta { margin-left: auto; }
+    body { font-size: 16px; }
+    .hero { padding-top: 7rem; }
+    .hero__specs { gap: 1.5rem; flex-wrap: wrap; }
+    .config { gap: 1rem; padding: 0.65rem 0.75rem 0.65rem 1rem; border-radius: var(--r-md); }
+    .config__name { display: none; }
+    .traits { grid-template-columns: 1fr; }
+    .trait { min-height: 0; }
+    .models { grid-template-columns: 1fr; }
+    .model:last-child { grid-column: auto; }
+    .detail__media { aspect-ratio: 4 / 3; }
+    .footer__base { flex-direction: column; }
+  }
+
+  @media (max-width: 420px) {
+    .hero__actions { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+    .hero__actions .textlink { justify-content: center; }
+    .config { width: 100%; justify-content: space-between; }
+    .config__price { font-size: 0.875rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-scene] { height: auto !important; }
+    .is-live .scene__copy .beat { grid-row: auto; }
+    .scene__copy { min-height: 0; display: block; }
+    .scene__head { margin-bottom: 2rem; }
+    .beat + .beat { margin-top: 2.5rem; }
+    .scene__rail::after { transform: none; }
+    * { scroll-behavior: auto !important; }
   }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Zum Inhalt springen</a>
-<div class="progress" data-progress aria-hidden="true"></div>
 
 <header class="nav">
-  <a class="nav__brand" href="#main">Aera</a>
-  <nav class="nav__links" aria-label="Hauptnavigation">
-    <a href="#material">Material</a>
-    <a href="#bahn">Funktionen</a>
-    <a href="#spezifikationen">Technik</a>
-  </nav>
-  <a class="pill" href="#kaufen" data-magnetic="4">Kaufen</a>
+  <div class="wrap nav__inner">
+    <a class="nav__brand" href="#top" aria-label="Aera — zur Startseite">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.4" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2.2" fill="currentColor"/></svg>
+      Aera
+    </a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <a href="#story">Licht</a>
+      <a href="#detail">Material</a>
+      <a href="#modelle">Modelle</a>
+      <a href="#zahlen">Technik</a>
+    </nav>
+    <a class="pill nav__cta" href="#kaufen">Kaufen</a>
+  </div>
 </header>
 
 <main id="main">
-  <div class="wrap">
-    <section class="hero">
-      <p class="eyebrow">Aera</p>
-      <h1 data-words>Licht. In seiner<br>ruhigsten Form.</h1>
-      <p class="hero__sub">
-        Ein Raumlicht, das den Tag kennt. Es wird wärmer, wenn es Abend wird, und dunkler,
-        wenn Sie es brauchen — ohne dass Sie es ihm sagen.
-      </p>
-      <div class="hero__cta">
-        <a class="btn-solid" href="#kaufen" data-magnetic="6">Ab 349 €</a>
-        <a class="link" href="#material">Mehr erfahren <span aria-hidden="true">›</span></a>
-      </div>
-    </section>
-
-    <section class="stage" aria-label="Aera, Vorderansicht">
-      <div class="stage__halo" aria-hidden="true"></div>
-      <div class="device" data-scrub>
-        <div class="device__disc"></div>
-        <div class="device__ring" aria-hidden="true"></div>
-        <div class="device__core"></div>
-      </div>
-      <p class="stage__label"><span>Ø 180 mm</span><span>1,1 kg</span><span>Aluminium, eloxiert</span></p>
-    </section>
-
-    <section class="colors" aria-label="Farbe wählen">
-      <div class="swatches" role="group" aria-label="Gehäusefarbe">
-        <button class="swatch" style="--c:#7c5cff" data-tint="#7c5cff" data-name="Violett" aria-pressed="true" aria-label="Violett"></button>
-        <button class="swatch" style="--c:#f26d5b" data-tint="#f26d5b" data-name="Koralle" aria-pressed="false" aria-label="Koralle"></button>
-        <button class="swatch" style="--c:#3ad0a4" data-tint="#3ad0a4" data-name="Jade" aria-pressed="false" aria-label="Jade"></button>
-        <button class="swatch" style="--c:#d9d9de" data-tint="#d9d9de" data-name="Silber" aria-pressed="false" aria-label="Silber"></button>
-      </div>
-      <p class="colors__name" aria-live="polite">Violett</p>
-    </section>
-
-    <section class="material" id="material">
-      <div class="material__sticky" aria-hidden="true" data-reveal="mask">
-        <div class="material__chip"></div>
-      </div>
-      <div class="material__text">
-        <h2 data-words>Ein Körper, der nur Licht zeigt.</h2>
-        <p>
-          Kein Display, keine Taste, keine Beschriftung. Die Oberfläche ist aus einem Stück
-          eloxiertem Aluminium gefräst, die Kante ist so dünn, dass sie im Gegenlicht verschwindet.
-        </p>
-        <p>
-          Alles, was Sie brauchen, liegt in einer Geste: drehen für Helligkeit, tippen für Stimmung.
-        </p>
-        <div class="facts">
-          <div class="fact"><span>Gehäuse</span><span>Aluminium 6061, eloxiert</span></div>
-          <div class="fact"><span>Streuung</span><span>Optisches PMMA, 2 mm</span></div>
-          <div class="fact"><span>Leistung</span><span>4 W im Mittelbetrieb</span></div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <section class="rail" id="bahn">
+  <section class="hero" id="top">
     <div class="wrap">
-      <div class="rail__head">
-        <h2 data-words>Es passt sich an, ohne zu fragen.</h2>
-        <p>Vier Dinge, die den Unterschied zwischen einem Licht und einem Raumgefühl machen.</p>
+      <p class="label hero__eyebrow" data-reveal="side">Aera · Raumlicht</p>
+      <h1 class="display" data-words="45">Licht. In seiner ruhigsten Form.</h1>
+      <p class="lead" data-reveal data-delay="0.18s">
+        Ein Raumlicht, das den Tag kennt. Es wird wärmer, wenn es Abend wird,
+        und dunkler, wenn Sie es brauchen — ohne dass Sie es ihm sagen.
+      </p>
+      <div class="hero__actions" data-reveal data-delay="0.26s">
+        <a class="pill" href="#kaufen" data-magnetic="4">Kaufen</a>
+        <a class="textlink" href="#story">
+          Mehr erfahren
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </div>
-    </div>
-    <div class="rail__track" data-scrub>
-      <article class="tile">
-        <div class="tile__glyph" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4"/><path d="M10 1v2M10 17v2M1 10h2M17 10h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+
+      <div class="hero__stage" data-reveal="scale" data-delay="0.32s">
+        <div class="orb" aria-hidden="true">
+          <span class="orb__halo"></span>
+          <span class="orb__floor"></span>
+          <span class="orb__body"></span>
+          <span class="orb__core"></span>
+          <span class="orb__rim"></span>
         </div>
-        <div>
-          <h3>Tageslicht, gemessen statt geschätzt</h3>
-          <p>Ein Sensor liest die Farbtemperatur im Raum und verschiebt das Licht um 200 K in Richtung Abend.</p>
+      </div>
+
+      <ul class="hero__specs" data-reveal data-delay="0.4s">
+        <li><b>180 mm</b>Durchmesser</li>
+        <li><b>1,1 kg</b>Gewicht</li>
+        <li><b>Aluminium</b>eloxiert</li>
+      </ul>
+
+      <div class="config" data-reveal data-delay="0.46s">
+        <div class="swatches" role="radiogroup" aria-label="Farbe wählen">
+          <label class="swatch">
+            <input type="radio" name="tint" value="262" data-tint="262" data-name="Violett" checked>
+            <i style="--sw-h: 262" aria-hidden="true"></i>
+            <span class="visually-hidden">Violett</span>
+          </label>
+          <label class="swatch">
+            <input type="radio" name="tint" value="32" data-tint="32" data-name="Bernstein">
+            <i style="--sw-h: 32" aria-hidden="true"></i>
+            <span class="visually-hidden">Bernstein</span>
+          </label>
+          <label class="swatch">
+            <input type="radio" name="tint" value="158" data-tint="158" data-name="Minze">
+            <i style="--sw-h: 158" aria-hidden="true"></i>
+            <span class="visually-hidden">Minze</span>
+          </label>
+          <label class="swatch">
+            <input type="radio" name="tint" value="220" data-tint="220" data-name="Graphit">
+            <i style="--sw-h: 220" aria-hidden="true"></i>
+            <span class="visually-hidden">Graphit</span>
+          </label>
         </div>
-      </article>
-      <article class="tile">
-        <div class="tile__glyph" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 13c2-6 12-6 14 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M3 13h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div>
-          <h3>Dämmerung in 40 Minuten</h3>
-          <p>Statt hart auszugehen, dimmt Aera über den Abend. Die Kurve ist ruhig, nicht linear.</p>
-        </div>
-      </article>
-      <article class="tile">
-        <div class="tile__glyph" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <h3>Lokal. Ohne Konto.</h3>
-          <p>Zeitpläne liegen auf dem Gerät. Kein Konto, kein Cloud-Zwang, kein Update, das Sie aussperrt.</p>
-        </div>
-      </article>
-      <article class="tile">
-        <div class="tile__glyph" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="12" rx="6" stroke="currentColor" stroke-width="1.4"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div>
-          <h3>Zehn Jahre, ein Kabel</h3>
-          <p>USB-C, austauschbarer Akku, Ersatzteile über den Support. Kein Kleber im Gehäuse.</p>
-        </div>
-      </article>
+        <span class="config__name" id="tintName">Violett</span>
+        <span class="config__price">349 € <span>· ab</span></span>
+        <a class="pill pill--light" href="#kaufen">In den Warenkorb</a>
+      </div>
     </div>
   </section>
 
-  <div class="wrap">
-    <section class="specs" id="spezifikationen">
-      <h2 data-words>Die Zahlen, die zählen.</h2>
-      <dl>
-        <dt>Lichtstrom</dt><dd>780 lm</dd>
-        <dt>Farbtemperatur</dt><dd>1 800 – 6 500 K</dd>
-        <dt>Farbwiedergabe</dt><dd>CRI 96</dd>
-        <dt>Abmessung</dt><dd>180 × 62 mm</dd>
-        <dt>Gewicht</dt><dd>1,1 kg</dd>
-        <dt>Anschluss</dt><dd>USB-C, 15 W</dd>
-        <dt>Material</dt><dd>Aluminium, eloxiert</dd>
-        <dt>Garantie</dt><dd>5 Jahre</dd>
+  <section class="scene" id="story" data-scene aria-labelledby="story-title">
+    <div class="scene__stage" data-scene-stage>
+      <div class="wrap scene__inner">
+      <div class="scene__copy">
+        <div class="scene__head">
+          <p class="label">Ein Tag mit Aera</p>
+          <h2 class="headline" id="story-title">Licht, das sich nicht erklären muss.</h2>
+        </div>
+
+        <article class="beat" data-scene-beat data-from="0" data-to="0.34">
+          <p class="beat__index">06:00</p>
+          <h3>Es beginnt kühl.</h3>
+          <p>5000 Kelvin. Genug, um den Raum zu lesen, nicht genug, um ihn zu wecken. Kein Display, kein Ton, kein Anlaufen.</p>
+        </article>
+
+        <article class="beat" data-scene-beat data-from="0.31" data-to="0.67">
+          <p class="beat__index">18:40</p>
+          <h3>Dann wird es Abend.</h3>
+          <p>Der Sensor misst das Restlicht und nimmt 2300 Kelvin heraus, bevor das Auge es merkt. Sie drehen nichts.</p>
+        </article>
+
+        <article class="beat" data-scene-beat data-from="0.64" data-to="1">
+          <p class="beat__index">22:10</p>
+          <h3>Bis nur noch Wärme bleibt.</h3>
+          <p>2200 Kelvin, 4 Watt, ein Körper aus Aluminium. Die letzte Stunde gehört nicht dem Gerät.</p>
+        </article>
+      </div>
+
+      <div class="scene__object">
+        <div class="orb" aria-hidden="true">
+          <span class="orb__halo"></span>
+          <span class="orb__floor"></span>
+          <span class="orb__body"></span>
+          <span class="orb__core"></span>
+          <span class="orb__rim"></span>
+        </div>
+      </div>
+
+      <ol class="scene__rail" aria-hidden="true">
+        <li>06:00</li>
+        <li>18:40</li>
+        <li>22:10</li>
+      </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="detail">
+    <div class="wrap detail">
+      <div class="detail__media" data-reveal="scale">
+        <div class="orb" aria-hidden="true">
+          <span class="orb__halo"></span>
+          <span class="orb__floor"></span>
+          <span class="orb__body"></span>
+          <span class="orb__core"></span>
+          <span class="orb__rim"></span>
+        </div>
+        <p class="macro-line"><span>180 mm</span><span>Aluminium 6061</span></p>
+      </div>
+
+      <div class="detail__copy">
+        <p class="label" data-reveal="side">Material</p>
+        <h2 class="headline" style="margin-top:0.85rem" data-words="45">Ein Körper, der nur Licht zeigt.</h2>
+        <p class="lead" data-reveal data-delay="0.14s">
+          Kein Display, keine Taste, keine Beschriftung. Die Oberfläche ist aus einem Stück
+          eloxiertem Aluminium gefräst, die Kante ist so dünn, dass sie im Gegenlicht verschwindet.
+        </p>
+        <p class="body-sm" data-reveal data-delay="0.2s" style="margin-top:1rem;max-width:38ch">
+          Alles, was Sie brauchen, liegt in einer Geste: drehen für Helligkeit, tippen für Stimmung.
+        </p>
+
+        <dl class="specs" data-reveal data-delay="0.26s">
+          <div><dt>Gehäuse</dt><dd>Aluminium 6061, eloxiert</dd></div>
+          <div><dt>Streuung</dt><dd>Optisches PMMA, 2 mm</dd></div>
+          <div><dt>Leistung</dt><dd>4 W im Mittelbetrieb</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--hair" id="eigenschaften">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="label" data-reveal="side">Im Alltag</p>
+          <h2 class="headline-md" style="margin-top:0.85rem" data-words="45">Es passt sich an, ohne zu fragen.</h2>
+        </div>
+        <p>Vier Dinge, die den Unterschied zwischen einem Licht und einem Raumpunkt machen.</p>
+      </div>
+
+      <div class="traits" data-stagger>
+        <article class="trait">
+          <span class="trait__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5 5l2.1 2.1M16.9 16.9 19 19M19 5l-2.1 2.1M7.1 16.9 5 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+          <h3>Tageslicht, gemessen statt geschätzt</h3>
+          <p>Ein Sensor liest die Farbtemperatur im Raum und verschiebt das Licht um 200 K in Richtung Abend.</p>
+        </article>
+
+        <article class="trait">
+          <span class="trait__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </span>
+          <h3>Dämmerung in 40 Minuten</h3>
+          <p>Statt hart auszugehen, dimmt Aera über den Abend. Die Kurve ist ruhig, nicht linear.</p>
+        </article>
+
+        <article class="trait">
+          <span class="trait__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+          <h3>Lokal. Ohne Konto.</h3>
+          <p>Zeitpläne liegen auf dem Gerät. Kein Konto, kein Cloud-Zwang, kein Update, das Sie ausperrt.</p>
+        </article>
+
+        <article class="trait">
+          <span class="trait__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="10" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+          <h3>Zehn Jahre, ein Kabel</h3>
+          <p>USB-C, austauschbarer Akku. Ersatzteile gibt es zehn Jahre nach dem Kauf — nicht nur in der Garantie.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--hair" id="modelle">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="label" data-reveal="side">Drei Größen</p>
+          <h2 class="headline-md" style="margin-top:0.85rem" data-words="45">Für jeden Raum die richtige Menge Licht.</h2>
+        </div>
+        <p>Gleiche Form, gleiche Geste. Nur der Lichtstrom wächst mit — und der Preis bleibt ehrlich.</p>
+      </div>
+
+      <div class="models" data-stagger>
+        <article class="model model--hero">
+          <span class="model__tag">Empfohlen</span>
+          <div class="model__media">
+            <div class="orb" aria-hidden="true"><span class="orb__halo"></span><span class="orb__body"></span><span class="orb__core"></span><span class="orb__rim"></span></div>
+          </div>
+          <h3 class="model__name">Aera 36</h3>
+          <p class="model__price">349 €</p>
+          <div class="model__specs">
+            <span><b>Lichtstrom</b>520 lm</span>
+            <span><b>Ausleuchtung</b>3 m</span>
+            <span><b>Gewicht</b>0,8 kg</span>
+            <span><b>Lieferung</b>2 Tage</span>
+          </div>
+          <a class="pill" href="#kaufen" data-model="Aera 36" data-price="349 €">Aera 36 wählen</a>
+        </article>
+
+        <article class="model">
+          <div class="model__media">
+            <div class="orb" aria-hidden="true"><span class="orb__halo"></span><span class="orb__body"></span><span class="orb__core"></span><span class="orb__rim"></span></div>
+          </div>
+          <h3 class="model__name">Aera 40</h3>
+          <p class="model__price">429 €</p>
+          <div class="model__specs">
+            <span><b>Lichtstrom</b>780 lm</span>
+            <span><b>Ausleuchtung</b>5 m</span>
+            <span><b>Gewicht</b>1,1 kg</span>
+            <span><b>Lieferung</b>2 Tage</span>
+          </div>
+          <a class="pill pill--ghost" href="#kaufen" data-model="Aera 40" data-price="429 €">Aera 40 wählen</a>
+        </article>
+
+        <article class="model">
+          <div class="model__media">
+            <div class="orb" aria-hidden="true"><span class="orb__halo"></span><span class="orb__body"></span><span class="orb__core"></span><span class="orb__rim"></span></div>
+          </div>
+          <h3 class="model__name">Aera 46</h3>
+          <p class="model__price">549 €</p>
+          <div class="model__specs">
+            <span><b>Lichtstrom</b>1 100 lm</span>
+            <span><b>Ausleuchtung</b>7 m</span>
+            <span><b>Gewicht</b>1,6 kg</span>
+            <span><b>Lieferung</b>5 Tage</span>
+          </div>
+          <a class="pill pill--ghost" href="#kaufen" data-model="Aera 46" data-price="549 €">Aera 46 wählen</a>
+        </article>
+      </div>
+
+      <p class="body-sm" style="margin-top:1.25rem" data-reveal>
+        Aera 40 · 780 lm · 429 €. Alle Preise inkl. MwSt., Beispielpreise.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--hair" id="zahlen">
+    <div class="wrap numbers__grid">
+      <div>
+        <p class="label" data-reveal="side">Technik</p>
+        <h2 class="headline" style="margin-top:0.85rem" data-words="45">Die Zahlen, die zählen.</h2>
+      </div>
+      <dl class="numbers" data-reveal data-delay="0.12s">
+        <div><dt>Lichtstrom</dt><dd>780 lm</dd></div>
+        <div><dt>Farbtemperatur</dt><dd>1800 – 6500 K</dd></div>
+        <div><dt>Farbwiedergabe</dt><dd>CRI 96</dd></div>
+        <div><dt>Abmessung</dt><dd>180 × 62 mm</dd></div>
+        <div><dt>Gewicht</dt><dd>1,1 kg</dd></div>
+        <div><dt>Anschluss</dt><dd>USB-C 15 W</dd></div>
+        <div><dt>Material</dt><dd>Aluminium eloxiert</dd></div>
+        <div><dt>Garantie</dt><dd>5 Jahre</dd></div>
       </dl>
-    </section>
+    </div>
+  </section>
 
-    <footer id="kaufen">
-      <span>Aera — Konzeptseite im Design-System cupertino-clarity.</span>
-      <span>Testseite 02</span>
-    </footer>
-  </div>
+  <section class="buy" id="kaufen">
+    <div class="wrap--narrow">
+      <p class="label" data-reveal="side">Kaufen</p>
+      <h2 class="headline" style="margin-top:0.85rem" data-words="45">349 €. Einmal. Für zehn Jahre.</h2>
+      <p data-reveal data-delay="0.14s">
+        Kein Abo, keine App-Pflicht, kein Konto. Lieferung in zwei Tagen,
+        Rückgabe innerhalb von 30 Tagen.
+      </p>
+      <div class="buy__actions" data-reveal data-delay="0.2s">
+        <a class="pill" href="#kaufen" id="buyButton">Aera 36 in den Warenkorb</a>
+        <a class="textlink" href="#zahlen">
+          Technik ansehen
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <p class="buy__note" aria-live="polite">
+        Ausgewählt: <span class="buy__model" id="buyModel">Aera 36</span> ·
+        <span id="buyPrice">349 €</span> · 2 Tage Lieferzeit
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <p>Aera — Konzeptprojekt im Design-System Cupertino Clarity. Keine echte Marke.</p>
+        <nav class="footer__links" aria-label="Rechtliches">
+          <a href="#zahlen">Technik</a>
+          <a href="#modelle">Modelle</a>
+          <a href="#top">Nach oben</a>
+        </nav>
+      </div>
+      <div class="footer__base">
+        <p>© 2026 Aera Beispiel · Alle Preise ohne Gewähr</p>
+        <p class="mono">CUPERTINO CLARITY · TESTSEITE 02</p>
+      </div>
+    </div>
+  </footer>
 </main>
-
-<div class="buybar" id="buybar">
-  <p class="buybar__info"><strong>Aera</strong> <span>· Violett · ab 349 €</span></p>
-  <a class="btn-solid" href="#kaufen">In den Beutel</a>
-</div>
 
 <script src="assets/motion.js" defer></script>
 <script>
   (function () {
+    'use strict';
+
     var root = document.documentElement;
-    var name = document.querySelector('.colors__name');
-    document.querySelectorAll('.swatch').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        document.querySelectorAll('.swatch').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
-        btn.setAttribute('aria-pressed', 'true');
-        root.style.setProperty('--tint', btn.dataset.tint);
-        name.textContent = btn.dataset.name;
-        var info = document.querySelector('.buybar__info span');
-        if (info) info.textContent = '· ' + btn.dataset.name + ' · ab 349 €';
+    var scene = document.querySelector('[data-scene]');
+    var sceneOrb = scene ? scene.querySelector('.orb') : null;
+
+    /* Farbe: eine Variable für alle Lichter auf der Seite. */
+    var tintName = document.getElementById('tintName');
+    document.querySelectorAll('input[name="tint"]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        if (!input.checked) return;
+        root.style.setProperty('--tint', input.getAttribute('data-tint'));
+        if (tintName) tintName.textContent = input.getAttribute('data-name');
       });
     });
 
-    var bar = document.getElementById('buybar');
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        bar.classList.toggle('is-in', !e.isIntersecting);
+    /* Szene: Lichtfarbe folgt dem Tagesverlauf, der Körper behält seine Farbe. */
+    if (scene && sceneOrb) {
+      /* Der Tageslauf geht über Violett und Rosé nach Bernstein — nie durch Grün,
+         das wäre ein Farbfehler, keine Dämmerung. */
+      var states = [
+        { at: 0,    h: 206, l: 80, glow: 0.5 },
+        { at: 0.34, h: 258, l: 76, glow: 0.42 },
+        { at: 0.62, h: 318, l: 68, glow: 0.36 },
+        { at: 0.9,  h: 26,  l: 60, glow: 0.3 }
+      ];
+      var last = -1;
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      function paint() {
+        var raw = getComputedStyle(scene).getPropertyValue('--scene');
+        var p = parseFloat(raw) || 0;
+        if (Math.abs(p - last) < 0.002) return;
+        last = p;
+
+        var i = 0;
+        while (i < states.length - 2 && p > states[i + 1].at) i++;
+        var a = states[i];
+        var b = states[i + 1];
+        var t = Math.min(1, Math.max(0, (p - a.at) / (b.at - a.at)));
+
+        sceneOrb.style.setProperty('--light-h', lerp(a.h, b.h, t).toFixed(1));
+        sceneOrb.style.setProperty('--glow', lerp(a.glow, b.glow, t).toFixed(3));
+      }
+
+      if (window.MutationObserver) {
+        new MutationObserver(paint).observe(scene, { attributes: true, attributeFilter: ['style'] });
+      }
+      paint();
+    }
+
+    /* Modelle: Auswahl landet im Kaufbereich, ohne die Seite neu zu laden. */
+    var buyModel = document.getElementById('buyModel');
+    var buyPrice = document.getElementById('buyPrice');
+    var buyButton = document.getElementById('buyButton');
+    document.querySelectorAll('[data-model]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        var model = link.getAttribute('data-model');
+        var price = link.getAttribute('data-price');
+        if (buyModel) buyModel.textContent = model;
+        if (buyPrice) buyPrice.textContent = price;
+        if (buyButton) buyButton.textContent = model + ' in den Warenkorb';
       });
-    }, { threshold: 0 });
-    io.observe(document.querySelector('.hero'));
+    });
   })();
 </script>
 </body>

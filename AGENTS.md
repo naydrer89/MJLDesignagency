@@ -18,11 +18,12 @@ Kurzfassung: *Was soll der Mensch hier tun — und was ist das Einfachste, was i
 | --- | --- | --- |
 | [`philosophy.md`](philosophy.md) | Prinzipien, Prozess, Anti-Patterns, Definition of Done | **immer zuerst** |
 | [`skills/`](skills) | installierte Agent-Skills (Design, Motion, Art-Direction, Taste) | vor Design-, UI- oder Motion-Arbeit |
-| [`designguidelines/`](designguidelines/README.md) | 21 Design-Systeme im `design.md`-Format (Tokens + Begründung) | wenn eine Richtung, Marke oder ein Token-Set gebraucht wird |
+| [`designguidelines/`](designguidelines/README.md) | 22 Design-Systeme im `design.md`-Format (Tokens + Begründung) | wenn eine Richtung, Marke oder ein Token-Set gebraucht wird |
 | [`reference/`](reference/README.md) | Screenshots + `tokens.json` + Analyse echter Top-Websites | wenn ein konkretes Muster oder Detail belegt werden soll |
 | [`test/`](test/README.md) | neun Beispielseiten in neun Designsprachen (reines HTML, kein Build) | wenn eine Richtung verglichen oder ein Muster im Code gebraucht wird |
+| [`test/assets/motion.js`](test/assets/motion.js) | gemeinsamer Motion-Layer der Seiten (Reveal, Stagger, Tabs, Dialoge) | wenn eine Testseite Bewegung braucht |
 | [`tools/`](tools) | Capture-Pipeline (Playwright), Browser-Setup, Token-Extraktion | wenn Referenzen neu erzeugt werden sollen |
-| [`designguidelines/obsidian-precision/design.md`](designguidelines/obsidian-precision/design.md) | das Haus-System (Default, wenn nichts anderes passt) | als Startpunkt für neue Systeme |
+| [`designguidelines/meridian-studio/design.md`](designguidelines/meridian-studio/design.md) | das Haus-System (Default, wenn nichts anderes passt) | als Startpunkt für neue Systeme |
 
 ## Design-Systeme benutzen
 
@@ -36,14 +37,15 @@ Regeln:
    Systems. Fehlt ein Wert, wird er ergänzt **und** im Dokument begründet — nicht im Code hart kodiert.
 2. **Ein System pro Projekt.** Mischen ist erlaubt nur über klar benannte Ausnahmen (z. B. „Obsidian Precision
    + Apple-Motion"), nie als Sammlung von Einzelentscheidungen.
-3. **Neue Systeme** werden nach demselben Schema angelegt (siehe Obsidian Precision) und im
+3. **Neue Systeme** werden nach demselben Schema angelegt (siehe Meridian Studio) und im
    [Index](designguidelines/README.md) eingetragen.
 4. **Marken-Systeme sind Analysen, keine Kopien.** Keine Logos, keine geschützten Assets, keine Imitation von
    Markenauftritten in Kundenprojekten — die Systeme dienen als Studien und als Startpunkt für eigenständige Arbeit.
 
 ## Wann welches System
 
-- **Haus-Default:** `obsidian-precision` (Apple × OpenAI, dunkel, ruhig, präzise).
+- **Haus-Default:** `meridian-studio` (Apple × Linear × Stripe × Notion: warmes Papier, Haarlinien, ein Kobalt).
+  Dunkle Variante des Hauses: `obsidian-precision`.
 - **SaaS / Developer-Tools:** `ledger-gradient`, `midnight-velocity`, `monochrome-edge`, `quiet-intelligence`.
 - **Consumer / Marktplatz:** `coral-belonging`, `neon-sound`, `kinetic-brutal`.
 - **Content / Produktivität:** `paper-workshop`, `canvas-play`, `cupertino-clarity`.
@@ -56,11 +58,25 @@ Regeln:
 `skills/` enthält installierte Skills (`SKILL.md` je Ordner). Vor der Arbeit den passenden `SKILL.md` lesen, nicht
 aus dem Gedächtnis zitieren.
 
+- `motion-design` (LottieFiles) — Timing, Easing, Choreografie, Disney-Prinzipien; **vor jeder Motion-Arbeit lesen**
+- `scroll-cinema` — scroll-gescrubbte Produktszenen: geklebte Bühne, Beats, Tokens, Fallbacks; **für jede große Scroll-Strecke**
 - `design-taste-frontend` — Art-Direction, Anti-Slop, Landingpages, App-Screens
 - `emil-design-eng` — UI-Polish, Komponenten-Qualität, die unsichtbaren Details
-- `animate` — Motion von Grund auf entscheiden und implementieren
+- `animate` — eine einzelne Animation von Grund auf entscheiden und implementieren
 - `apple-design` — Gesten, Spring-Physik, Materials, Typo-Feinheiten
 - `gpt-taste` — zweite Meinung zur visuellen Richtung
+
+### Bewegung (Hausregel)
+
+Premium-Charakter: **380–520 ms**, `cubic-bezier(0.4, 0, 0.2, 1)`, kein Überschwingen. Einstiege von unten
+(16–24 px) und ausblenden, Ausstiege 65–75 % davon. Staffelung 60 ms, insgesamt nie über 420 ms. Hover
+antwortet in ≤ 140 ms. Bewegung erklärt Hierarchie oder Ursache — sonst wird sie entfernt. Details:
+[`skills/motion-design/SKILL.md`](skills/motion-design/SKILL.md).
+
+Für die **eine große Szene** einer Seite gilt stattdessen Scroll-Cinema: der Scroll ist die Uhr, eine
+geklebte Bühne, drei bis vier Beats, `--scene` statt Timer. Tokens und Fallbacks stehen in
+[`skills/scroll-cinema/SKILL.md`](skills/scroll-cinema/SKILL.md); die gemeinsame Bühne liegt in
+`test/assets/scene.css` und wird von `motion.js` über `[data-scene]` gesteuert. Nie zwei Szenen auf einer Seite.
 
 ## Referenzen benutzen
 

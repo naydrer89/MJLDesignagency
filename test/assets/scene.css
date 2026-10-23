@@ -1,0 +1,77 @@
+/* Scroll-Cinema — gemeinsame Bühne für scroll-gescrubbte Szenen.
+   Regeln und Tokens: skills/scroll-cinema/SKILL.md.
+
+   Ohne JavaScript (und bei prefers-reduced-motion) bleibt alles statisch:
+   keine Klebung, keine Ausblendung, alle Beats untereinander lesbar.
+   Erst wenn motion.js die Szene als .is-live markiert, wird geklebt. */
+
+@property --scene {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+[data-scene] {
+  --scene-span: 260svh;
+  position: relative;
+}
+
+[data-scene].is-live {
+  height: var(--scene-span);
+}
+
+[data-scene-stage] {
+  position: relative;
+  min-height: 100svh;
+  /* clip statt hidden: erzeugt keinen Scroll-Container, sticky bleibt intakt. */
+  overflow: clip;
+}
+
+[data-scene].is-live [data-scene-stage] {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 0;
+}
+
+[data-scene-beat] {
+  transition: opacity 0.24s linear;
+}
+
+[data-scene].is-live [data-scene-beat] {
+  opacity: 0;
+}
+
+[data-scene].is-live [data-scene-beat].is-on {
+  opacity: 1;
+}
+
+[data-scene].is-live [data-scene-beat].is-past {
+  opacity: var(--scene-dim, 0.35);
+}
+
+[data-scene-depth] {
+  transform: translate3d(0, var(--depth, 0px), 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scene],
+  [data-scene].is-live {
+    height: auto;
+  }
+
+  [data-scene] [data-scene-stage],
+  [data-scene].is-live [data-scene-stage] {
+    position: static;
+    height: auto;
+  }
+
+  [data-scene].is-live [data-scene-beat] {
+    opacity: 1;
+    transition: none;
+  }
+
+  [data-scene-depth] {
+    transform: none;
+  }
+}

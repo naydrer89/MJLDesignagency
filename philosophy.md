@@ -40,8 +40,12 @@ Jede Ansicht hat genau ein primäres Ziel. Sekundäres wird leiser, Tertiäres w
 Konkurrierende Primäraktionen sind ein Bug, kein Feature.
 
 ### 4. Bewegung ist Feedback, nicht Unterhaltung
-Animation erklärt Herkunft, Richtung und Konsequenz einer Zustandsänderung. Sie dauert selten
-länger als 200–300 ms, respektiert `prefers-reduced-motion` und nie die Eingabe des Nutzers.
+Animation erklärt Herkunft, Richtung und Konsequenz einer Zustandsänderung. Rückmeldung auf Eingaben
+antwortet in 120–260 ms; große Flächen dürfen beim Einstieg 380–520 ms brauchen, weil das Auge ihnen
+sonst nicht folgen kann. Ausstiege sind 65–75 % davon. Kein Überschwingen, keine Endlosschleife ohne
+Bedeutung — und `prefers-reduced-motion` schaltet alles ab, ohne Inhalte zu verstecken. Die Regeln stehen
+in [`skills/motion-design/`](skills/motion-design/SKILL.md), die Umsetzung in
+[`test/assets/motion.js`](test/assets/motion.js).
 
 ### 5. Kontrast führt
 Der Blick folgt dem Kontrast. Wir setzen Kontrast bewusst als Navigationswerkzeug ein: ein
@@ -130,7 +134,8 @@ Ein Design ohne Zustände ist ein Poster, keine Oberfläche.
 - **Farbe als Signal.** Neutrale Basis, ein Primärton, ein Sekundärton für Status — und Disziplin.
 - **Tiefe nur, wenn sie Hierarchie erklärt.** Hairline-Borders und weiche, diffuse Schatten statt
   harter schwarzer Kanten.
-- **Bewegung mit Ursache.** Kein Fade-in beim Scrollen um des Effekts willen.
+- **Bewegung mit Ursache.** Kein Fade-in beim Scrollen um des Effekts willen — jede Bewegung zeigt,
+  woher etwas kommt oder was daraus folgt. Premium-Timing: 380–520 ms, kein Überschwingen.
 
 Die konkrete Ausprägung — Farbwerte, Typo-Skala, Radien, Abstände, Komponenten — steht in
 [`designguidelines/`](designguidelines/README.md). Jedes dort hinterlegte System ist eine
@@ -156,10 +161,12 @@ Ein Design gilt als fertig, wenn:
 
 ## 8. Wo was liegt
 
-- [`designguidelines/`](designguidelines/README.md) — Design-Systeme im `design.md`-Format (Tokens + Begründung)
+- [`designguidelines/`](designguidelines/README.md) — Design-Systeme im `design.md`-Format (Tokens + Begründung);
+  Haus-System ist [`meridian-studio`](designguidelines/meridian-studio/design.md)
 - [`reference/`](reference/README.md) — Screenshots und Analysen echter, herausragender Websites
 - [`test/`](test/README.md) — neun Testseiten in neun Designsprachen, zum Nebeneinanderlegen und Weiterbauen
-- [`skills/`](skills) — installierte Skills für Design, Motion und Art-Direction
+- [`skills/`](skills) — sechs installierte Skills für Design, Motion und Art-Direction, u. a.
+  [`motion-design`](skills/motion-design/SKILL.md)
 - [`tools/`](tools) — Capture- und Token-Werkzeuge
 
 **Kurzform für jede Entscheidung:**

@@ -425,12 +425,21 @@
     flex-direction: column;
   }
 
+  .card__preview .ph-bar { display: flex; gap: 4px; margin-bottom: 0.9rem; }
+  .card__preview .ph-bar i { width: 5px; height: 5px; border-radius: 50%; background: #d6d6d2; }
+  .card:nth-child(1) .ph-bar i:first-child { background: #cfe0ff; }
+  .card:nth-child(2) .ph-bar i:first-child { background: #d8ecdc; }
+  .card:nth-child(3) .ph-bar i:first-child { background: #f4ddc8; }
   .card__preview .ph-title { height: 12px; width: 55%; border-radius: 3px; background: #dcdcd8; }
   .card__preview .ph-line { height: 7px; border-radius: 3px; background: #e6e6e2; margin-top: 0.5rem; }
   .card__preview .ph-line:nth-child(3) { width: 82%; }
   .card__preview .ph-line:nth-child(4) { width: 68%; }
   .card__preview .ph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.9rem; flex: 1; }
   .card__preview .ph-grid i { height: auto; min-height: 34px; border-radius: 4px; background: #ecece8; display: block; }
+
+  .card:nth-child(1) .ph-grid i:first-child { background: #e4ecfb; }
+  .card:nth-child(2) .ph-grid i:first-child { background: #e6f1e8; }
+  .card:nth-child(3) .ph-grid i:first-child { background: #fbeee1; }
 
   .card__body { padding: 1rem 1.1rem 1.15rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
   .card__body h3 { font-size: 14.5px; font-weight: 600; }
@@ -521,6 +530,207 @@
     .testimonial { grid-template-columns: 1fr; }
     .hero__actions .btn { flex: 1 1 auto; justify-content: center; }
   }
+  /* Befehlspalette: die eine Suche, die alles findet. */
+  .searchbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: 30px;
+    padding: 0 0.5rem 0 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--paper-2);
+    font-size: 12.5px;
+    color: var(--ink-3);
+    transition: border-color 0.16s var(--ease), color 0.16s var(--ease), background-color 0.16s var(--ease);
+  }
+
+  .searchbtn:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    color: var(--ink-2);
+    background: var(--paper);
+  }
+
+  .searchbtn kbd {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    padding: 2px 4px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--ink-3);
+  }
+
+  .palette-dialog {
+    width: min(600px, calc(100vw - 28px));
+    margin-top: 12vh;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.4);
+  }
+
+  .palette-dialog::backdrop {
+    background: rgba(25, 25, 24, 0.4);
+    backdrop-filter: blur(3px);
+  }
+
+  .palette-dialog[open] {
+    animation: pal 0.3s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  @keyframes pal {
+    from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  }
+
+  .pal__input {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pal__input input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .pal__input input:focus {
+    outline: none;
+  }
+
+  .pal__input span {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    padding: 2px 5px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    color: var(--ink-3);
+  }
+
+  .pal__list {
+    max-height: min(46vh, 340px);
+    overflow-y: auto;
+    padding: 0.4rem;
+  }
+
+  .pal__group {
+    padding: 0.55rem 0.6rem 0.35rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .pal__item[hidden],
+  .pal__group[hidden],
+  .pal__empty[hidden] {
+    display: none;
+  }
+
+  .pal__input input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  .pal__item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    border-radius: 4px;
+    font-size: 13.5px;
+    color: var(--ink);
+    text-align: left;
+  }
+
+  .pal__item svg {
+    color: var(--ink-3);
+    flex: none;
+  }
+
+  .pal__item span {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-3);
+  }
+
+  .pal__item:hover,
+  .pal__item.is-active {
+    background: var(--paper-3);
+  }
+
+  .pal__empty {
+    padding: 1.4rem 0.8rem 1.6rem;
+    font-size: 13px;
+    color: var(--ink-3);
+    text-align: center;
+  }
+
+  .pal__foot {
+    display: flex;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--line);
+    font-size: 10.5px;
+    color: var(--ink-3);
+  }
+
+  .pal__foot span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pal__foot kbd {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    padding: 1px 4px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--paper-2);
+  }
+
+  .toast {
+    position: fixed;
+    left: 1.2rem;
+    bottom: 1.2rem;
+    z-index: 80;
+    max-width: 340px;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 12.5px;
+    transform: translateY(14px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.24s var(--ease), transform 0.3s var(--ease);
+  }
+
+  .toast.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 720px) {
+    .searchbtn span {
+      display: none;
+    }
+
+    .searchbtn kbd {
+      display: none;
+    }
+  }
 </style>
 </head>
 <body>
@@ -535,6 +745,11 @@
       <a href="#vorlagen">Vorlagen</a>
       <a href="#team">Teams</a>
     </nav>
+    <button class="searchbtn" type="button" data-dialog-open="palette" aria-label="Suchen und springen">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-linecap="round"/></svg>
+      <span>Suchen</span>
+      <kbd>⌘K</kbd>
+    </button>
     <a class="nav__cta" href="#start" data-magnetic="4">Kostenlos starten</a>
   </div>
 </header>
@@ -635,6 +850,7 @@
       <div class="cards">
         <a class="card" href="#start" data-reveal>
           <div class="card__preview" aria-hidden="true">
+            <div class="ph-bar"><i></i><i></i><i></i></div>
             <div class="ph-title"></div>
             <div class="ph-line"></div>
             <div class="ph-line"></div>
@@ -644,6 +860,7 @@
         </a>
         <a class="card" href="#start" data-reveal>
           <div class="card__preview" aria-hidden="true">
+            <div class="ph-bar"><i></i><i></i><i></i></div>
             <div class="ph-title"></div>
             <div class="ph-line"></div>
             <div class="ph-line"></div>
@@ -654,6 +871,7 @@
         </a>
         <a class="card" href="#start" data-reveal>
           <div class="card__preview" aria-hidden="true">
+            <div class="ph-bar"><i></i><i></i><i></i></div>
             <div class="ph-title"></div>
             <div class="ph-grid"><i></i><i></i><i></i><i></i></div>
             <div class="ph-line"></div>
@@ -685,6 +903,35 @@
   </div>
 </main>
 
+<dialog class="palette-dialog" id="palette" aria-labelledby="palTitle">
+  <div class="pal__input">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <input id="palInput" type="search" placeholder="Seite, Vorlage oder Befehl …" aria-label="Suchen" autocomplete="off">
+    <span>esc</span>
+  </div>
+  <h2 id="palTitle" class="visually-hidden">Befehlspalette</h2>
+  <div class="pal__list" id="palList">
+    <p class="pal__group">Zuletzt</p>
+    <button class="pal__item" type="button" data-target="Produktlaunch — was bis Freitag gilt"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M4 2.5h5l3 3v8H4v-11Z" stroke="currentColor"/><path d="M9 2.5v3h3" stroke="currentColor"/></svg>Produktlaunch — was bis Freitag gilt<span>Seite</span></button>
+    <button class="pal__item" type="button" data-target="Wöchentliches Review"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M4 2.5h5l3 3v8H4v-11Z" stroke="currentColor"/><path d="M9 2.5v3h3" stroke="currentColor"/></svg>Wöchentliches Review<span>Seite</span></button>
+    <p class="pal__group">Vorlagen</p>
+    <button class="pal__item" type="button" data-target="Projektbrief"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="11" height="11" rx="2" stroke="currentColor"/><path d="M5 6h6M5 9h4" stroke="currentColor"/></svg>Projektbrief<span>Vorlage</span></button>
+    <button class="pal__item" type="button" data-target="Meeting-Notizen"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="11" height="11" rx="2" stroke="currentColor"/><path d="M5 6h6M5 9h4" stroke="currentColor"/></svg>Meeting-Notizen<span>Vorlage</span></button>
+    <button class="pal__item" type="button" data-target="Entscheidungsprotokoll"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="11" height="11" rx="2" stroke="currentColor"/><path d="M5 6h6M5 9h4" stroke="currentColor"/></svg>Entscheidungsprotokoll<span>Vorlage</span></button>
+    <p class="pal__group">Aktionen</p>
+    <button class="pal__item" type="button" data-target="Neue Seite"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-linecap="round"/></svg>Neue Seite<span>Befehl</span></button>
+    <button class="pal__item" type="button" data-target="Team einladen"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="6" r="2.5" stroke="currentColor"/><path d="M2.5 13c.6-2.2 2-3.2 3.5-3.2S8.9 10.8 9.5 13M11 6.5a2 2 0 1 0 0-4M11.5 13c-.2-1.4-.7-2.4-1.4-3" stroke="currentColor" stroke-linecap="round"/></svg>Team einladen<span>Befehl</span></button>
+    <p class="pal__empty" id="palEmpty" hidden>Kein Treffer. Andere Schreibweise versuchen.</p>
+  </div>
+  <div class="pal__foot">
+    <span><kbd>↑</kbd><kbd>↓</kbd> auswählen</span>
+    <span><kbd>↵</kbd> öffnen</span>
+    <span>Beispieldaten</span>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script src="assets/motion.js" defer></script>
 <script>
   document.querySelectorAll('.check').forEach(function (box) {
@@ -692,6 +939,90 @@
       box.setAttribute('aria-checked', box.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
     });
   });
+
+  /* Palette: filtert wirklich, statt nur auszusehen. */
+  (function () {
+    var dialog = document.getElementById('palette');
+    var input = document.getElementById('palInput');
+    var list = document.getElementById('palList');
+    var empty = document.getElementById('palEmpty');
+    var toast = document.getElementById('toast');
+    if (!dialog || !input) return;
+    var items = Array.prototype.slice.call(list.querySelectorAll('.pal__item'));
+    var active = 0;
+
+    function visibleItems() {
+      return items.filter(function (b) { return !b.hidden; });
+    }
+
+    function setActive(i) {
+      var vis = visibleItems();
+      if (!vis.length) return;
+      active = Math.max(0, Math.min(vis.length - 1, i));
+      items.forEach(function (b) { b.classList.remove('is-active'); });
+      vis[active].classList.add('is-active');
+      vis[active].scrollIntoView({ block: 'nearest' });
+    }
+
+    function filter() {
+      var q = input.value.trim().toLowerCase();
+      items.forEach(function (b) {
+        var haystack = (b.dataset.target + ' ' + b.textContent).toLowerCase();
+        b.hidden = q !== '' && haystack.indexOf(q) === -1;
+      });
+      var groups = Array.prototype.slice.call(list.querySelectorAll('.pal__group'));
+      groups.forEach(function (g) {
+        var next = g.nextElementSibling;
+        var any = false;
+        while (next && !next.classList.contains('pal__group')) {
+          if (next.classList.contains('pal__item') && !next.hidden) any = true;
+          next = next.nextElementSibling;
+        }
+        g.hidden = !any;
+      });
+      var vis = visibleItems();
+      empty.hidden = vis.length > 0;
+      active = 0;
+      setActive(0);
+    }
+
+    function choose(btn) {
+      if (!btn) return;
+      toast.textContent = 'Demo: „' + btn.dataset.target + '“ würde geöffnet — es passiert nichts weiter.';
+      toast.classList.add('is-in');
+      window.setTimeout(function () { toast.classList.remove('is-in'); }, 2600);
+      dialog.close();
+    }
+
+    input.addEventListener('input', filter);
+    input.addEventListener('keydown', function (e) {
+      var vis = visibleItems();
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(active + 1); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); setActive(active - 1); }
+      if (e.key === 'Enter') { e.preventDefault(); choose(vis[active]); }
+    });
+
+    items.forEach(function (btn) {
+      btn.addEventListener('click', function () { choose(btn); });
+    });
+
+    dialog.addEventListener('close', function () {
+      input.value = '';
+      filter();
+      input.blur();
+    });
+
+    /* ⌘K / Strg+K öffnet, auch wenn der Fokus im Dokument liegt. */
+    window.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (typeof dialog.showModal === 'function') dialog.showModal();
+        else dialog.setAttribute('open', '');
+        input.focus();
+        filter();
+      }
+    });
+  })();
 </script>
 </body>
 </html>

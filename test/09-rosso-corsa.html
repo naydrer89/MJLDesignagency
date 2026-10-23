@@ -447,6 +447,31 @@
 
   @keyframes turn { to { transform: rotate(360deg); } }
 
+  .tech__mesh {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .tech__spec {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 2;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    padding: 0.5rem 0.8rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
   .tech__caption {
     position: absolute;
     left: 1rem;
@@ -473,14 +498,52 @@
   .pan {
     display: flex;
     gap: 1px;
-    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     background: var(--hair);
-    transform: translate3d(calc(var(--scrub, 0) * -40%), 0, 0);
-    transition: transform 0.14s linear;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .pan::-webkit-scrollbar {
+    display: none;
+  }
+
+  .railnav {
+    display: flex;
+    gap: 1px;
+    margin-left: 20px;
+    border: 1px solid var(--hair);
+  }
+
+  .calendar__head > .mono {
+    margin-left: auto;
+  }
+
+  .railnav button {
+    width: 34px;
+    height: 30px;
+    color: var(--paper);
+    font-size: 14px;
+    line-height: 1;
+    transition: background-color 0.16s var(--ease), color 0.16s var(--ease);
+  }
+
+  .railnav button:hover:not(:disabled) {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .railnav button:disabled {
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
   }
 
   .round {
     width: clamp(220px, 22vw, 300px);
+    flex: 0 0 clamp(220px, 22vw, 300px);
+    scroll-snap-align: start;
     background: var(--ink);
     padding: 1.3rem;
     transition: background 0.35s ease;
@@ -558,6 +621,230 @@
     thead th:nth-child(3), tbody td:nth-child(3) { display: none; }
     .spec-row { grid-template-columns: 1fr; gap: 0.2rem; }
     .spec-row dd { text-align: left; }
+  }
+  /* Telemetrie: der Beweis, nicht das Poster. */
+  .telemetry {
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    border-top: 1px solid rgba(0, 0, 0, 0.14);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .tel__head {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .tel__head h2 {
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    font-weight: 700;
+    max-width: 18ch;
+  }
+
+  .tel__head p {
+    margin-left: auto;
+    max-width: 38ch;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.62);
+    padding-bottom: 4px;
+  }
+
+  .tel__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .tel__chart {
+    padding: 1.2rem 1.2rem 0.8rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .tel__chart svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .tel__chart text {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    fill: rgba(255, 255, 255, 0.4);
+  }
+
+  .tel__legend {
+    display: flex;
+    gap: 1.2rem;
+    padding: 0.6rem 0 0.4rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .tel__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .tel__legend i {
+    width: 14px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .tel__legend span:nth-child(2) i { background: rgba(255, 255, 255, 0.55); }
+  .tel__legend span:nth-child(3) i { background: rgba(255, 255, 255, 0.28); }
+
+  .tel__stats {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .telstat {
+    padding: 1.1rem 1.3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .telstat:last-child {
+    border-bottom: 0;
+  }
+
+  .telstat span {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.5625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 0.35rem;
+  }
+
+  .telstat b {
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .telstat b small {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0;
+    margin-left: 0.25rem;
+  }
+
+  /* Countdown */
+  .countdown {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    color: var(--ink);
+    background: var(--paper);
+  }
+
+  .countdown__grid {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .countdown__copy .eyebrow {
+    margin-bottom: 0.6rem;
+  }
+
+  .countdown__copy h2 {
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .clock {
+    display: flex;
+    gap: 1px;
+    margin-left: auto;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+  }
+
+  .clock div {
+    background: var(--paper);
+    min-width: 86px;
+    padding: 0.65rem 0.8rem 0.6rem;
+    text-align: center;
+  }
+
+  .clock b {
+    display: block;
+    color: var(--ink);
+    font-family: 'Geist Mono', monospace;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 500;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
+  }
+
+  .clock span {
+    display: block;
+    margin-top: 0.35rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  .countdown__note {
+    width: 100%;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.5625rem;
+    letter-spacing: 0.06em;
+    color: var(--grey);
+    margin-top: 0.7rem;
+  }
+
+  @media (max-width: 900px) {
+    .tel__head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.9rem;
+    }
+
+    .tel__head p {
+      margin-left: 0;
+    }
+
+    .tel__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tel__chart {
+      border-right: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .clock {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .clock div {
+      flex: 1;
+      min-width: 0;
+    }
   }
 </style>
 </head>
@@ -663,9 +950,74 @@
           <div class="spec-row"><dt>Reifenfenster</dt><dd>96 – 108 °C</dd></div>
         </dl>
       </div>
-      <div class="tech__art">
-        <span class="tech__caption">Seitenansicht · nicht maßstäblich</span>
+      <div class="tech__art" role="img" aria-label="Formstudie der Karosserie, nicht maßstäblich">
+        <svg class="tech__mesh" viewBox="0 0 600 750" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 150h600M0 300h600M0 450h600M0 600h600M150 0v750M300 0v750M450 0v750" stroke="rgba(255,255,255,0.16)" stroke-width="1"/>
+          <path d="M300 0v750M0 375h600" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="3 6"/>
+        </svg>
+        <span class="tech__spec" aria-hidden="true">5 400 mm · 798 kg · 1 020 PS</span>
+        <span class="tech__caption">Formstudie · nicht maßstäblich</span>
       </div>
+    </div>
+  </section>
+
+  <section class="telemetry" id="telemetrie">
+    <div class="wrap">
+      <div class="tel__head">
+        <h2 data-words="45">Die Kurve ist die Wahrheit.</h2>
+        <p data-reveal data-delay="0.12s">Monza, Runde 41. Vollgas 61 Prozent — der Rest ist Bremsen, Traktion und ein Fahrer, der rechnet.</p>
+      </div>
+
+      <div class="tel__grid" data-reveal>
+        <div class="tel__chart">
+          <svg viewBox="0 0 760 230" role="img" aria-label="Geschwindigkeitsverlauf einer Runde: Spitze 342 km/h, Minimum 64 km/h">
+            <g stroke="rgba(255,255,255,0.1)" stroke-width="1">
+              <path d="M0 30h760M0 75h760M0 120h760M0 165h760M0 210h760" />
+            </g>
+            <g>
+              <text x="0" y="26">350</text>
+              <text x="0" y="116">200</text>
+              <text x="0" y="206">50</text>
+            </g>
+            <path data-draw d="M10 190 L70 120 L120 100 L170 108 L205 60 L240 52 L275 58 L300 96 L330 150 L352 182 L370 174 L392 150 L410 118 L430 70 L448 44 L468 40 L492 66 L512 96 L536 72 L556 48 L580 40 L610 52 L632 92 L654 140 L676 172 L700 150 L722 118 L742 96" fill="none" stroke="rgba(255,40,0,0.22)" stroke-width="9" stroke-linejoin="round" />
+            <path data-draw d="M10 190 L70 120 L120 100 L170 108 L205 60 L240 52 L275 58 L300 96 L330 150 L352 182 L370 174 L392 150 L410 118 L430 70 L448 44 L468 40 L492 66 L512 96 L536 72 L556 48 L580 40 L610 52 L632 92 L654 140 L676 172 L700 150 L722 118 L742 96" fill="none" stroke="#ff2800" stroke-width="2" stroke-linejoin="round" />
+            <g fill="rgba(255,255,255,0.55)" font-family="Geist Mono, monospace" font-size="9">
+              <text x="10" y="224">T1</text>
+              <text x="240" y="224">T2</text>
+              <text x="470" y="224">T3</text>
+              <text x="700" y="224">Ziel</text>
+            </g>
+            <circle cx="742" cy="96" r="3" fill="#ff2800" />
+          </svg>
+          <div class="tel__legend">
+            <span><i></i>Geschwindigkeit</span>
+            <span><i></i>Vollgas</span>
+            <span><i></i>Bremszone</span>
+          </div>
+        </div>
+
+        <div class="tel__stats">
+          <div class="telstat"><span>Spitze</span><b><span data-count="342">0</span><small>km/h</small></b></div>
+          <div class="telstat"><span>Durchschnitt</span><b><span data-count="218">0</span><small>km/h</small></b></div>
+          <div class="telstat"><span>Vollgasanteil</span><b><span data-count="61">0</span><small>%</small></b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="countdown">
+    <div class="wrap countdown__grid">
+      <div class="countdown__copy">
+        <span class="eyebrow">Nächste Session · Monza</span>
+        <h2>Start in</h2>
+      </div>
+      <div class="clock" aria-live="off" aria-label="Countdown bis zum Start">
+        <div><b id="cdD">00</b><span>Tage</span></div>
+        <div><b id="cdH">00</b><span>Stunden</span></div>
+        <div><b id="cdM">00</b><span>Minuten</span></div>
+        <div><b id="cdS">00</b><span>Sekunden</span></div>
+      </div>
+      <p class="countdown__note">Beispielcountdown dieses Entwurfs · Startzeit relativ zur geöffneten Seite</p>
     </div>
   </section>
 
@@ -674,10 +1026,14 @@
       <div class="calendar__head">
         <h2 data-words>Die nächsten fünf.</h2>
         <span class="mono" style="color:var(--grey)">Saison 2026</span>
+        <div class="railnav">
+          <button type="button" data-pan="-1" aria-label="Vorherige Rennen">←</button>
+          <button type="button" data-pan="1" aria-label="Nächste Rennen">→</button>
+        </div>
       </div>
     </div>
     <div class="wrap" style="overflow:visible">
-      <div class="pan" data-scrub>
+      <div class="pan">
         <article class="round round--next">
           <p class="round__date">05. April</p>
           <h3>Monza</h3>
@@ -728,5 +1084,49 @@
 </main>
 
 <script src="assets/motion.js" defer></script>
+<script>
+  (function () {
+    /* Kalender: seitlich scrollbar, mit Pfeilen und ohne Abschneiden am Start. */
+    var pan = document.querySelector('.pan');
+    var arrows = Array.prototype.slice.call(document.querySelectorAll('[data-pan]'));
+    if (pan && arrows.length) {
+      var step = function () {
+        var card = pan.querySelector('.round');
+        return card ? card.getBoundingClientRect().width + 1 : 300;
+      };
+      var syncArrows = function () {
+        var max = pan.scrollWidth - pan.clientWidth - 1;
+        arrows[0].disabled = pan.scrollLeft <= 1;
+        arrows[1].disabled = pan.scrollLeft >= max;
+      };
+      arrows.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          pan.scrollBy({ left: Number(btn.dataset.pan) * step(), behavior: 'smooth' });
+        });
+      });
+      pan.addEventListener('scroll', syncArrows, { passive: true });
+      window.addEventListener('resize', syncArrows);
+      syncArrows();
+    }
+
+    var target = Date.now() + (2 * 24 * 60 + 14 * 60 + 36) * 60 * 1000;
+    var d = document.getElementById('cdD');
+    var h = document.getElementById('cdH');
+    var m = document.getElementById('cdM');
+    var s = document.getElementById('cdS');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function tick() {
+      var left = Math.max(0, target - Date.now());
+      var secs = Math.floor(left / 1000);
+      d.textContent = pad(Math.floor(secs / 86400));
+      h.textContent = pad(Math.floor((secs % 86400) / 3600));
+      m.textContent = pad(Math.floor((secs % 3600) / 60));
+      s.textContent = pad(secs % 60);
+    }
+    tick();
+    window.setInterval(tick, 1000);
+  })();
+</script>
 </body>
 </html>

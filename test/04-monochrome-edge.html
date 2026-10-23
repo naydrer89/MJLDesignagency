@@ -513,6 +513,197 @@
     .build__row { grid-template-columns: 1fr 0.8fr; }
     .build__row b + span { display: none; }
   }
+  /* Latenz: ein Diagramm, das man lesen kann, ohne Legende zu studieren. */
+  .lat {
+    padding-block: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid var(--line);
+  }
+
+  .lat__head {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2.5rem;
+    align-items: end;
+    margin-bottom: 2.5rem;
+  }
+
+  .lat__head h2 {
+    font-size: clamp(1.8rem, 3.4vw, 2.9rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  .lat__head p {
+    color: var(--ink-2, #666);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    max-width: 34ch;
+    justify-self: end;
+  }
+
+  .lat__grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    border: 1px solid var(--line);
+  }
+
+  .chart {
+    padding: 1.4rem 1.5rem 1rem;
+    border-right: 1px solid var(--line);
+  }
+
+  .chart__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-2, #666);
+    margin-bottom: 1rem;
+  }
+
+  .chart__head b {
+    color: var(--ink, #111);
+    font-weight: 500;
+  }
+
+  .chart__head span:last-child {
+    margin-left: auto;
+    color: var(--ink-3, #999);
+  }
+
+  .chart svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .chart__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.8rem;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.625rem;
+    color: var(--ink-2, #666);
+  }
+
+  .chart__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .chart__legend i {
+    width: 14px;
+    height: 1.5px;
+    background: #fff;
+  }
+
+  .chart__legend span:nth-child(2) i { background: #8a8a8a; }
+  .chart__legend span:nth-child(3) i { background: #555; }
+
+  .regions {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .region {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.3rem 1rem;
+    padding: 1.05rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .region:last-child {
+    border-bottom: 0;
+  }
+
+  .region:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  .region b {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .region b span {
+    color: var(--ink-3, #999);
+    font-weight: 400;
+    margin-left: 0.4rem;
+  }
+
+  .region strong {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    justify-self: end;
+  }
+
+  .region__bar {
+    grid-column: 1 / -1;
+    height: 2px;
+    background: var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .region__bar i {
+    position: absolute;
+    inset: 0;
+    background: var(--ink, #111);
+    transform: scaleX(var(--w, 0.2));
+    transform-origin: left;
+    transition: transform 0.9s var(--ease);
+  }
+
+  .region:nth-child(2) .region__bar i { background: #777; }
+  .region:nth-child(3) .region__bar i { background: #999; }
+  .region:nth-child(4) .region__bar i { background: #c4c4c4; }
+
+  @media (max-width: 860px) {
+    .lat__head {
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+    }
+
+    .lat__head p {
+      justify-self: start;
+    }
+
+    .lat__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .chart {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+      padding-inline: 1rem;
+    }
+
+    /* Auf 390 px ist eine 720er-Achse nicht lesbar. Die Form bleibt,
+       die Werte stehen in der Legende. */
+    .chart .axis-y {
+      display: none;
+    }
+
+    .chart .axis-x text {
+      font-size: 17px;
+    }
+
+    .region {
+      padding-inline: 1rem;
+    }
+  }
 </style>
 </head>
 <body>
@@ -548,7 +739,7 @@
         </div>
       </div>
 
-      <div class="term" aria-label="Beispiel eines Deploy-Protokolls">
+      <div class="term" aria-label="Beispiel eines Deploy-Protokolls" data-tilt="1.4">
         <div class="term__bar"><span>deploy — main</span><span>zsh</span></div>
         <div class="term__body">
           <span class="term__line" style="--i:0"><span class="dim">$</span> monolith deploy</span>
@@ -592,6 +783,62 @@
         <div class="build__row"><b>Optimierung</b><span>Bilder, Fonts</span><span>3,2 s</span></div>
         <div class="build__row"><b>Auslieferung</b><span>128 Objekte</span><span>2,4 s</span></div>
         <div class="build__row"><b>Prüfung</b><span class="status">bestanden</span><span>34,1 s</span></div>
+      </div>
+    </section>
+
+    <section class="lat" id="latenz">
+      <div class="lat__head">
+        <div>
+          <span class="kicker"><i aria-hidden="true"></i>Edge · letzte 24 Stunden</span>
+          <h2 data-words="45">Nähe ist eine Zahl, keine Behauptung.</h2>
+        </div>
+        <p data-reveal data-delay="0.12s">
+          Jede Funktion läuft dort, wo der Aufruf entsteht. Die drei Linien sind p50, p95 und p99 —
+          gemessen am Rand, nicht im Rechenzentrum.
+        </p>
+      </div>
+
+      <div class="lat__grid" data-reveal>
+        <div class="chart">
+          <div class="chart__head"><b>Antwortzeit</b><span>·</span><span>Millisekunden, 60 Minuten</span></div>
+          <svg viewBox="0 0 720 250" role="img" aria-label="Latenzverlauf: p50 bei 18 ms, p95 bei 42 ms, p99 bei 61 ms">
+            <g stroke="rgba(255,255,255,0.08)" stroke-width="1">
+              <path d="M0 40h720M0 90h720M0 140h720M0 190h720M0 240h720" />
+            </g>
+            <g class="axis-y" fill="#999" font-family="Geist Mono, monospace" font-size="9">
+              <text x="0" y="34">80</text>
+              <text x="0" y="84">60</text>
+              <text x="0" y="134">40</text>
+              <text x="0" y="184">20</text>
+              <text x="0" y="234">0</text>
+            </g>
+            <path data-draw d="M28 190 C 90 176, 120 186, 170 168 S 250 150, 300 158 S 380 132, 440 140 S 540 118, 600 126 S 680 112, 700 116" fill="none" stroke="#fff" stroke-width="1.6" />
+            <path data-draw d="M28 152 C 90 140, 130 150, 180 128 S 260 108, 310 118 S 390 96, 450 104 S 550 82, 610 92 S 680 78, 700 84" fill="none" stroke="#8a8a8a" stroke-width="1.3" />
+            <path data-draw d="M28 112 C 80 104, 120 120, 180 96 S 250 78, 300 92 S 380 62, 440 76 S 520 54, 590 66 S 670 48, 700 56" fill="none" stroke="#555" stroke-width="1.2" stroke-dasharray="3 4" />
+            <g fill="#fff">
+              <circle cx="700" cy="116" r="2.4" />
+              <circle cx="700" cy="84" r="2.4" />
+              <circle cx="700" cy="56" r="2.4" />
+            </g>
+            <g class="axis-x" fill="#999" font-family="Geist Mono, monospace" font-size="9">
+              <text x="28" y="248">-60 min</text>
+              <text x="320" y="248">-30 min</text>
+              <text x="630" y="248">jetzt</text>
+            </g>
+          </svg>
+          <div class="chart__legend">
+            <span><i aria-hidden="true"></i>p50 <b class="mono"><span data-count="18">0</span> ms</b></span>
+            <span><i aria-hidden="true"></i>p95 <b class="mono"><span data-count="42">0</span> ms</b></span>
+            <span><i aria-hidden="true"></i>p99 <b class="mono"><span data-count="61">0</span> ms</b></span>
+          </div>
+        </div>
+
+        <div class="regions" data-stagger>
+          <div class="region"><b>fra1<span>Frankfurt</span></b><strong>18 ms</strong><div class="region__bar"><i style="--w:0.18"></i></div></div>
+          <div class="region"><b>iad1<span>Washington</span></b><strong>42 ms</strong><div class="region__bar"><i style="--w:0.42"></i></div></div>
+          <div class="region"><b>hnd1<span>Tokio</span></b><strong>61 ms</strong><div class="region__bar"><i style="--w:0.61"></i></div></div>
+          <div class="region"><b>gru1<span>São Paulo</span></b><strong>87 ms</strong><div class="region__bar"><i style="--w:0.87"></i></div></div>
+        </div>
       </div>
     </section>
 

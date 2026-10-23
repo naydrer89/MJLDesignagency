@@ -1,0 +1,2285 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian — Entscheidungen, die man später noch versteht</title>
+<meta name="description" content="Meridian hält Kontext, Belege und Entscheidungen an einem Ort. Ein Beispielprojekt im Haus-System Meridian Studio.">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/meridian.css">
+<style>
+  /* Seite 01 — Meridian Studio (Haus-System).
+     Aufbau: Split-Hero mit arbeitender Oberfläche, drei Prinzipien, dunkle
+     Sticky-Strecke, gefülltes Bento, Statement, CTA. Alles andere trägt
+     meridian.css. */
+
+  .hero {
+    padding-block: 64px 96px;
+    position: relative;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+  }
+
+  .hero__label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .hero__label::before {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .serif {
+    font-size: 1.04em;
+    color: var(--accent);
+    padding-right: 0.06em;
+  }
+
+  .hero .lead {
+    margin-bottom: 32px;
+  }
+
+  .hero__actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .hero__facts span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .hero__facts svg {
+    color: var(--accent);
+    flex: none;
+  }
+
+  /* ---------- Produktoberfläche ---------- */
+
+  .stage {
+    position: relative;
+    perspective: 1600px;
+    padding: 20px 0 44px;
+  }
+
+  .app {
+    position: relative;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-xl);
+    background: var(--surface);
+    box-shadow: var(--e3);
+    overflow: hidden;
+    transform: translate3d(0, 22px, 0) scale(0.975);
+    opacity: 0;
+    transition:
+      transform 1s var(--ease-premium) 0.12s,
+      opacity 0.8s var(--ease-premium) 0.12s;
+    will-change: transform;
+  }
+
+  .is-ready .app {
+    transform: none;
+    opacity: 1;
+  }
+
+  .app__chrome {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 38px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--canvas-raised);
+  }
+
+  .app__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .app__dots i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--surface-sunken);
+  }
+
+  .app__crumbs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-left: 6px;
+  }
+
+  .app__crumbs b {
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .app__chrome-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    background: var(--surface-sunken);
+    color: var(--ink-2);
+    border: 1px solid var(--surface);
+  }
+
+  .avatar--accent {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .app__body {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 1fr);
+    min-height: 372px;
+  }
+
+  .app__side {
+    border-right: 1px solid var(--hairline);
+    padding: 14px 10px;
+    background: color-mix(in srgb, var(--canvas) 55%, var(--surface));
+  }
+
+  .app__ws {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .app__ws i {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--r-sm);
+    background: var(--ink);
+    color: var(--canvas);
+    display: grid;
+    place-items: center;
+    font-size: 8px;
+    font-style: normal;
+    letter-spacing: 0;
+  }
+
+  .app__nav {
+    display: grid;
+    gap: 1px;
+  }
+
+  .app__nav a {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 7px;
+    border-radius: var(--r-sm);
+    font-size: 11.5px;
+    color: var(--ink-2);
+    transition: background-color 0.14s var(--ease), color 0.14s var(--ease);
+  }
+
+  .app__nav a:hover {
+    background: var(--surface-subtle);
+    color: var(--ink);
+  }
+
+  .app__nav a.is-current {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--e1);
+    font-weight: 500;
+  }
+
+  .app__nav svg {
+    color: var(--ink-3);
+    flex: none;
+  }
+
+  .app__nav a.is-current svg {
+    color: var(--accent);
+  }
+
+  .app__nav small {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+  }
+
+  .app__side-rule {
+    height: 1px;
+    background: var(--hairline);
+    margin: 12px 4px;
+  }
+
+  .app__doc {
+    padding: 18px 20px 0;
+    min-width: 0;
+  }
+
+  .doc__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .doc__head h2 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .doc__head .badge {
+    margin-left: auto;
+    flex: none;
+  }
+
+  .doc__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin-top: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+  }
+
+  .tabs {
+    position: relative;
+    display: flex;
+    gap: 18px;
+    margin-top: 16px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .tabs [role='tab'] {
+    position: relative;
+    padding: 0 0 8px;
+    font-size: 10.5px;
+    color: var(--ink-3);
+    transition: color 0.14s var(--ease);
+  }
+
+  .tabs [role='tab']:hover {
+    color: var(--ink);
+  }
+
+  .tabs [role='tab'][aria-selected='true'] {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .tabs__indicator {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 1px;
+    width: 0;
+    background: var(--ink);
+    transition: transform 0.32s var(--ease-premium), width 0.32s var(--ease-premium);
+  }
+
+  .tabpanel {
+    padding-top: 14px;
+    min-height: 194px;
+  }
+
+  .tabpanel[hidden] {
+    display: none;
+  }
+
+  .doc__label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+  }
+
+  .doc__p {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin-bottom: 12px;
+    max-width: 46ch;
+  }
+
+  .doc__decision {
+    border-left: 2px solid var(--accent);
+    padding: 2px 0 2px 12px;
+    margin-bottom: 14px;
+  }
+
+  .doc__decision p {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  .evidence {
+    display: grid;
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+  }
+
+  .evidence a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--surface);
+    font-size: 10.5px;
+    color: var(--ink-2);
+    transition: background-color 0.14s var(--ease);
+  }
+
+  .evidence a:hover {
+    background: var(--accent-wash);
+    color: var(--ink);
+  }
+
+  .evidence svg {
+    color: var(--ink-3);
+    flex: none;
+  }
+
+  .evidence em {
+    font-family: 'Geist Mono', monospace;
+    font-style: normal;
+    font-size: 9px;
+    margin-left: auto;
+    color: var(--positive);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .timeline {
+    display: grid;
+    gap: 0;
+  }
+
+  .timeline li {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 10.5px;
+    color: var(--ink-2);
+  }
+
+  .timeline li:last-child {
+    border-bottom: 0;
+  }
+
+  .timeline time {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    padding-top: 1px;
+  }
+
+  .timeline b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .tokens {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5px;
+  }
+
+  .tokens td {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink-2);
+  }
+
+  .tokens tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .tokens code {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink);
+  }
+
+  .tokens .swatch {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    background: var(--accent);
+    margin-right: 5px;
+    vertical-align: -0.5px;
+  }
+
+  .tokens td:last-child {
+    text-align: right;
+    font-family: 'Geist Mono', monospace;
+    color: var(--ink-3);
+  }
+
+  .doc__foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px solid var(--hairline);
+    margin-top: 12px;
+    padding: 9px 0;
+    font-size: 9.5px;
+    color: var(--ink-3);
+  }
+
+  .doc__foot .avatar {
+    width: 16px;
+    height: 16px;
+    font-size: 7px;
+    margin-left: auto;
+  }
+
+  .doc__foot .avatar + .avatar {
+    margin-left: -10px;
+    border-color: var(--surface);
+  }
+
+  /* Schwebende Ebenen: zwei, nicht mehr. */
+  .float {
+    position: absolute;
+    z-index: 2;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: var(--e2);
+    opacity: 0;
+    transition: opacity 0.7s var(--ease-premium), transform 1s var(--ease-premium);
+  }
+
+  .is-ready .float {
+    opacity: 1;
+  }
+
+  .float--token {
+    left: -44px;
+    bottom: -10px;
+    width: 248px;
+    padding: 12px;
+    transform: translate3d(0, 16px, 0) rotate(-1.5deg);
+    transition-delay: 0.42s;
+  }
+
+  .is-ready .float--token {
+    transform: translate3d(0, var(--shift, 0), 0) rotate(-1.5deg);
+  }
+
+  .float--comment {
+    right: -28px;
+    bottom: 88px;
+    width: 208px;
+    padding: 10px 12px;
+    transform: translate3d(0, 14px, 0) rotate(1.2deg);
+    transition-delay: 0.56s;
+  }
+
+  .is-ready .float--comment {
+    transform: translate3d(0, var(--shift, 0), 0) rotate(1.2deg);
+  }
+
+  .float__head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 9px;
+  }
+
+  .float__head .label {
+    font-size: 9px;
+    color: var(--ink-2);
+    letter-spacing: 0.08em;
+  }
+
+  .float__head .badge {
+    margin-left: auto;
+    height: 16px;
+    font-size: 8px;
+  }
+
+  .diff {
+    display: grid;
+    gap: 3px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9.5px;
+  }
+
+  .diff div {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+
+  .diff del {
+    color: var(--ink-3);
+    text-decoration-color: var(--negative);
+  }
+
+  .diff ins {
+    color: var(--accent);
+    text-decoration: none;
+    background: var(--accent-wash);
+    padding: 0 3px;
+    border-radius: 2px;
+  }
+
+  .float__foot {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px solid var(--hairline);
+    font-size: 9px;
+    color: var(--ink-3);
+  }
+
+  .float__foot svg {
+    color: var(--positive);
+  }
+
+  .comment {
+    display: flex;
+    gap: 8px;
+  }
+
+  .comment .avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 8px;
+    flex: none;
+    background: var(--accent-wash);
+    color: var(--accent);
+    border: 0;
+  }
+
+  .comment p {
+    font-size: 10px;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .comment b {
+    color: var(--ink);
+    font-weight: 600;
+    display: block;
+    font-size: 10px;
+    margin-bottom: 1px;
+  }
+
+  .comment time {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 8.5px;
+    color: var(--ink-3);
+  }
+
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-sm);
+    color: var(--ink-2);
+    border: 1px solid transparent;
+    transition: border-color 0.16s var(--ease), color 0.16s var(--ease), background-color 0.16s var(--ease);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--hairline);
+    color: var(--ink);
+    background: var(--surface);
+  }
+
+  .theme-toggle .moon {
+    display: block;
+  }
+
+  .theme-toggle .sun {
+    display: none;
+  }
+
+  [data-theme='dark'] .theme-toggle .moon {
+    display: none;
+  }
+
+  [data-theme='dark'] .theme-toggle .sun {
+    display: block;
+  }
+
+  /* ---------- Drei Prinzipien ---------- */
+
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .principle {
+    padding: 28px 32px 8px 0;
+    border-right: 1px solid var(--hairline);
+    transition: background-color 0.24s var(--ease);
+  }
+
+  .principle:last-child {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .principle + .principle {
+    padding-left: 32px;
+  }
+
+  .principle:hover {
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+  }
+
+  .principle__id {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .principle h3 {
+    margin-bottom: 10px;
+  }
+
+  .principle p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: 36ch;
+  }
+
+  /* ---------- Dunkle Sticky-Strecke ---------- */
+
+  .process {
+    background: var(--night);
+    color: var(--on-ink);
+    border-top: 1px solid var(--night-hairline);
+  }
+
+  .process__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 80px;
+    align-items: start;
+  }
+
+  .process__sticky {
+    position: sticky;
+    top: 104px;
+    padding-block: 8px 40px;
+  }
+
+  .process .label {
+    color: var(--on-ink-2);
+    display: block;
+    margin-bottom: 22px;
+  }
+
+  .process h2 {
+    color: var(--on-ink);
+    margin-bottom: 20px;
+  }
+
+  .process h2 .serif {
+    color: #a9b9ff;
+  }
+
+  .process__lead {
+    color: var(--on-ink-2);
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 38ch;
+  }
+
+  .process__meter {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 44px;
+    padding-top: 16px;
+    border-top: 1px solid var(--night-hairline);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--on-ink-2);
+  }
+
+  .process__bar {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: var(--night-hairline);
+    overflow: hidden;
+  }
+
+  .process__bar i {
+    position: absolute;
+    inset: 0;
+    background: #a9b9ff;
+    transform: scaleX(var(--p, 0));
+    transform-origin: left;
+    transition: transform 0.2s linear;
+  }
+
+  .steps {
+    display: grid;
+    gap: 0;
+    padding-block: 64px 96px;
+  }
+
+  .step {
+    position: relative;
+    padding: 40px 0 48px 34px;
+    border-top: 1px solid var(--night-hairline);
+    opacity: 0.42;
+    transition: opacity 0.5s var(--ease-premium);
+  }
+
+  .step:last-child {
+    border-bottom: 1px solid var(--night-hairline);
+  }
+
+  .step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 46px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1px solid var(--on-ink-2);
+    background: var(--night);
+    transition: background-color 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  }
+
+  .step.is-active {
+    opacity: 1;
+  }
+
+  .step.is-active::before {
+    background: #a9b9ff;
+    border-color: #a9b9ff;
+    box-shadow: 0 0 0 5px rgba(169, 185, 255, 0.14);
+  }
+
+  .step__meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--on-ink-2);
+    margin-bottom: 14px;
+  }
+
+  .step h3 {
+    color: var(--on-ink);
+    margin-bottom: 12px;
+    font-size: 1.5rem;
+  }
+
+  .step p {
+    color: var(--on-ink-2);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    max-width: 44ch;
+  }
+
+  .step__visual {
+    margin-top: 22px;
+    border: 1px solid var(--night-hairline);
+    border-radius: var(--r-lg);
+    background: var(--night-surface);
+    padding: 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    color: var(--on-ink-2);
+    overflow: hidden;
+  }
+
+  .thread {
+    display: grid;
+    gap: 10px;
+  }
+
+  .thread div {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .thread i {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(169, 185, 255, 0.18);
+    color: #a9b9ff;
+    font-style: normal;
+    display: grid;
+    place-items: center;
+    font-size: 7px;
+    flex: none;
+  }
+
+  .thread p {
+    font-size: 10.5px;
+    line-height: 1.5;
+    color: var(--on-ink-2);
+    max-width: none;
+  }
+
+  .thread b {
+    color: var(--on-ink);
+    font-weight: 500;
+  }
+
+  .state-rows {
+    display: grid;
+    gap: 6px;
+  }
+
+  .state-rows div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--r-xs);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .state-rows em {
+    font-style: normal;
+    margin-left: auto;
+    color: #8fb99f;
+    font-size: 9px;
+  }
+
+  .state-rows .wait {
+    color: #d7b483;
+  }
+
+  @media (max-width: 900px) {
+    .process__grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .process__sticky {
+      position: static;
+      padding-top: 40px;
+    }
+
+    .steps {
+      padding-block: 24px 72px;
+    }
+
+    .step {
+      opacity: 1;
+    }
+  }
+
+  /* ---------- Bento ---------- */
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-panel);
+    overflow: hidden;
+    box-shadow: var(--e2);
+  }
+
+  .cell {
+    background: var(--surface);
+    padding: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: background-color 0.24s var(--ease);
+  }
+
+  .cell:hover {
+    background: var(--canvas-raised);
+  }
+
+  .cell--wide {
+    grid-column: span 7;
+    grid-row: span 2;
+  }
+
+  .cell--half {
+    grid-column: span 5;
+  }
+
+  .cell--third {
+    grid-column: span 4;
+  }
+
+  .cell__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .cell__head h3 {
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .cell__head .label {
+    margin-left: auto;
+  }
+
+  .cell__note {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin-bottom: 18px;
+    max-width: 40ch;
+  }
+
+  /* Vorschau statt Leerraum: derselbe Tokensatz, einmal als Fläche. */
+  .token-preview {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+    padding: 14px;
+    margin-bottom: 20px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-lg);
+    background: var(--canvas);
+  }
+
+  .swatches {
+    display: flex;
+    gap: 4px;
+  }
+
+  .swatches i {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-sm);
+    background: var(--accent);
+    display: block;
+  }
+
+  .swatches i:nth-child(2) {
+    background: var(--ink);
+  }
+
+  .swatches i:nth-child(3) {
+    background: var(--surface-sunken);
+    border: 1px solid var(--hairline);
+  }
+
+  .radii {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .radii i {
+    display: block;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--hairline-strong);
+    background: var(--surface);
+  }
+
+  .radii i:nth-child(1) { border-radius: 2px; }
+  .radii i:nth-child(2) { border-radius: 6px; }
+  .radii i:nth-child(3) { border-radius: 10px; }
+  .radii i:nth-child(4) { border-radius: 999px; }
+
+  .preview-meta {
+    text-align: right;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  .tokens-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    margin-top: auto;
+  }
+
+  .tokens-table th {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: left;
+    padding: 0 10px 8px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .tokens-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink-2);
+  }
+
+  .tokens-table tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .tokens-table code {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+  }
+
+  .tokens-table td:last-child {
+    text-align: right;
+    font-family: 'Geist Mono', monospace;
+    color: var(--ink-3);
+    font-size: 11px;
+  }
+
+  .tokens-table tbody tr {
+    transition: background-color 0.15s var(--ease);
+  }
+
+  .tokens-table tbody tr:hover {
+    background: var(--accent-wash);
+  }
+
+  .bento__foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--hairline);
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .bento__foot .btn {
+    --btn-h: 30px;
+    margin-left: auto;
+    font-size: 0.75rem;
+    padding: 0 12px;
+  }
+
+  .comment-list {
+    display: grid;
+    gap: 12px;
+    margin-bottom: auto;
+  }
+
+  .comment-list .comment p {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .reply {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 7px 10px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-sm);
+    background: var(--canvas);
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    transition: border-color 0.18s var(--ease);
+  }
+
+  .reply:hover {
+    border-color: var(--hairline-strong);
+  }
+
+  .reply .kbd {
+    margin-left: auto;
+  }
+
+  .palette {
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-md);
+    background: var(--canvas);
+    overflow: hidden;
+    margin-top: auto;
+  }
+
+  .palette__input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+  }
+
+  .palette__input .kbd {
+    margin-left: auto;
+  }
+
+  .palette ul {
+    padding: 4px;
+  }
+
+  .palette li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--r-xs);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    transition: background-color 0.12s var(--ease);
+  }
+
+  .palette li:first-child {
+    background: var(--accent-wash);
+    color: var(--ink);
+  }
+
+  .palette li span {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+  }
+
+  .export {
+    margin-top: auto;
+    border-radius: var(--r-md);
+    background: var(--ink);
+    color: #d8d9dd;
+    padding: 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    line-height: 1.7;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .export .k {
+    color: #a9b9ff;
+  }
+
+  .export .s {
+    color: #9ec7a9;
+  }
+
+  .export .c {
+    color: #6d7078;
+  }
+
+  .copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: var(--r-xs);
+    background: rgba(255, 255, 255, 0.08);
+    color: #b9bac0;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 9.5px;
+    transition: background-color 0.16s var(--ease), color 0.16s var(--ease);
+  }
+
+  .copy:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+  }
+
+  .review-list {
+    display: grid;
+    gap: 0;
+    margin-top: auto;
+  }
+
+  .review-list li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+  }
+
+  .review-list li:last-child {
+    border-bottom: 0;
+  }
+
+  .review-list .avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 9px;
+    border: 1px solid var(--hairline);
+  }
+
+  .review-list em {
+    margin-left: auto;
+    font-style: normal;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--positive);
+  }
+
+  .review-list .is-wait em {
+    color: var(--ink-3);
+  }
+
+  .mini-log {
+    display: grid;
+    gap: 10px;
+    margin-top: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-3);
+  }
+
+  .mini-log div {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .mini-log div:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .mini-log b {
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+
+  @media (max-width: 1020px) {
+    .bento {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .cell--wide,
+    .cell--half {
+      grid-column: span 6;
+    }
+
+    .cell--wide {
+      grid-row: auto;
+    }
+
+    .cell--third {
+      grid-column: span 3;
+    }
+
+    /* Die letzte Kachel füllt die Zeile, statt eine leere Zelle zu lassen. */
+    .cell--third:last-child {
+      grid-column: span 6;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .bento {
+      grid-template-columns: 1fr;
+      border-radius: var(--r-lg);
+    }
+
+    .cell--wide,
+    .cell--half,
+    .cell--third,
+    .cell--third:last-child {
+      grid-column: auto;
+    }
+
+    .cell {
+      padding: 20px;
+    }
+
+    .cell--third {
+      min-height: 160px;
+    }
+  }
+
+  /* ---------- Statement ---------- */
+
+  .statement {
+    text-align: left;
+    padding-block: clamp(80px, 10vw, 144px);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .statement blockquote {
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(1.75rem, 3.9vw, 3rem);
+    font-weight: 500;
+    line-height: 1.16;
+    letter-spacing: -0.028em;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+
+  .statement blockquote .serif {
+    color: var(--accent);
+  }
+
+  .statement__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+
+  .statement__meta i {
+    width: 24px;
+    height: 1px;
+    background: var(--ink-3);
+  }
+
+  /* ---------- CTA ---------- */
+
+  .cta {
+    background: var(--surface);
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    padding-block: clamp(56px, 7vw, 88px);
+  }
+
+  .cta__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 56px;
+    align-items: center;
+  }
+
+  .cta h2 {
+    margin-bottom: 14px;
+  }
+
+  .cta p {
+    color: var(--ink-2);
+    max-width: 40ch;
+  }
+
+  .form {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .field {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .field label {
+    display: block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 7px;
+  }
+
+  .field input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--r-sm);
+    background: var(--canvas);
+    font-size: 0.9375rem;
+    color: var(--ink);
+    transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease), background-color 0.16s var(--ease);
+  }
+
+  .field input::placeholder {
+    color: var(--ink-3);
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px var(--accent-wash);
+  }
+
+  .form .btn {
+    margin-top: 24px;
+    --btn-h: 44px;
+  }
+
+  .form__note {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .contact-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 26px;
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+  }
+
+  .contact-line i {
+    width: 28px;
+    height: 1px;
+    background: var(--hairline-strong);
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 1080px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .stage {
+      max-width: 720px;
+      padding-bottom: 8px;
+    }
+
+    /* Ohne Platz neben dem Fenster überlagert nichts mehr den Inhalt:
+       die Detailkarte steht darunter, die Sprechblase entfällt. */
+    .float--token {
+      position: relative;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      width: 100%;
+      max-width: 280px;
+      margin: 16px 0 0 auto;
+    }
+
+    .float--comment {
+      display: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .principles {
+      grid-template-columns: 1fr;
+    }
+
+    .principle,
+    .principle + .principle {
+      padding: 24px 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .principle:last-child {
+      border-bottom: 0;
+    }
+
+    .cta__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+
+  /* Navigation über dunklen Abschnitten: Tinte wird Licht. */
+  .nav--on-dark {
+    --ink: #f4f2ed;
+    --ink-2: #b9bac0;
+    --ink-3: #85878e;
+    --hairline: rgba(255, 255, 255, 0.12);
+    --hairline-strong: rgba(255, 255, 255, 0.26);
+    --surface: rgba(255, 255, 255, 0.06);
+    background: rgba(16, 17, 20, 0.72);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .nav--on-dark .nav__link::after {
+    background: #f4f2ed;
+  }
+
+  @media (max-width: 760px) {
+    .hero {
+      padding-block: 40px 72px;
+    }
+
+    .hero__actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .hero__actions .btn {
+      width: 100%;
+    }
+
+    .hero__facts {
+      gap: 8px 18px;
+      margin-top: 28px;
+    }
+
+    .stage {
+      padding: 0 0 72px;
+    }
+
+    .app__body {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .app__side {
+      display: none;
+    }
+
+    .app__doc {
+      padding: 16px 14px 0;
+    }
+
+
+    .form .btn {
+      margin-top: 0;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .nav__inner {
+      gap: 12px;
+    }
+
+    .nav__actions {
+      gap: 8px;
+    }
+
+    .nav__actions .btn--ghost {
+      display: none;
+    }
+
+    .nav__actions .btn--primary {
+      --btn-h: 34px;
+      padding: 0 13px;
+      font-size: 0.8125rem;
+    }
+
+    .brand {
+      font-size: 0.875rem;
+    }
+
+    .theme-toggle {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .doc__meta {
+      font-size: 8.5px;
+    }
+
+    .doc__head h2 {
+      font-size: 15px;
+    }
+
+    .tabs {
+      gap: 14px;
+    }
+
+    .float--token {
+      max-width: 220px;
+      padding: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<header class="nav">
+  <div class="frame nav__inner">
+    <a class="brand" href="#top" aria-label="Meridian — zur Startseite">
+      <svg class="brand__mark" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M2 10h16" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="10" cy="10" r="2.4" fill="currentColor"/>
+      </svg>
+      Meridian
+    </a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <a class="nav__link" href="#produkt">Produkt</a>
+      <a class="nav__link" href="#methode">Methode</a>
+      <a class="nav__link" href="#arbeitsweise">Arbeitsweise</a>
+      <a class="nav__link" href="#preise">Preise</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="theme-toggle" type="button" id="theme" aria-label="Dunkles Design umschalten" aria-pressed="false">
+        <svg class="moon" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M13.5 10.2A6 6 0 0 1 5.8 2.5a6 6 0 1 0 7.7 7.7Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+        <svg class="sun" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M13 3l-1.1 1.1M4.1 11.9 3 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <a class="btn btn--ghost" href="#preise">Anmelden</a>
+      <a class="btn btn--primary" href="#preise">Kostenlos starten</a>
+    </div>
+  </div>
+  <div class="progress" data-progress aria-hidden="true"></div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="frame hero__grid">
+      <div>
+        <p class="label hero__label" data-reveal="side">Design-Betriebssystem</p>
+        <h1 class="display" data-words="45">
+          Entscheidungen, die man <span class="serif">später</span> noch versteht.
+        </h1>
+        <p class="lead" data-reveal data-delay="0.24s">
+          Meridian hält Kontext, Belege und Entscheidungen an einem Ort — damit ein Team
+          nach drei Monaten nicht wieder bei null anfängt.
+        </p>
+        <div class="hero__actions" data-reveal data-delay="0.32s">
+          <a class="btn btn--primary btn--lg" href="#preise" data-magnetic="5">Kostenlos starten</a>
+          <a class="btn btn--ghost btn--lg" href="#produkt">
+            Produkt ansehen
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <div class="hero__facts" data-reveal data-delay="0.4s">
+          <span>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2 6.4 2.4 2.4L10 3.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Keine Kreditkarte
+          </span>
+          <span>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2 6.4 2.4 2.4L10 3.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            In 10 Minuten einsatzbereit
+          </span>
+          <span>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2 6.4 2.4 2.4L10 3.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Export als Markdown
+          </span>
+        </div>
+      </div>
+
+      <!-- Produktoberfläche: gearbeitet, nicht dekoriert. Drei Ebenen:
+           Fenster, Token-Diff, Kommentar. -->
+      <div class="stage">
+        <div class="app" data-tilt="1.4" data-spotlight aria-label="Meridian-Oberfläche, Beispielentscheidung">
+          <div class="app__chrome">
+            <span class="app__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="app__crumbs">MJL / Produkt / <b>Checkout</b></span>
+            <span class="app__chrome-right">
+              <span class="avatar" title="Lena Ort">LO</span>
+              <span class="avatar avatar--accent" title="Du">DU</span>
+            </span>
+          </div>
+          <div class="app__body">
+            <aside class="app__side" aria-label="Bereiche">
+              <div class="app__ws"><i>M</i> MJL Produkt</div>
+              <div class="app__nav">
+                <a href="#produkt">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" stroke="currentColor"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1" stroke="currentColor"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1" stroke="currentColor"/><rect x="9" y="9" width="4.5" height="4.5" rx="1" stroke="currentColor"/></svg>
+                  Übersicht
+                </a>
+                <a href="#produkt" class="is-current" aria-current="page">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3.5h10M3 8h10M3 12.5h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  Entscheidungen
+                  <small>24</small>
+                </a>
+                <a href="#produkt">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.5" stroke="currentColor"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  Tokens
+                  <small>86</small>
+                </a>
+                <a href="#produkt">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5 13.5 5.5v5L8 13.5 2.5 10.5v-5L8 2.5Z" stroke="currentColor" stroke-linejoin="round"/></svg>
+                  Komponenten
+                </a>
+              </div>
+              <div class="app__side-rule"></div>
+              <div class="app__nav">
+                <a href="#produkt">Belege <small>112</small></a>
+                <a href="#produkt">Archiv</a>
+              </div>
+            </aside>
+
+            <div class="app__doc">
+              <div class="doc__head">
+                <h2>Checkout: Retry-Logik</h2>
+                <span class="badge badge--accent">Entschieden</span>
+              </div>
+              <p class="doc__meta">
+                <span>14. Okt 2026</span>
+                <span>4 Belege</span>
+                <span>3 Kommentare</span>
+                <span>v3</span>
+              </p>
+
+              <div class="tabs" data-tabs role="tablist" aria-label="Entscheidungsdetails">
+                <button role="tab" id="tab-a" aria-controls="panel-a" aria-selected="true" type="button">Entscheidung</button>
+                <button role="tab" id="tab-b" aria-controls="panel-b" aria-selected="false" type="button" tabindex="-1">Verlauf</button>
+                <button role="tab" id="tab-c" aria-controls="panel-c" aria-selected="false" type="button" tabindex="-1">Tokens</button>
+                <span class="tabs__indicator" aria-hidden="true"></span>
+              </div>
+
+              <div class="tabpanel" id="panel-a" role="tabpanel" aria-labelledby="tab-a" tabindex="0">
+                <p class="doc__label">Kontext</p>
+                <p class="doc__p">Zahlungen schlugen fehl, wenn der Zahlungsdienstleister einen 409 zurückgab. Der Client wiederholte sofort — und erzeugte Doppelbuchungen.</p>
+                <p class="doc__label">Entscheidung</p>
+                <div class="doc__decision">
+                  <p>Wiederholung nur nach Backoff, höchstens drei Versuche, mit idempotentem Schlüssel pro Bestellung.</p>
+                </div>
+                <div class="evidence">
+                  <a href="#produkt">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2.5h5l3 3v8H4v-11Z" stroke="currentColor" stroke-linejoin="round"/><path d="M9 2.5v3h3" stroke="currentColor" stroke-linejoin="round"/></svg>
+                    Protokoll · 14:12
+                    <em><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2 6.4 2.4 2.4L10 3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Geprüft</em>
+                  </a>
+                  <a href="#produkt">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2.5h5l3 3v8H4v-11Z" stroke="currentColor" stroke-linejoin="round"/><path d="M9 2.5v3h3" stroke="currentColor" stroke-linejoin="round"/></svg>
+                    Lasttest · 28. Sep
+                    <em><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2 6.4 2.4 2.4L10 3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Geprüft</em>
+                  </a>
+                </div>
+              </div>
+
+              <div class="tabpanel" id="panel-b" role="tabpanel" aria-labelledby="tab-b" tabindex="0" hidden>
+                <ul class="timeline">
+                  <li><time>14:12</time><span><b>Fehlerfall dokumentiert</b> — 409 auf <code>charges.create</code>, 14 Vorfälle.</span></li>
+                  <li><time>15:04</time><span><b>Vorschlag</b> von Jonas: exponentieller Backoff, max. 3 Versuche.</span></li>
+                  <li><time>16:20</time><span><b>Einwand</b> von Lena: Was passiert bei Mobile-Abbruch?</span></li>
+                  <li><time>17:02</time><span><b>Entschieden</b> — mit Widerruf über <code>idempotencyKey</code>.</span></li>
+                </ul>
+              </div>
+
+              <div class="tabpanel" id="panel-c" role="tabpanel" aria-labelledby="tab-c" tabindex="0" hidden>
+                <table class="tokens">
+                  <tbody>
+                    <tr><td><code>radius.md</code></td><td>6px</td></tr>
+                    <tr><td><code>space.gutter</code></td><td>32px</td></tr>
+                    <tr><td><span class="swatch"></span><code>color.accent</code></td><td>#2447E8</td></tr>
+                    <tr><td><code>motion.standard</code></td><td>260ms</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="doc__foot">
+                <span>Zuletzt geändert vor 12 Minuten</span>
+                <span class="avatar">LO</span>
+                <span class="avatar">JS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="float float--token" data-parallax="0.5" aria-hidden="true">
+          <div class="float__head">
+            <span class="label">Token-Diff</span>
+            <span class="badge">v3</span>
+          </div>
+          <div class="diff">
+            <div><del>radius.md&nbsp; 6px</del></div>
+            <div><ins>radius.md&nbsp; 8px</ins></div>
+          </div>
+          <div class="float__foot">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="m2 6.4 2.4 2.4L10 3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Mit Figma synchron
+          </div>
+        </div>
+
+        <div class="float float--comment" data-parallax="-0.4" aria-hidden="true">
+          <div class="comment">
+            <span class="avatar">LO</span>
+            <div>
+              <b>Lena Ort</b>
+              <p>Gilt der Backoff auch, wenn die App im Hintergrund war?</p>
+              <time>vor 2 Stunden</time>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="produkt">
+    <div class="frame">
+      <div class="section-head">
+        <div>
+          <span class="label" data-reveal="side">Warum es das gibt</span>
+          <h2 class="h2" data-words="45">Ein Gedanke braucht einen Ort, an dem er <span class="serif">bleibt</span>.</h2>
+        </div>
+        <p class="body" data-reveal data-delay="0.16s">
+          Die meisten Teams verlieren nicht die Arbeit. Sie verlieren die Begründung.
+          Meridian ist um diese eine Lücke gebaut.
+        </p>
+      </div>
+
+      <div class="principles">
+        <article class="principle" data-reveal data-delay="0.05s">
+          <p class="principle__id">01</p>
+          <h3 class="h3">Kontext bleibt stehen</h3>
+          <p>Was war der Auslöser, wer war beteiligt, was wurde verworfen. Nicht als Notiz, sondern als Teil der Entscheidung.</p>
+        </article>
+        <article class="principle" data-reveal data-delay="0.12s">
+          <p class="principle__id">02</p>
+          <h3 class="h3">Belege statt Behauptungen</h3>
+          <p>Jede Aussage lässt sich auf ein Protokoll, einen Test oder ein Dokument zurückführen. Klick genügt.</p>
+        </article>
+        <article class="principle" data-reveal data-delay="0.19s">
+          <p class="principle__id">03</p>
+          <h3 class="h3">Änderung ist sichtbar</h3>
+          <p>Versionen, Diffs und offene Einwände stehen nebeneinander. Wer später kommt, sieht, was sich verschoben hat.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="process" id="methode" data-track data-nav-dark>
+    <div class="frame process__grid">
+      <div class="process__sticky">
+        <span class="label" data-reveal="side">Die Methode</span>
+        <h2 class="h2" data-words="45">Vom Zweifel zur <span class="serif">Entscheidung</span>.</h2>
+        <p class="process__lead">
+          Drei Schritte, dieselbe Reihenfolge, jedes Mal. Nicht weil ein Prozess
+          heilig ist, sondern weil er zwei Menschen mit unterschiedlichem Gedächtnis
+          zusammenbringt.
+        </p>
+        <div class="process__meter" aria-hidden="true">
+          <span>Fortschritt</span>
+          <span class="process__bar"><i style="--p: 0.33"></i></span>
+          <span>03</span>
+        </div>
+      </div>
+
+      <div class="steps">
+        <article class="step" data-sticky-step>
+          <p class="step__meta">Schritt 01 · Beobachten</p>
+          <h3>Erst festhalten, was passiert</h3>
+          <p>Ein Vorfall, ein Gespräch, ein Messwert. Der Auslöser wird angelegt, bevor jemand eine Lösung vorschlägt.</p>
+          <div class="step__visual" aria-hidden="true">
+            <div class="thread">
+              <div><i>LO</i><p><b>Lena</b> — Checkout bricht bei 409 ab, 14 Vorfälle seit Dienstag.</p></div>
+              <div><i>JS</i><p><b>Jonas</b> — Client wiederholt sofort, ohne Schlüssel.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-sticky-step>
+          <p class="step__meta">Schritt 02 · Abwägen</p>
+          <h3>Zwei Wege, offen nebeneinander</h3>
+          <p>Vorschläge und Einwände stehen im selben Dokument. Der bessere Einwand gewinnt, nicht die lautere Stimme.</p>
+          <div class="step__visual" aria-hidden="true">
+            <div class="state-rows">
+              <div>Vorschlag A · Backoff, 3 Versuche <em>gewählt</em></div>
+              <div>Vorschlag B · Warteschlange <em class="wait">verworfen</em></div>
+              <div>Offen · Mobile-Abbruch <em class="wait">geklärt</em></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-sticky-step>
+          <p class="step__meta">Schritt 03 · Festlegen</p>
+          <h3>Eine Entscheidung, die man zitieren kann</h3>
+          <p>Ein Satz, ein Datum, ein Verantwortlicher. Was folgt, ist Arbeit — und die Entscheidung bleibt nachlesbar.</p>
+          <div class="step__visual" aria-hidden="true">
+            <div class="thread">
+              <div><i>OK</i><p><b>Entschieden</b> am 14. Oktober 2026 · Owner: Jonas S.</p></div>
+              <div><i>↗</i><p>Export nach Markdown, verlinkt in der Komponente.</p></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="arbeitsweise">
+    <div class="frame">
+      <div class="section-head">
+        <div>
+          <span class="label" data-reveal="side">Im Alltag</span>
+          <h2 class="h2" data-words="45">Alles, was ein Team braucht — und nichts, was es <span class="serif">ablenkt</span>.</h2>
+        </div>
+        <p class="body" data-reveal data-delay="0.14s">
+          Dokument, Tokens, Review und Verlauf greifen ineinander. Kein Werkzeugwechsel,
+          kein Screenshot im Chat, der die Hälfte verliert.
+        </p>
+      </div>
+
+      <div class="bento" data-stagger>
+        <article class="cell cell--wide">
+          <div class="cell__head">
+            <h3>Der Tokensatz ist die Wahrheit</h3>
+            <span class="label">Live</span>
+          </div>
+          <p class="cell__note">
+            Änderungen an Tokens laufen als Entscheidung mit Begründung. Wer den Wert
+            sieht, sieht auch, warum er so ist.
+          </p>
+          <div class="token-preview" aria-hidden="true">
+            <div class="swatches"><i></i><i></i><i></i></div>
+            <div class="radii"><i></i><i></i><i></i><i></i></div>
+            <div class="preview-meta">3 Farben<br>4 Radien</div>
+          </div>
+          <table class="tokens-table">
+            <thead>
+              <tr><th>Token</th><th>Wert</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>color.accent</code></td><td>#2447E8</td></tr>
+              <tr><td><code>radius.md</code></td><td>6px</td></tr>
+              <tr><td><code>space.section</code></td><td>128px</td></tr>
+              <tr><td><code>motion.entrance</code></td><td>380ms</td></tr>
+            </tbody>
+          </table>
+          <div class="bento__foot">
+            <span class="badge badge--live">Synchron</span>
+            <span>Figma, Code und Dokumentation in einem Stand</span>
+            <a class="btn btn--secondary" href="#preise">Ansehen</a>
+          </div>
+        </article>
+
+        <article class="cell cell--half">
+          <div class="cell__head">
+            <h3>Einwand statt Kommentar</h3>
+            <span class="label">Offen</span>
+          </div>
+          <div class="comment-list">
+            <div class="comment">
+              <span class="avatar">JS</span>
+              <div>
+                <b>Jonas S.</b>
+                <p>Nach drei Versuchen abbrechen — oder in die Warteschlange?</p>
+              </div>
+            </div>
+            <div class="comment">
+              <span class="avatar">LO</span>
+              <div>
+                <b>Lena O.</b>
+                <p>Abbrechen. Alles andere verschiebt das Problem in die Nacht.</p>
+              </div>
+            </div>
+          </div>
+          <div class="reply">
+            Antworten …
+            <span class="kbd">⌘</span><span class="kbd">↵</span>
+          </div>
+        </article>
+
+        <article class="cell cell--half">
+          <div class="cell__head">
+            <h3>Finden, ohne zu suchen</h3>
+            <span class="label">⌘K</span>
+          </div>
+          <div class="palette" aria-hidden="true">
+            <div class="palette__input">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-linecap="round"/></svg>
+              retry
+              <span class="kbd">esc</span>
+            </div>
+            <ul>
+              <li>Checkout: Retry-Logik <span>Entscheidung</span></li>
+              <li>Idempotenz-Schlüssel <span>Token</span></li>
+              <li>Retry-Backoff · Protokoll <span>Beleg</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cell cell--third">
+          <div class="cell__head">
+            <h3>Export</h3>
+            <span class="label">.md</span>
+          </div>
+          <div class="export">
+            <button class="copy" type="button" data-copy="#snippet">Kopieren</button>
+            <div id="snippet"><span class="c">// tokens.json</span><br><span class="k">"accent"</span>: <span class="s">"#2447E8"</span>,<br><span class="k">"radius"</span>: <span class="s">"6px"</span><br><span class="k">"source"</span>: <span class="s">"decision/checkout"</span></div>
+          </div>
+        </article>
+
+        <article class="cell cell--third">
+          <div class="cell__head">
+            <h3>Review</h3>
+            <span class="label">3 Personen</span>
+          </div>
+          <ul class="review-list">
+            <li><span class="avatar">LO</span> Lena Ort <em>Geprüft</em></li>
+            <li><span class="avatar">OK</span> Okan Kaya <em>Geprüft</em></li>
+            <li class="is-wait"><span class="avatar">JS</span> Jonas S. <em>Offen</em></li>
+          </ul>
+        </article>
+
+        <article class="cell cell--third">
+          <div class="cell__head">
+            <h3>Verlauf</h3>
+            <span class="label">Heute</span>
+          </div>
+          <div class="mini-log">
+            <div><span>17:02</span><b>Entschieden</b></div>
+            <div><span>16:20</span><b>Einwand ergänzt</b></div>
+            <div><span>14:12</span><b>Fehlerfall dokumentiert</b></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement">
+    <div class="frame" data-reveal>
+      <blockquote>
+        „Wir schreiben nicht mehr Dokumente. Wir schreiben <span class="serif">Entscheidungen</span>.“
+      </blockquote>
+      <p class="statement__meta"><i></i> Aus einem Kundenworkshop, 2026 · Beispielzitat</p>
+    </div>
+  </section>
+
+  <section class="cta" id="preise">
+    <div class="frame cta__grid">
+      <div>
+        <span class="label" style="display:block;margin-bottom:18px">Kostenlos starten</span>
+        <h2 class="h2" data-words="45">Die erste Entscheidung dauert zehn Minuten.</h2>
+        <p style="margin-top:14px">Kein Verkaufsgespräch, keine Kreditkarte. Ein Workspace für drei Personen, unbegrenzt viele Entscheidungen.</p>
+        <div class="contact-line"><i></i> Fragen? <a class="arrow-link" href="#main">Schreiben Sie uns</a></div>
+      </div>
+      <form class="form" novalidate>
+        <div class="field">
+          <label for="email">Arbeitsadresse</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="name@firma.de" required>
+        </div>
+        <button class="btn btn--primary" type="submit">Workspace anlegen</button>
+        <p class="form__note">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="2" y="5" width="8" height="5" rx="1" stroke="currentColor"/><path d="M4 5V3.8a2 2 0 0 1 4 0V5" stroke="currentColor"/></svg>
+          Wir senden eine Bestätigung, sonst nichts.
+        </p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="frame">
+    <div class="footer__grid">
+      <div>
+        <a class="brand" href="#top" aria-label="Meridian">
+          <svg class="brand__mark" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M2 10h16" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="10" cy="10" r="2.4" fill="currentColor"/>
+          </svg>
+          Meridian
+        </a>
+        <p class="small" style="margin-top:14px;max-width:30ch">
+          Ein Beispielprojekt der MJL Design Agency. Gebaut im Haus-System
+          <a href="../designguidelines/meridian-studio/design.md" style="text-decoration:underline;text-underline-offset:2px">Meridian Studio</a>.
+        </p>
+      </div>
+      <div class="footer__col">
+        <h4 class="label">Produkt</h4>
+        <a href="#produkt">Entscheidungen</a>
+        <a href="#produkt">Tokens</a>
+        <a href="#arbeitsweise">Review</a>
+        <a href="#preise">Preise</a>
+      </div>
+      <div class="footer__col">
+        <h4 class="label">Methode</h4>
+        <a href="#methode">Der Prozess</a>
+        <a href="#produkt">Prinzipien</a>
+        <a href="../philosophy.md">UX first</a>
+      </div>
+      <div class="footer__col">
+        <h4 class="label">Mehr</h4>
+        <a href="index.html">Alle Systeme</a>
+        <a href="../AGENTS.md">Für Agenten</a>
+        <a href="#main">Kontakt</a>
+      </div>
+    </div>
+    <div class="footer__base">
+      <span>© 2026 Meridian · Beispiel, keine echte Firma</span>
+      <span>Meridian Studio · Archivo, Instrument Sans, Geist Mono</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/motion.js"></script>
+<script>
+  (function () {
+    'use strict';
+
+    /* Seite bereit: die Produktoberfläche baut sich zusammen. */
+    requestAnimationFrame(function () {
+      document.body.classList.add('is-ready');
+    });
+
+    /* Theme: gespeicherte Wahl gewinnt, sonst Systemeinstellung. */
+    var root = document.documentElement;
+    var button = document.getElementById('theme');
+    var stored = null;
+    try { stored = localStorage.getItem('meridian-theme'); } catch (e) {}
+    var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var dark = stored ? stored === 'dark' : systemDark;
+
+    function apply() {
+      root.setAttribute('data-theme', dark ? 'dark' : 'light');
+      button.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      button.setAttribute('aria-label', dark ? 'Helles Design umschalten' : 'Dunkles Design umschalten');
+    }
+    apply();
+
+    button.addEventListener('click', function () {
+      dark = !dark;
+      apply();
+      try { localStorage.setItem('meridian-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+
+    /* Kopieren mit kurzer, ehrlicher Rückmeldung. */
+    var copy = document.querySelector('[data-copy]');
+    if (copy) {
+      copy.addEventListener('click', function () {
+        var target = document.querySelector(copy.getAttribute('data-copy'));
+        var text = target ? target.textContent.replace(/\/\/ tokens\.json/, '').trim() : '';
+        var done = function () {
+          copy.textContent = 'Kopiert';
+          setTimeout(function () { copy.textContent = 'Kopieren'; }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, done);
+        } else {
+          done();
+        }
+      });
+    }
+
+    /* Navigation invertieren, sobald sie über einem dunklen Abschnitt liegt. */
+    var nav = document.querySelector('.nav');
+    var darkSections = Array.prototype.slice.call(document.querySelectorAll('[data-nav-dark]'));
+    if (nav && darkSections.length) {
+      var navTick = function () {
+        var over = darkSections.some(function (section) {
+          var r = section.getBoundingClientRect();
+          return r.top <= 12 && r.bottom >= 96;
+        });
+        nav.classList.toggle('nav--on-dark', over);
+      };
+      window.addEventListener('scroll', navTick, { passive: true });
+      navTick();
+    }
+
+    /* Fortschrittsbalken in der Sticky-Strecke: Anteil der Strecke, die
+       bereits passiert ist. Die Schritte selbst markiert motion.js. */
+    var process = document.querySelector('.process');
+    var fill = process ? process.querySelector('.process__bar i') : null;
+    if (process && fill) {
+      var tick = function () {
+        var r = process.getBoundingClientRect();
+        var total = r.height - window.innerHeight;
+        var p = total > 0 ? Math.min(1, Math.max(0.02, -r.top / total)) : 1;
+        fill.style.setProperty('--p', p.toFixed(3));
+      };
+      window.addEventListener('scroll', tick, { passive: true });
+      tick();
+    }
+
+    /* Das Formular ist eine Demonstration: es sagt, was es tut, statt
+       eine Erfolgsmeldung zu erfinden. */
+    var form = document.querySelector('.form');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var note = form.querySelector('.form__note');
+        var input = form.querySelector('input');
+        note.textContent = 'Demo: Es wurde nichts gesendet. Adresse „' + (input.value || 'leer') + '“ nicht gespeichert.';
+      });
+    }
+  })();
+</script>
+</body>
+</html>

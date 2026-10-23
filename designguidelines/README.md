@@ -1,7 +1,7 @@
 # Design Systems
 
-21 Systeme, alle im selben Format: YAML-Frontmatter (Tokens) + Kapitel *Brand & Style, Colors, Typography,
-Layout & Spacing, Elevation & Depth, Shapes, Components*. Grundlage ist [`obsidian-precision`](obsidian-precision/design.md),
+22 Systeme, alle im selben Format: YAML-Frontmatter (Tokens) + Kapitel *Brand & Style, Colors, Typography,
+Layout & Spacing, Elevation & Depth, Shapes, Components*. Grundlage ist [`meridian-studio`](meridian-studio/design.md),
 das Haus-System.
 
 **Wie benutzen:** ein System pro Projekt wählen, Tokens aus dem Frontmatter übernehmen, Komponenten aus dem
@@ -11,7 +11,8 @@ letzten Kapitel ableiten. Nichts erfinden, was im Frontmatter steht. Regeln: sie
 
 | System | Ordner | Charakter |
 | --- | --- | --- |
-| Obsidian Precision | [`obsidian-precision/`](obsidian-precision/design.md) | Apple × OpenAI: dunkles Obsidian, Micro-Glass, Pill-Buttons, Inter |
+| Meridian Studio | [`meridian-studio/`](meridian-studio/design.md) | Apple × Linear × Stripe × Notion: warmes Papier, Hairlines, ein Kobalt, Archivo + Instrument |
+| Obsidian Precision | [`obsidian-precision/`](obsidian-precision/design.md) | Apple × OpenAI: dunkles Obsidian, Micro-Glass, Pill-Buttons, Inter — dunkle Variante des Hauses |
 
 ## Top-Unternehmen
 
